@@ -12,6 +12,7 @@ const RegisterPage   = lazy(() => import('@/pages/auth/RegisterPage').then(m => 
 const DashboardPage  = lazy(() => import('@/pages/app/DashboardPage').then(m => ({ default: m.DashboardPage })))
 const PetsPage       = lazy(() => import('@/pages/app/PetsPage').then(m => ({ default: m.PetsPage })))
 const PetDetailPage  = lazy(() => import('@/pages/app/PetDetailPage').then(m => ({ default: m.PetDetailPage })))
+const PetFormPage    = lazy(() => import('@/pages/app/PetFormPage').then(m => ({ default: m.PetFormPage })))
 const SettingsPage   = lazy(() => import('@/pages/app/SettingsPage').then(m => ({ default: m.SettingsPage })))
 const AdminPage      = lazy(() => import('@/pages/admin/AdminPage').then(m => ({ default: m.AdminPage })))
 
@@ -46,8 +47,10 @@ export default function App() {
         <Route element={<RequireAuth />}>
           <Route element={<AppShell />}>
             <Route path="/app/dashboard" element={<DashboardPage />} />
-            <Route path="/app/pets"      element={<PetsPage />} />
-            <Route path="/app/pets/:id"  element={<PetDetailPage />} />
+            <Route path="/app/pets"          element={<PetsPage />} />
+            <Route path="/app/pets/new"      element={<PetFormPage />} />
+            <Route path="/app/pets/:id"      element={<PetDetailPage />} />
+            <Route path="/app/pets/:id/edit" element={<PetFormPage />} />
             <Route path="/app/settings"  element={<SettingsPage />} />
           </Route>
         </Route>

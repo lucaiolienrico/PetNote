@@ -9,3 +9,10 @@
     @apply bg-white text-gray-900 font-sans antialiased;
   }
 }
+
+@layer utilities {
+  /* iOS home-indicator: padding dinamico sotto la BottomNav */
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+}

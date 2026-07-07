@@ -1,160 +1,509 @@
-// Auto-generated via: supabase gen types typescript --project-id <PROJECT_ID> > src/types/database.types.ts
-// Per ora placeholder — sostituire dopo aver creato lo schema su Supabase
+// Generato via Supabase MCP generate_typescript_types — project sspezhjfgkskdbojngjs
+// Rigenerare dopo ogni migrazione schema.
+// NB: species/sex sono `string` (CHECK constraint, non enum PG) — union locali in src/lib/species.ts
 
-export type Json = string | number | boolean | null | { [key: string]: Json } | Json[]
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
 
-export interface Database {
+export type Database = {
+  __InternalSupabase: {
+    PostgrestVersion: "14.5"
+  }
   public: {
     Tables: {
-      profiles: {
+      admin_audit_log: {
         Row: {
-          id:                      string
-          full_name:               string | null
-          avatar_url:              string | null
-          plan:                    'free' | 'premium'
-          paypal_subscription_id:  string | null
-          subscription_status:     'active' | 'cancelled' | 'expired' | null
-          subscription_expires_at: string | null
-          is_admin:                boolean
-          created_at:              string
-          updated_at:              string
-        }
-        Insert: Omit<Database['public']['Tables']['profiles']['Row'], 'created_at' | 'updated_at'>
-        Update: Partial<Database['public']['Tables']['profiles']['Insert']>
-      }
-      pets: {
-        Row: {
-          id:         string
-          owner_id:   string
-          name:       string
-          species:    'cane' | 'gatto' | 'coniglio' | 'uccello' | 'rettile' | 'altro'
-          breed:      string | null
-          sex:        'maschio' | 'femmina' | 'non_specificato'
-          birth_date: string | null
-          microchip:  string | null
-          photo_url:  string | null
-          notes:      string | null
-          is_active:  boolean
+          action: string
+          admin_id: string | null
           created_at: string
-          updated_at: string
+          id: number
+          payload: Json | null
+          target_id: string | null
+          target_type: string | null
         }
-        Insert: Omit<Database['public']['Tables']['pets']['Row'], 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Database['public']['Tables']['pets']['Insert']>
-      }
-      vaccinations: {
-        Row: {
-          id:              string
-          pet_id:          string
-          vaccine_name:    string
-          administered_at: string
-          veterinarian:    string | null
-          batch_number:    string | null
-          next_due_at:     string | null
-          notes:           string | null
-          attachment_url:  string | null
-          created_at:      string
+        Insert: {
+          action: string
+          admin_id?: string | null
+          created_at?: string
+          id?: number
+          payload?: Json | null
+          target_id?: string | null
+          target_type?: string | null
         }
-        Insert: Omit<Database['public']['Tables']['vaccinations']['Row'], 'id' | 'created_at'>
-        Update: Partial<Database['public']['Tables']['vaccinations']['Insert']>
-      }
-      vet_visits: {
-        Row: {
-          id:             string
-          pet_id:         string
-          visited_at:     string
-          clinic:         string | null
-          veterinarian:   string | null
-          reason:         string
-          diagnosis:      string | null
-          cost:           number | null
-          notes:          string | null
-          attachment_url: string | null
-          created_at:     string
+        Update: {
+          action?: string
+          admin_id?: string | null
+          created_at?: string
+          id?: number
+          payload?: Json | null
+          target_id?: string | null
+          target_type?: string | null
         }
-        Insert: Omit<Database['public']['Tables']['vet_visits']['Row'], 'id' | 'created_at'>
-        Update: Partial<Database['public']['Tables']['vet_visits']['Insert']>
+        Relationships: [
+          {
+            foreignKeyName: "admin_audit_log_admin_id_fkey"
+            columns: ["admin_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       antiparasitics: {
         Row: {
-          id:              string
-          pet_id:          string
-          product_name:    string
-          type:            'interno' | 'esterno' | 'entrambi'
           administered_at: string
-          next_due_at:     string | null
-          notes:           string | null
-          created_at:      string
-        }
-        Insert: Omit<Database['public']['Tables']['antiparasitics']['Row'], 'id' | 'created_at'>
-        Update: Partial<Database['public']['Tables']['antiparasitics']['Insert']>
-      }
-      weight_logs: {
-        Row: {
-          id:          string
-          pet_id:      string
-          weight_kg:   number
-          measured_at: string
-          notes:       string | null
-          created_at:  string
-        }
-        Insert: Omit<Database['public']['Tables']['weight_logs']['Row'], 'id' | 'created_at'>
-        Update: Partial<Database['public']['Tables']['weight_logs']['Insert']>
-      }
-      health_events: {
-        Row: {
-          id:             string
-          pet_id:         string
-          event_type:     string
-          occurred_at:    string
-          description:    string | null
-          attachment_url: string | null
-          created_at:     string
-        }
-        Insert: Omit<Database['public']['Tables']['health_events']['Row'], 'id' | 'created_at'>
-        Update: Partial<Database['public']['Tables']['health_events']['Insert']>
-      }
-      medications: {
-        Row: {
-          id:         string
-          pet_id:     string
-          drug_name:  string
-          dosage:     string | null
-          frequency:  string | null
-          start_date: string
-          end_date:   string | null
-          notes:      string | null
           created_at: string
+          id: string
+          next_due_at: string | null
+          notes: string | null
+          pet_id: string
+          product_name: string
+          type: string
         }
-        Insert: Omit<Database['public']['Tables']['medications']['Row'], 'id' | 'created_at'>
-        Update: Partial<Database['public']['Tables']['medications']['Insert']>
+        Insert: {
+          administered_at: string
+          created_at?: string
+          id?: string
+          next_due_at?: string | null
+          notes?: string | null
+          pet_id: string
+          product_name: string
+          type: string
+        }
+        Update: {
+          administered_at?: string
+          created_at?: string
+          id?: string
+          next_due_at?: string | null
+          notes?: string | null
+          pet_id?: string
+          product_name?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "antiparasitics_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       documents: {
         Row: {
-          id:            string
-          pet_id:        string
-          title:         string
-          document_type: 'passaporto' | 'cartella_clinica' | 'ricetta' | 'esame' | 'altro'
-          file_url:      string
-          file_size:     number | null
-          uploaded_at:   string
+          document_type: string
+          file_size: number | null
+          file_url: string
+          id: string
+          pet_id: string
+          title: string
+          uploaded_at: string
         }
-        Insert: Omit<Database['public']['Tables']['documents']['Row'], 'id' | 'uploaded_at'>
-        Update: Partial<Database['public']['Tables']['documents']['Insert']>
+        Insert: {
+          document_type: string
+          file_size?: number | null
+          file_url: string
+          id?: string
+          pet_id: string
+          title: string
+          uploaded_at?: string
+        }
+        Update: {
+          document_type?: string
+          file_size?: number | null
+          file_url?: string
+          id?: string
+          pet_id?: string
+          title?: string
+          uploaded_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "documents_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      health_events: {
+        Row: {
+          attachment_url: string | null
+          created_at: string
+          description: string | null
+          event_type: string
+          id: string
+          occurred_at: string
+          pet_id: string
+        }
+        Insert: {
+          attachment_url?: string | null
+          created_at?: string
+          description?: string | null
+          event_type: string
+          id?: string
+          occurred_at: string
+          pet_id: string
+        }
+        Update: {
+          attachment_url?: string | null
+          created_at?: string
+          description?: string | null
+          event_type?: string
+          id?: string
+          occurred_at?: string
+          pet_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "health_events_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      medications: {
+        Row: {
+          created_at: string
+          dosage: string | null
+          drug_name: string
+          end_date: string | null
+          frequency: string | null
+          id: string
+          notes: string | null
+          pet_id: string
+          start_date: string
+        }
+        Insert: {
+          created_at?: string
+          dosage?: string | null
+          drug_name: string
+          end_date?: string | null
+          frequency?: string | null
+          id?: string
+          notes?: string | null
+          pet_id: string
+          start_date: string
+        }
+        Update: {
+          created_at?: string
+          dosage?: string | null
+          drug_name?: string
+          end_date?: string | null
+          frequency?: string | null
+          id?: string
+          notes?: string | null
+          pet_id?: string
+          start_date?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "medications_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pets: {
+        Row: {
+          birth_date: string | null
+          breed: string | null
+          created_at: string
+          id: string
+          is_active: boolean
+          microchip: string | null
+          name: string
+          notes: string | null
+          owner_id: string
+          photo_url: string | null
+          sex: string
+          species: string
+          updated_at: string
+        }
+        Insert: {
+          birth_date?: string | null
+          breed?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          microchip?: string | null
+          name: string
+          notes?: string | null
+          owner_id: string
+          photo_url?: string | null
+          sex?: string
+          species: string
+          updated_at?: string
+        }
+        Update: {
+          birth_date?: string | null
+          breed?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          microchip?: string | null
+          name?: string
+          notes?: string | null
+          owner_id?: string
+          photo_url?: string | null
+          sex?: string
+          species?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pets_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      processed_paypal_events: {
+        Row: {
+          event_id: string
+          event_type: string | null
+          processed_at: string
+        }
+        Insert: {
+          event_id: string
+          event_type?: string | null
+          processed_at?: string
+        }
+        Update: {
+          event_id?: string
+          event_type?: string | null
+          processed_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          is_admin: boolean
+          paypal_subscription_id: string | null
+          plan: string
+          subscription_expires_at: string | null
+          subscription_status: string | null
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id: string
+          is_admin?: boolean
+          paypal_subscription_id?: string | null
+          plan?: string
+          subscription_expires_at?: string | null
+          subscription_status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          is_admin?: boolean
+          paypal_subscription_id?: string | null
+          plan?: string
+          subscription_expires_at?: string | null
+          subscription_status?: string | null
+          updated_at?: string
+        }
+        Relationships: []
       }
       share_links: {
         Row: {
-          id:         string
-          pet_id:     string
-          token:      string
-          expires_at: string | null
           created_at: string
+          expires_at: string | null
+          id: string
+          pet_id: string
+          token: string
         }
-        Insert: Omit<Database['public']['Tables']['share_links']['Row'], 'id' | 'token' | 'created_at'>
-        Update: Partial<Database['public']['Tables']['share_links']['Insert']>
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          pet_id: string
+          token?: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          pet_id?: string
+          token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "share_links_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vaccinations: {
+        Row: {
+          administered_at: string
+          attachment_url: string | null
+          batch_number: string | null
+          created_at: string
+          id: string
+          next_due_at: string | null
+          notes: string | null
+          pet_id: string
+          vaccine_name: string
+          veterinarian: string | null
+        }
+        Insert: {
+          administered_at: string
+          attachment_url?: string | null
+          batch_number?: string | null
+          created_at?: string
+          id?: string
+          next_due_at?: string | null
+          notes?: string | null
+          pet_id: string
+          vaccine_name: string
+          veterinarian?: string | null
+        }
+        Update: {
+          administered_at?: string
+          attachment_url?: string | null
+          batch_number?: string | null
+          created_at?: string
+          id?: string
+          next_due_at?: string | null
+          notes?: string | null
+          pet_id?: string
+          vaccine_name?: string
+          veterinarian?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vaccinations_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vet_visits: {
+        Row: {
+          attachment_url: string | null
+          clinic: string | null
+          cost: number | null
+          created_at: string
+          diagnosis: string | null
+          id: string
+          notes: string | null
+          pet_id: string
+          reason: string
+          veterinarian: string | null
+          visited_at: string
+        }
+        Insert: {
+          attachment_url?: string | null
+          clinic?: string | null
+          cost?: number | null
+          created_at?: string
+          diagnosis?: string | null
+          id?: string
+          notes?: string | null
+          pet_id: string
+          reason: string
+          veterinarian?: string | null
+          visited_at: string
+        }
+        Update: {
+          attachment_url?: string | null
+          clinic?: string | null
+          cost?: number | null
+          created_at?: string
+          diagnosis?: string | null
+          id?: string
+          notes?: string | null
+          pet_id?: string
+          reason?: string
+          veterinarian?: string | null
+          visited_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vet_visits_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      weight_logs: {
+        Row: {
+          created_at: string
+          id: string
+          measured_at: string
+          notes: string | null
+          pet_id: string
+          weight_kg: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          measured_at: string
+          notes?: string | null
+          pet_id: string
+          weight_kg: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          measured_at?: string
+          notes?: string | null
+          pet_id?: string
+          weight_kg?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "weight_logs_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
-    Views:   Record<string, never>
-    Functions: Record<string, never>
-    Enums:   Record<string, never>
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      [_ in never]: never
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
   }
 }
