@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { supabase } from '@/lib/supabase'
 
@@ -13,18 +13,36 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>
 
 export function RegisterPage() {
+  const navigate = useNavigate()
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormData>({
     resolver: zodResolver(schema),
   })
 
   const onSubmit = async ({ email, password, full_name }: FormData) => {
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: { data: { full_name } },
-    })
-    if (error) toast.error(error.message)
-    else toast.success('Controlla la tua email per confermare la registrazione!')
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { data: { full_name } },
+      })
+
+      if (error) {
+        toast.error(error.message)
+        return
+      }
+
+      if (data.session) {
+        // Email confirmation OFF → sessione attiva subito
+        toast.success('Benvenuto in PetNote! 🐾')
+        navigate('/app/dashboard', { replace: true })
+      } else {
+        // Email confirmation ON → attende conferma
+        toast.success('Controlla la tua email per confermare la registrazione!')
+        navigate('/login', { replace: true })
+      }
+    } catch {
+      toast.error('Errore di rete. Riprova.')
+    }
   }
 
   return (
