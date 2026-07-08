@@ -1,13 +1,13 @@
-import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { ArrowLeft, Pencil, Trash2, Syringe, Stethoscope, Bug, Scale } from 'lucide-react'
 import { toast } from 'sonner'
 import { usePet, usePetPhotoUrl, useDeletePet } from '@/lib/queries/pets'
 import { SPECIES, petAge } from '@/lib/species'
+import { useConfirmTap } from '@/hooks/useConfirmTap'
 
 const SECTIONS = [
   { icon: Syringe,     label: 'Vaccinazioni',    path: 'vaccinations',   ready: true },
-  { icon: Stethoscope, label: 'Visite',          path: 'vet-visits',     ready: false },
+  { icon: Stethoscope, label: 'Visite',          path: 'vet-visits',     ready: true },
   { icon: Bug,         label: 'Antiparassitari', path: 'antiparasitics', ready: true },
   { icon: Scale,       label: 'Peso',            path: 'weight',         ready: false },
 ] as const
@@ -18,14 +18,10 @@ export function PetDetailPage() {
   const { data: pet, isLoading, isError } = usePet(id)
   const { data: photoUrl } = usePetPhotoUrl(pet?.photo_url ?? null)
   const deletePet = useDeletePet()
-  const [confirmDelete, setConfirmDelete] = useState(false)
+  const { tap, isArmed } = useConfirmTap()
+  const confirmDelete = isArmed('delete')
 
-  const onDelete = async () => {
-    if (!confirmDelete) {
-      setConfirmDelete(true)
-      setTimeout(() => setConfirmDelete(false), 3000)
-      return
-    }
+  const onDelete = () => tap('delete', async () => {
     try {
       await deletePet.mutateAsync(id!)
       toast.success('Animale rimosso')
@@ -33,7 +29,7 @@ export function PetDetailPage() {
     } catch {
       toast.error('Rimozione non riuscita')
     }
-  }
+  })
 
   if (isLoading) return <div className="p-4 text-center text-gray-400 text-sm py-16">Caricamento…</div>
   if (isError || !pet) return (

@@ -15,6 +15,7 @@ const PetDetailPage      = lazy(() => import('@/pages/app/PetDetailPage').then(m
 const PetFormPage        = lazy(() => import('@/pages/app/PetFormPage').then(m => ({ default: m.PetFormPage })))
 const VaccinationsPage   = lazy(() => import('@/pages/app/VaccinationsPage').then(m => ({ default: m.VaccinationsPage })))
 const AntiparasiticsPage = lazy(() => import('@/pages/app/AntiparasiticsPage').then(m => ({ default: m.AntiparasiticsPage })))
+const VetVisitsPage      = lazy(() => import('@/pages/app/VetVisitsPage').then(m => ({ default: m.VetVisitsPage })))
 const SettingsPage   = lazy(() => import('@/pages/app/SettingsPage').then(m => ({ default: m.SettingsPage })))
 const AdminPage      = lazy(() => import('@/pages/admin/AdminPage').then(m => ({ default: m.AdminPage })))
 
@@ -55,6 +56,7 @@ export default function App() {
             <Route path="/app/pets/:id/edit" element={<PetFormPage />} />
             <Route path="/app/pets/:id/vaccinations"   element={<VaccinationsPage />} />
             <Route path="/app/pets/:id/antiparasitics" element={<AntiparasiticsPage />} />
+            <Route path="/app/pets/:id/vet-visits"     element={<VetVisitsPage />} />
             <Route path="/app/settings"  element={<SettingsPage />} />
           </Route>
         </Route>

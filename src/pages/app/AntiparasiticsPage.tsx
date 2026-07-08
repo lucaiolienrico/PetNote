@@ -11,6 +11,7 @@ import {
 } from '@/lib/queries/antiparasitics'
 import { ReminderBadge } from '@/components/shared/ReminderBadge'
 import { formatIt } from '@/lib/health'
+import { useConfirmTap } from '@/hooks/useConfirmTap'
 
 const today = () => new Date().toISOString().slice(0, 10)
 
@@ -45,7 +46,7 @@ export function AntiparasiticsPage() {
 
   const [editing, setEditing]   = useState<Antiparasitic | null>(null)
   const [showForm, setShowForm] = useState(false)
-  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
+  const { tap, isArmed } = useConfirmTap()
 
   const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -82,15 +83,14 @@ export function AntiparasiticsPage() {
     }
   }
 
-  const onDelete = async (id: string) => {
-    if (confirmDeleteId !== id) { setConfirmDeleteId(id); setTimeout(() => setConfirmDeleteId(null), 3000); return }
+  const onDelete = (id: string) => tap(id, async () => {
     try {
       await deleteA.mutateAsync(id)
       toast.success('Rimosso')
     } catch {
       toast.error('Rimozione non riuscita')
     }
-  }
+  })
 
   return (
     <div className="p-4 space-y-4">
@@ -172,7 +172,7 @@ export function AntiparasiticsPage() {
                 <ReminderBadge nextDueAt={a.next_due_at} />
                 <button
                   onClick={() => onDelete(a.id)}
-                  className={`p-1 ${confirmDeleteId === a.id ? 'text-red-600' : 'text-gray-300'}`}
+                  className={`p-1 ${isArmed(a.id) ? 'text-red-600' : 'text-gray-300'}`}
                   aria-label="Elimina"
                 >
                   <Trash2 size={16} />

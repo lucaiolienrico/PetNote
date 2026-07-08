@@ -7,6 +7,7 @@ import { toast } from 'sonner'
 import { useAuthStore, selectIsPremium } from '@/stores/auth.store'
 import { useUpdateProfile } from '@/lib/queries/profile'
 import { UpgradeModal } from '@/components/shared/UpgradeModal'
+import { useConfirmTap } from '@/hooks/useConfirmTap'
 
 const schema = z.object({
   full_name: z.string().trim().min(2, 'Nome troppo corto').max(80),
@@ -22,9 +23,10 @@ export function SettingsPage() {
   const isPremium  = useAuthStore(selectIsPremium)
   const updateProfile = useUpdateProfile()
 
-  const [editingName, setEditingName]     = useState(false)
-  const [showUpgrade, setShowUpgrade]     = useState(false)
-  const [confirmLogout, setConfirmLogout] = useState(false)
+  const [editingName, setEditingName] = useState(false)
+  const [showUpgrade, setShowUpgrade] = useState(false)
+  const { tap, isArmed } = useConfirmTap()
+  const confirmLogout = isArmed('logout')
 
   const { register, handleSubmit, reset } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -46,14 +48,7 @@ export function SettingsPage() {
     setEditingName(false)
   }
 
-  const onLogout = async () => {
-    if (!confirmLogout) {
-      setConfirmLogout(true)
-      setTimeout(() => setConfirmLogout(false), 3000)
-      return
-    }
-    await signOut()
-  }
+  const onLogout = () => tap('logout', () => { void signOut() })
 
   const renewalDate = profile?.subscription_expires_at
     ? new Date(profile.subscription_expires_at).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' })
