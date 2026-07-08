@@ -16,3 +16,11 @@
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 }
+
+/* Landing page — ingresso hero. Rispetta prefers-reduced-motion tramite la
+   variante motion-safe: di Tailwind applicata a livello di className, quindi
+   qui basta l'animazione senza guardia duplicata. */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

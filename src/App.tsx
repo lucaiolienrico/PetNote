@@ -7,6 +7,7 @@ import { RequireAuth }  from '@/components/shared/RequireAuth'
 import { RequireGuest } from '@/components/shared/RequireGuest'
 
 // Lazy pages — ogni route = chunk separato
+const LandingPage    = lazy(() => import('@/pages/marketing/LandingPage').then(m => ({ default: m.LandingPage })))
 const LoginPage      = lazy(() => import('@/pages/auth/LoginPage').then(m => ({ default: m.LoginPage })))
 const RegisterPage   = lazy(() => import('@/pages/auth/RegisterPage').then(m => ({ default: m.RegisterPage })))
 const DashboardPage  = lazy(() => import('@/pages/app/DashboardPage').then(m => ({ default: m.DashboardPage })))
@@ -39,9 +40,8 @@ export default function App() {
   return (
     <Suspense fallback={<Spinner />}>
       <Routes>
-        <Route path="/" element={<Navigate to="/app/dashboard" replace />} />
-
         <Route element={<RequireGuest />}>
+          <Route path="/" element={<LandingPage />} />
           <Route element={<AuthLayout />}>
             <Route path="/login"    element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
