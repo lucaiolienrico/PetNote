@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -6,6 +7,7 @@ import { LogOut, Pencil, Check, X } from 'lucide-react'
 import { toast } from 'sonner'
 import { useAuthStore, selectIsPremium } from '@/stores/auth.store'
 import { useUpdateProfile } from '@/lib/queries/profile'
+import { useCancelSubscription } from '@/lib/queries/subscription'
 import { UpgradeModal } from '@/components/shared/UpgradeModal'
 import { useConfirmTap } from '@/hooks/useConfirmTap'
 
@@ -17,21 +19,66 @@ type FormData = z.infer<typeof schema>
 const APP_VERSION = '0.1.0' // bump manuale ad ogni release — no build tool a leggerlo
 
 export function SettingsPage() {
-  const user       = useAuthStore(s => s.user)
-  const profile    = useAuthStore(s => s.profile)
-  const signOut    = useAuthStore(s => s.signOut)
-  const isPremium  = useAuthStore(selectIsPremium)
-  const updateProfile = useUpdateProfile()
+  const user               = useAuthStore(s => s.user)
+  const profile             = useAuthStore(s => s.profile)
+  const signOut             = useAuthStore(s => s.signOut)
+  const refreshProfile      = useAuthStore(s => s.refreshProfile)
+  const isPremium           = useAuthStore(selectIsPremium)
+  const updateProfile       = useUpdateProfile()
+  const cancelSubscription  = useCancelSubscription()
 
+  const [searchParams, setSearchParams] = useSearchParams()
   const [editingName, setEditingName] = useState(false)
   const [showUpgrade, setShowUpgrade] = useState(false)
   const { tap, isArmed } = useConfirmTap()
   const confirmLogout = isArmed('logout')
+  const confirmCancel = isArmed('cancel-subscription')
 
   const { register, handleSubmit, reset } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: { full_name: profile?.full_name ?? '' },
   })
+
+  // Ritorno dal checkout PayPal: il redirect è sincrono, l'attivazione
+  // reale arriva via webhook async (paypal-webhook). Il profilo in
+  // Zustand qui può essere ancora stale — rileggiamo con retry invece
+  // di mostrare "Free" a chi ha appena pagato solo per timing.
+  useEffect(() => {
+    const subscriptionParam = searchParams.get('subscription')
+    if (!subscriptionParam) return
+
+    if (subscriptionParam === 'success') {
+      toast.info('Pagamento ricevuto, stiamo attivando Premium…')
+
+      let attempts = 0
+      const maxAttempts = 4
+      const poll = async () => {
+        await refreshProfile()
+        attempts += 1
+        const active = useAuthStore.getState().profile?.subscription_status === 'active'
+        if (active) {
+          toast.success('Premium attivato!')
+          return
+        }
+        if (attempts < maxAttempts) {
+          setTimeout(poll, 1500)
+        } else {
+          toast.message(
+            'Attivazione in corso, può richiedere qualche minuto. Ricarica la pagina più tardi se il piano non risulta ancora aggiornato.'
+          )
+        }
+      }
+      void poll()
+    } else if (subscriptionParam === 'cancelled') {
+      toast.info('Checkout PayPal annullato.')
+    }
+
+    // Pulisce il query param una tantum — senza questo un refresh manuale
+    // della pagina rifarebbe partire il polling ad ogni reload.
+    setSearchParams({}, { replace: true })
+    // Effetto intenzionalmente single-run all'ingresso pagina.
+    // eslint-disable-next-line
+  }, [])
 
   const saveName = async (data: FormData) => {
     try {
@@ -49,6 +96,18 @@ export function SettingsPage() {
   }
 
   const onLogout = () => tap('logout', () => { void signOut() })
+
+  const handleCancelSubscription = async () => {
+    try {
+      await cancelSubscription.mutateAsync(undefined)
+      toast.success('Cancellazione inviata. Il piano tornerà a Free a breve.')
+      void refreshProfile()
+    } catch {
+      toast.error('Cancellazione non riuscita. Riprova o contatta il supporto.')
+    }
+  }
+
+  const onManageSubscription = () => tap('cancel-subscription', () => { void handleCancelSubscription() })
 
   const renewalDate = profile?.subscription_expires_at
     ? new Date(profile.subscription_expires_at).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' })
@@ -110,11 +169,19 @@ export function SettingsPage() {
               <p className="text-xs text-gray-500">Rinnovo il {renewalDate}</p>
             )}
             <button
-              disabled
-              title="Disponibile a breve"
-              className="w-full border border-gray-200 text-gray-400 rounded-xl py-2.5 text-sm font-semibold cursor-not-allowed"
+              onClick={onManageSubscription}
+              disabled={cancelSubscription.isPending}
+              className={`w-full border rounded-xl py-2.5 text-sm font-semibold transition-colors disabled:opacity-50 ${
+                confirmCancel
+                  ? 'border-red-200 bg-red-50 text-red-600'
+                  : 'border-gray-200 text-gray-600 hover:bg-gray-50'
+              }`}
             >
-              Gestisci abbonamento
+              {cancelSubscription.isPending
+                ? 'Cancellazione in corso…'
+                : confirmCancel
+                  ? 'Tocca di nuovo per confermare'
+                  : 'Gestisci abbonamento'}
             </button>
           </>
         ) : (
