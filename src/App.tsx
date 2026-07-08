@@ -18,6 +18,8 @@ const VaccinationsPage   = lazy(() => import('@/pages/app/VaccinationsPage').the
 const AntiparasiticsPage = lazy(() => import('@/pages/app/AntiparasiticsPage').then(m => ({ default: m.AntiparasiticsPage })))
 const VetVisitsPage      = lazy(() => import('@/pages/app/VetVisitsPage').then(m => ({ default: m.VetVisitsPage })))
 const WeightPage         = lazy(() => import('@/pages/app/WeightPage').then(m => ({ default: m.WeightPage })))
+const AllergiesPage      = lazy(() => import('@/pages/app/AllergiesPage').then(m => ({ default: m.AllergiesPage })))
+const InsurancePage      = lazy(() => import('@/pages/app/InsurancePage').then(m => ({ default: m.InsurancePage })))
 const SettingsPage   = lazy(() => import('@/pages/app/SettingsPage').then(m => ({ default: m.SettingsPage })))
 const AdminPage      = lazy(() => import('@/pages/admin/AdminPage').then(m => ({ default: m.AdminPage })))
 
@@ -59,6 +61,8 @@ export default function App() {
             <Route path="/app/pets/:id/antiparasitics" element={<AntiparasiticsPage />} />
             <Route path="/app/pets/:id/vet-visits"     element={<VetVisitsPage />} />
             <Route path="/app/pets/:id/weight"         element={<WeightPage />} />
+            <Route path="/app/pets/:id/allergies"      element={<AllergiesPage />} />
+            <Route path="/app/pets/:id/insurance"      element={<InsurancePage />} />
             <Route path="/app/settings"  element={<SettingsPage />} />
           </Route>
         </Route>

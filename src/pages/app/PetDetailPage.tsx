@@ -1,15 +1,17 @@
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft, Pencil, Trash2, Syringe, Stethoscope, Bug, Scale } from 'lucide-react'
+import { ArrowLeft, Pencil, Trash2, Syringe, Stethoscope, Bug, Scale, AlertTriangle, ShieldCheck } from 'lucide-react'
 import { toast } from 'sonner'
 import { usePet, usePetPhotoUrl, useDeletePet } from '@/lib/queries/pets'
 import { SPECIES, petAge } from '@/lib/species'
 import { useConfirmTap } from '@/hooks/useConfirmTap'
 
 const SECTIONS = [
-  { icon: Syringe,     label: 'Vaccinazioni',    path: 'vaccinations',   ready: true },
-  { icon: Stethoscope, label: 'Visite',          path: 'vet-visits',     ready: true },
-  { icon: Bug,         label: 'Antiparassitari', path: 'antiparasitics', ready: true },
-  { icon: Scale,       label: 'Peso',            path: 'weight',         ready: true },
+  { icon: Syringe,       label: 'Vaccinazioni',    path: 'vaccinations',   ready: true },
+  { icon: Stethoscope,   label: 'Visite',          path: 'vet-visits',     ready: true },
+  { icon: Bug,           label: 'Antiparassitari', path: 'antiparasitics', ready: true },
+  { icon: Scale,         label: 'Peso',            path: 'weight',         ready: true },
+  { icon: AlertTriangle, label: 'Allergie',        path: 'allergies',      ready: true },
+  { icon: ShieldCheck,   label: 'Assicurazioni',   path: 'insurance',      ready: true },
 ] as const
 
 export function PetDetailPage() {
@@ -98,7 +100,7 @@ export function PetDetailPage() {
         </div>
       )}
 
-      {/* Sezioni sanitarie — vaccinazioni/antiparassitari attive (passaggio 2/9), visite/peso in arrivo */}
+      {/* Sezioni sanitarie — MVP (vaccinazioni/visite/antiparassitari/peso) + Allergie/Assicurazioni */}
       <div className="grid grid-cols-2 gap-3">
         {SECTIONS.map(({ icon: Icon, label, path, ready }) =>
           ready ? (
