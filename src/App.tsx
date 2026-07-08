@@ -11,8 +11,10 @@ const LoginPage      = lazy(() => import('@/pages/auth/LoginPage').then(m => ({ 
 const RegisterPage   = lazy(() => import('@/pages/auth/RegisterPage').then(m => ({ default: m.RegisterPage })))
 const DashboardPage  = lazy(() => import('@/pages/app/DashboardPage').then(m => ({ default: m.DashboardPage })))
 const PetsPage       = lazy(() => import('@/pages/app/PetsPage').then(m => ({ default: m.PetsPage })))
-const PetDetailPage  = lazy(() => import('@/pages/app/PetDetailPage').then(m => ({ default: m.PetDetailPage })))
-const PetFormPage    = lazy(() => import('@/pages/app/PetFormPage').then(m => ({ default: m.PetFormPage })))
+const PetDetailPage      = lazy(() => import('@/pages/app/PetDetailPage').then(m => ({ default: m.PetDetailPage })))
+const PetFormPage        = lazy(() => import('@/pages/app/PetFormPage').then(m => ({ default: m.PetFormPage })))
+const VaccinationsPage   = lazy(() => import('@/pages/app/VaccinationsPage').then(m => ({ default: m.VaccinationsPage })))
+const AntiparasiticsPage = lazy(() => import('@/pages/app/AntiparasiticsPage').then(m => ({ default: m.AntiparasiticsPage })))
 const SettingsPage   = lazy(() => import('@/pages/app/SettingsPage').then(m => ({ default: m.SettingsPage })))
 const AdminPage      = lazy(() => import('@/pages/admin/AdminPage').then(m => ({ default: m.AdminPage })))
 
@@ -51,6 +53,8 @@ export default function App() {
             <Route path="/app/pets/new"      element={<PetFormPage />} />
             <Route path="/app/pets/:id"      element={<PetDetailPage />} />
             <Route path="/app/pets/:id/edit" element={<PetFormPage />} />
+            <Route path="/app/pets/:id/vaccinations"   element={<VaccinationsPage />} />
+            <Route path="/app/pets/:id/antiparasitics" element={<AntiparasiticsPage />} />
             <Route path="/app/settings"  element={<SettingsPage />} />
           </Route>
         </Route>

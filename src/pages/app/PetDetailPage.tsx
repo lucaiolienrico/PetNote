@@ -6,10 +6,10 @@ import { usePet, usePetPhotoUrl, useDeletePet } from '@/lib/queries/pets'
 import { SPECIES, petAge } from '@/lib/species'
 
 const SECTIONS = [
-  { icon: Syringe,     label: 'Vaccinazioni',    hint: 'Passaggio 7-8' },
-  { icon: Stethoscope, label: 'Visite',          hint: 'Passaggio 9' },
-  { icon: Bug,         label: 'Antiparassitari', hint: 'Passaggio 10' },
-  { icon: Scale,       label: 'Peso',            hint: 'Passaggio 11' },
+  { icon: Syringe,     label: 'Vaccinazioni',    path: 'vaccinations',   ready: true },
+  { icon: Stethoscope, label: 'Visite',          path: 'vet-visits',     ready: false },
+  { icon: Bug,         label: 'Antiparassitari', path: 'antiparasitics', ready: true },
+  { icon: Scale,       label: 'Peso',            path: 'weight',         ready: false },
 ] as const
 
 export function PetDetailPage() {
@@ -102,15 +102,27 @@ export function PetDetailPage() {
         </div>
       )}
 
-      {/* Sezioni sanitarie — placeholder passaggi 7-11 */}
+      {/* Sezioni sanitarie — vaccinazioni/antiparassitari attive (passaggio 2/9), visite/peso in arrivo */}
       <div className="grid grid-cols-2 gap-3">
-        {SECTIONS.map(({ icon: Icon, label }) => (
-          <div key={label} className="bg-white rounded-2xl border border-gray-100 p-4 opacity-60">
-            <Icon size={20} className="text-brand-600 mb-2" />
-            <p className="text-sm font-semibold text-gray-900">{label}</p>
-            <p className="text-xs text-gray-400 mt-0.5">In arrivo</p>
-          </div>
-        ))}
+        {SECTIONS.map(({ icon: Icon, label, path, ready }) =>
+          ready ? (
+            <Link
+              key={label}
+              to={`/app/pets/${pet.id}/${path}`}
+              className="bg-white rounded-2xl border border-gray-100 p-4 active:bg-gray-50 transition-colors"
+            >
+              <Icon size={20} className="text-brand-600 mb-2" />
+              <p className="text-sm font-semibold text-gray-900">{label}</p>
+              <p className="text-xs text-gray-400 mt-0.5">Vedi tutte</p>
+            </Link>
+          ) : (
+            <div key={label} className="bg-white rounded-2xl border border-gray-100 p-4 opacity-60">
+              <Icon size={20} className="text-brand-600 mb-2" />
+              <p className="text-sm font-semibold text-gray-900">{label}</p>
+              <p className="text-xs text-gray-400 mt-0.5">In arrivo</p>
+            </div>
+          ),
+        )}
       </div>
     </div>
   )
