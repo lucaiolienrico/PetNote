@@ -4,6 +4,7 @@ import { toast } from 'sonner'
 import { usePet, usePetPhotoUrl, useDeletePet } from '@/lib/queries/pets'
 import { SPECIES, petAge } from '@/lib/species'
 import { useConfirmTap } from '@/hooks/useConfirmTap'
+import { ExportPdfButton } from '@/components/pets/ExportPdfButton'
 
 const SECTIONS = [
   { icon: Syringe,       label: 'Vaccinazioni',    path: 'vaccinations',   ready: true },
@@ -53,6 +54,7 @@ export function PetDetailPage() {
       <div className="flex items-center justify-between pt-2">
         <Link to="/app/pets" className="p-1 text-gray-500"><ArrowLeft size={22} /></Link>
         <div className="flex gap-1">
+          <ExportPdfButton pet={pet} />
           <Link to={`/app/pets/${pet.id}/edit`} className="p-2 text-gray-500 hover:text-brand-600">
             <Pencil size={18} />
           </Link>
