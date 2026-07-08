@@ -6,20 +6,20 @@ import type { Database } from '@/types/database.types'
 type Profile = Database['public']['Tables']['profiles']['Row']
 
 interface AuthStore {
-  user:       User | null
-  profile:    Profile | null
-  loading:    boolean
-  initialize: () => Promise<void>
-  signOut:    () => Promise<void>
+  user:           User | null
+  profile:        Profile | null
+  loading:        boolean
+  initialize:     () => Promise<void>
+  signOut:        () => Promise<void>
+  refreshProfile: () => Promise<void>
 }
 
-export const useAuthStore = create<AuthStore>((set) => ({
+export const useAuthStore = create<AuthStore>((set, get) => ({
   user:    null,
   profile: null,
   loading: true,
 
   initialize: async () => {
-    // Get current session
     const { data: { session } } = await supabase.auth.getSession()
 
     if (session?.user) {
@@ -33,9 +33,6 @@ export const useAuthStore = create<AuthStore>((set) => ({
       set({ user: null, profile: null, loading: false })
     }
 
-    // Subscribe to auth changes.
-    // NB: query Supabase dentro il callback sincrono causano deadlock noto
-    // (supabase-js #762) → defer con setTimeout(0).
     supabase.auth.onAuthStateChange((_event, session) => {
       if (session?.user) {
         set({ user: session.user, loading: false })
@@ -57,9 +54,32 @@ export const useAuthStore = create<AuthStore>((set) => ({
     await supabase.auth.signOut()
     set({ user: null, profile: null })
   },
+
+  // Rilegge il profilo senza toccare la sessione. Serve dopo eventi che il
+  // client non osserva in tempo reale: redirect di ritorno da PayPal e
+  // cancellazione subscription aggiornano il DB via webhook asincrono,
+  // non via onAuthStateChange — nessun altro punto dello store lo saprebbe.
+  refreshProfile: async () => {
+    const user = get().user
+    if (!user) return
+
+    const { data: profile, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', user.id)
+      .single()
+
+    if (error) {
+      // Non sovrascrivere un profilo buono in cache con null per un
+      // blip di rete transitorio.
+      console.error('refreshProfile failed:', error)
+      return
+    }
+
+    set({ profile })
+  },
 }))
 
-// Derived selectors
 export const selectIsPremium = (s: AuthStore) =>
   s.profile?.plan === 'premium' &&
   s.profile?.subscription_status === 'active'
