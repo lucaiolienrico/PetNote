@@ -14,7 +14,7 @@ import { formatIt } from '@/lib/health'
 import { useConfirmTap } from '@/hooks/useConfirmTap'
 
 const today = () => new Date().toISOString().slice(0, 10)
-const BRAND_600 = '#16a34a' // tailwind.config.js brand.600 — Recharts non legge classi utility, serve hex
+const BRAND_600 = '#2563eb' // tailwind.config.js brand.600 — Recharts non legge classi utility, serve hex
 
 // Constraint DB: weight_kg > 0 AND weight_kg < 500 (NUMERIC 5,3)
 const schema = z.object({

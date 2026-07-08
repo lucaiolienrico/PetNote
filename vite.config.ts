@@ -13,7 +13,7 @@ export default defineConfig({
         name: 'PetNote',
         short_name: 'PetNote',
         description: 'La salute del tuo animale, sempre con te',
-        theme_color: '#16a34a',
+        theme_color: '#2563eb',
         background_color: '#ffffff',
         display: 'standalone',
         start_url: '/app/dashboard',
