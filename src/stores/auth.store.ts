@@ -87,3 +87,12 @@ export const selectIsPremium = (s: AuthStore) =>
 export const selectIsAdmin = (s: AuthStore) =>
   s.user?.email === 'lucaiolienrico@gmail.com' &&
   s.profile?.is_admin === true
+
+// Bypass paywall per gli amministratori: is_admin garantisce accesso pieno
+// alle feature Premium senza richiedere una subscription PayPal reale.
+// Tenuto separato da selectIsPremium (verità di fatturazione) per non far
+// credere alla UI billing che esista un abbonamento pagante quando è solo
+// un bypass — altrimenti un admin vedrebbe "Gestisci abbonamento" su una
+// subscription che non esiste.
+export const selectHasFullAccess = (s: AuthStore) =>
+  selectIsPremium(s) || selectIsAdmin(s)

@@ -2,18 +2,18 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Plus, PawPrint } from 'lucide-react'
 import { usePets } from '@/lib/queries/pets'
-import { useAuthStore, selectIsPremium } from '@/stores/auth.store'
+import { useAuthStore, selectHasFullAccess } from '@/stores/auth.store'
 import { PetCard } from '@/components/pets/PetCard'
 import { UpgradeModal } from '@/components/shared/UpgradeModal'
 
 export function PetsPage() {
   const navigate  = useNavigate()
-  const isPremium = useAuthStore(selectIsPremium)
+  const hasFullAccess = useAuthStore(selectHasFullAccess)
   const { data: pets, isLoading } = usePets()
   const [showUpgrade, setShowUpgrade] = useState(false)
 
-  // Paywall: Free = max 1 pet
-  const canAddPet = isPremium || (pets?.length ?? 0) < 1
+  // Paywall: Free = max 1 pet. Admin bypassa (vedi selectHasFullAccess).
+  const canAddPet = hasFullAccess || (pets?.length ?? 0) < 1
   const onAdd = () => canAddPet ? navigate('/app/pets/new') : setShowUpgrade(true)
 
   return (

@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { LogOut, Pencil, Check, X } from 'lucide-react'
 import { toast } from 'sonner'
-import { useAuthStore, selectIsPremium } from '@/stores/auth.store'
+import { useAuthStore, selectIsPremium, selectIsAdmin } from '@/stores/auth.store'
 import { useUpdateProfile } from '@/lib/queries/profile'
 import { useCancelSubscription } from '@/lib/queries/subscription'
 import { UpgradeModal } from '@/components/shared/UpgradeModal'
@@ -24,6 +24,7 @@ export function SettingsPage() {
   const signOut             = useAuthStore(s => s.signOut)
   const refreshProfile      = useAuthStore(s => s.refreshProfile)
   const isPremium           = useAuthStore(selectIsPremium)
+  const isAdmin             = useAuthStore(selectIsAdmin)
   const updateProfile       = useUpdateProfile()
   const cancelSubscription  = useCancelSubscription()
 
@@ -157,13 +158,19 @@ export function SettingsPage() {
         <div className="flex items-center justify-between">
           <p className="text-sm font-semibold text-gray-900">Il tuo piano</p>
           <span className={`text-xs px-2 py-1 rounded-full font-medium ${
-            isPremium ? 'bg-brand-100 text-brand-700' : 'bg-gray-100 text-gray-500'
+            isAdmin ? 'bg-purple-100 text-purple-700' : isPremium ? 'bg-brand-100 text-brand-700' : 'bg-gray-100 text-gray-500'
           }`}>
-            {isPremium ? '⭐ Premium' : 'Free'}
+            {isAdmin ? '🔧 Admin' : isPremium ? '⭐ Premium' : 'Free'}
           </span>
         </div>
 
-        {isPremium ? (
+        {isAdmin ? (
+          // Bypass amministrativo: nessuna subscription PayPal reale dietro,
+          // quindi niente rinnovo/cancellazione — sarebbero fuorvianti.
+          <p className="text-xs text-gray-500">
+            Accesso completo come amministratore — nessun abbonamento richiesto.
+          </p>
+        ) : isPremium ? (
           <>
             {renewalDate && (
               <p className="text-xs text-gray-500">Rinnovo il {renewalDate}</p>
