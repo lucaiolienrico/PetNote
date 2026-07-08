@@ -9,7 +9,7 @@ const SECTIONS = [
   { icon: Syringe,     label: 'Vaccinazioni',    path: 'vaccinations',   ready: true },
   { icon: Stethoscope, label: 'Visite',          path: 'vet-visits',     ready: true },
   { icon: Bug,         label: 'Antiparassitari', path: 'antiparasitics', ready: true },
-  { icon: Scale,       label: 'Peso',            path: 'weight',         ready: false },
+  { icon: Scale,       label: 'Peso',            path: 'weight',         ready: true },
 ] as const
 
 export function PetDetailPage() {
