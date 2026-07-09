@@ -1,170 +1,452 @@
+import { useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft, Pencil, Trash2, Syringe, Stethoscope, Bug, Scale, AlertTriangle, ShieldCheck, Lock } from 'lucide-react'
-import { toast } from 'sonner'
-import { usePet, usePetPhotoUrl, useDeletePet } from '@/lib/queries/pets'
-import { SPECIES, petAge } from '@/lib/species'
-import { useConfirmTap } from '@/hooks/useConfirmTap'
-import { ExportPdfButton } from '@/components/pets/ExportPdfButton'
+import {
+  ArrowLeft, Settings, Camera, Cpu,
+  Syringe, Stethoscope, Bug, Scale, AlertTriangle, ShieldCheck, Bell,
+} from 'lucide-react'
+import { usePet, usePetPhotoUrl } from '@/lib/queries/pets'
+import { useVaccinations }    from '@/lib/queries/vaccinations'
+import { useVetVisits }       from '@/lib/queries/vetVisits'
+import { useWeightLogs }      from '@/lib/queries/weightLogs'
+import { useAntiparasitics }  from '@/lib/queries/antiparasitics'
+import { useAllergies }       from '@/lib/queries/allergies'
+import { useInsurancePolicies } from '@/lib/queries/insurance'
+import { SPECIES, petAge }    from '@/lib/species'
 import { useAuthStore, selectHasFullAccess } from '@/stores/auth.store'
+import { ExportPdfButton }    from '@/components/pets/ExportPdfButton'
+import { UpgradeModal }       from '@/components/shared/UpgradeModal'
+import { StatCard }           from '@/components/pets/dashboard/StatCard'
+import { SectionCard }        from '@/components/pets/dashboard/SectionCard'
+import { ActivityTimeline }   from '@/components/pets/dashboard/ActivityTimeline'
+import type { ActivityItem }  from '@/components/pets/dashboard/ActivityTimeline'
+import { PhotoGallery }       from '@/components/pets/dashboard/PhotoGallery'
+import { ReminderBanner }     from '@/components/pets/dashboard/ReminderBanner'
+import { SECTION_COLORS }     from '@/components/pets/dashboard/sectionColors'
 
-// pro: sezione interamente Premium (0 per Free) — vedi LockedFeature.tsx.
-// Visite e Allergie restano fuori da questo flag: per Free sono
-// accessibili con cap 1 elemento, non bloccate in toto.
-const SECTIONS = [
-  { icon: Syringe,       label: 'Vaccinazioni',    path: 'vaccinations',   ready: true, pro: true },
-  { icon: Stethoscope,   label: 'Visite',          path: 'vet-visits',     ready: true, pro: false },
-  { icon: Bug,           label: 'Antiparassitari', path: 'antiparasitics', ready: true, pro: true },
-  { icon: Scale,         label: 'Peso',            path: 'weight',         ready: true, pro: true },
-  { icon: AlertTriangle, label: 'Allergie',        path: 'allergies',      ready: true, pro: false },
-  { icon: ShieldCheck,   label: 'Assicurazioni',   path: 'insurance',      ready: true, pro: true },
-] as const
+// Count records per calendar month over the last `months` months.
+function monthlyCount(dates: string[], months = 6): number[] {
+  const now = new Date()
+  const result: number[] = Array<number>(months).fill(0)
+  for (const raw of dates) {
+    const d = new Date(raw)
+    const diff =
+      (now.getFullYear() - d.getFullYear()) * 12 +
+      (now.getMonth() - d.getMonth())
+    if (diff >= 0 && diff < months) {
+      result[months - 1 - diff]++
+    }
+  }
+  return result
+}
+
+// Timezone-safe parse for date-only strings (e.g. "2024-03-18").
+function parseLocalDate(dateStr: string): Date {
+  const parts = dateStr.split('-')
+  return new Date(
+    parseInt(parts[0] ?? '2000', 10),
+    parseInt(parts[1] ?? '1', 10) - 1,
+    parseInt(parts[2] ?? '1', 10),
+  )
+}
+
+function fmtDate(dateStr: string): string {
+  return parseLocalDate(dateStr).toLocaleDateString('it-IT', {
+    day: '2-digit', month: 'short', year: 'numeric',
+  })
+}
 
 export function PetDetailPage() {
-  const { id }   = useParams<{ id: string }>()
-  const navigate = useNavigate()
-  const hasFullAccess = useAuthStore(selectHasFullAccess)
-  const { data: pet, isLoading, isError } = usePet(id)
-  const { data: photoUrl } = usePetPhotoUrl(pet?.photo_url ?? null)
-  const deletePet = useDeletePet()
-  const { tap, isArmed } = useConfirmTap()
-  const confirmDelete = isArmed('delete')
+  const { id }         = useParams<{ id: string }>()
+  const navigate       = useNavigate()
+  const hasFullAccess  = useAuthStore(selectHasFullAccess)
+  const [showUpgrade, setShowUpgrade] = useState(false)
 
-  const onDelete = () => tap('delete', async () => {
-    try {
-      await deletePet.mutateAsync(id!)
-      toast.success('Animale rimosso')
-      navigate('/app/pets', { replace: true })
-    } catch {
-      toast.error('Rimozione non riuscita')
-    }
-  })
+  const { data: pet, isLoading, isError }  = usePet(id)
+  const { data: photoUrl }                 = usePetPhotoUrl(pet?.photo_url ?? null)
+  const { data: vaccinations    = [] }     = useVaccinations(id)
+  const { data: vetVisits       = [] }     = useVetVisits(id)
+  const { data: weightLogs      = [] }     = useWeightLogs(id)
+  const { data: antiparasitics  = [] }     = useAntiparasitics(id)
+  const { data: allergies       = [] }     = useAllergies(id)
+  const { data: insurancePolicies = [] }   = useInsurancePolicies(id)
 
-  if (isLoading) return <div className="p-4 text-center text-slate-500 text-sm py-16">Caricamento…</div>
-  if (isError || !pet) return (
-    <div className="p-4 text-center text-slate-500 text-sm py-16">
-      Animale non trovato. <Link to="/app/pets" className="text-brand-600 font-medium">Torna alla lista</Link>
-    </div>
+  // ── Derived values ──────────────────────────────────────────────────────────
+
+  const latestWeight = weightLogs[0]?.weight_kg ?? null
+  const prevWeight   = weightLogs[1]?.weight_kg ?? null
+
+  // Most-recently-administered vaccination/antiparasitic (hooks return
+  // next_due_at ASC, so we need to re-find the latest by administered_at).
+  const lastVacc = useMemo(
+    () => [...vaccinations].sort((a, b) => b.administered_at.localeCompare(a.administered_at))[0],
+    [vaccinations],
+  )
+  const lastAnti = useMemo(
+    () => [...antiparasitics].sort((a, b) => b.administered_at.localeCompare(a.administered_at))[0],
+    [antiparasitics],
   )
 
-  const info: Array<[string, string | null]> = [
-    ['Specie',    SPECIES[pet.species].label],
-    ['Razza',     pet.breed],
-    ['Sesso',     pet.sex === 'non_specificato' ? null : pet.sex === 'maschio' ? 'Maschio' : 'Femmina'],
-    ['Età',       petAge(pet.birth_date)],
-    ['Microchip', pet.microchip],
-  ]
+  const activeInsurance = insurancePolicies.find(
+    p => !p.end_date || parseLocalDate(p.end_date) >= new Date(),
+  )
+
+  // ── Next upcoming reminder (Premium only) ───────────────────────────────────
+  const nextReminder = useMemo(() => {
+    if (!hasFullAccess) return null
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+
+    type Candidate = { label: string; sublabel: string; dueDate: Date }
+    const candidates: Candidate[] = []
+
+    for (const v of vaccinations) {
+      if (!v.next_due_at) continue
+      const due = parseLocalDate(v.next_due_at)
+      if (due >= today) candidates.push({ label: v.vaccine_name, sublabel: 'Vaccinazione', dueDate: due })
+    }
+    for (const a of antiparasitics) {
+      if (!a.next_due_at) continue
+      const due = parseLocalDate(a.next_due_at)
+      if (due >= today) candidates.push({ label: a.product_name, sublabel: 'Antiparassitario', dueDate: due })
+    }
+
+    if (!candidates.length) return null
+    candidates.sort((a, b) => a.dueDate.getTime() - b.dueDate.getTime())
+    const first = candidates[0]!
+    const daysUntil = Math.max(0, Math.ceil(
+      (first.dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
+    ))
+    return { label: first.label, sublabel: first.sublabel, daysUntil }
+  }, [hasFullAccess, vaccinations, antiparasitics])
+
+  // Count of reminders due within 30 days (Premium only).
+  const reminderCount = useMemo(() => {
+    if (!hasFullAccess) return 0
+    const today = new Date(); today.setHours(0, 0, 0, 0)
+    const in30  = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000)
+    let n = 0
+    for (const v of vaccinations) {
+      if (v.next_due_at) { const d = parseLocalDate(v.next_due_at); if (d >= today && d <= in30) n++ }
+    }
+    for (const a of antiparasitics) {
+      if (a.next_due_at) { const d = parseLocalDate(a.next_due_at); if (d >= today && d <= in30) n++ }
+    }
+    return n
+  }, [hasFullAccess, vaccinations, antiparasitics])
+
+  // ── Activity timeline ───────────────────────────────────────────────────────
+  const recentActivity = useMemo((): ActivityItem[] => {
+    const items: ActivityItem[] = []
+
+    for (const v of vaccinations) {
+      items.push({ key: `vacc-${v.id}`, section: 'vaccinations', title: v.vaccine_name,
+        subtitle: v.veterinarian ?? 'Vaccinazione', date: v.administered_at })
+    }
+    for (const v of vetVisits) {
+      items.push({ key: `vet-${v.id}`, section: 'vet-visits', title: v.reason,
+        subtitle: v.clinic ?? v.veterinarian ?? 'Visita veterinaria', date: v.visited_at })
+    }
+    for (const w of weightLogs) {
+      items.push({ key: `weight-${w.id}`, section: 'weight', title: `${w.weight_kg} kg`,
+        subtitle: 'Peso registrato', date: w.measured_at })
+    }
+    for (const a of antiparasitics) {
+      items.push({ key: `anti-${a.id}`, section: 'antiparasitics', title: a.product_name,
+        subtitle: a.type, date: a.administered_at })
+    }
+    for (const a of allergies) {
+      items.push({ key: `allergy-${a.id}`, section: 'allergies', title: a.allergen,
+        subtitle: a.severity, date: a.diagnosed_at ?? a.created_at })
+    }
+    for (const p of insurancePolicies) {
+      items.push({ key: `ins-${p.id}`, section: 'insurance', title: p.provider,
+        subtitle: p.policy_number ? `N° ${p.policy_number}` : 'Assicurazione', date: p.start_date })
+    }
+
+    return items
+      .sort((a, b) => b.date.localeCompare(a.date))
+      .slice(0, 5)
+  }, [vaccinations, vetVisits, weightLogs, antiparasitics, allergies, insurancePolicies])
+
+  // ── Sparklines ──────────────────────────────────────────────────────────────
+  const vaccSparkData  = monthlyCount(vaccinations.map(v => v.administered_at))
+  const visitSparkData = monthlyCount(vetVisits.map(v => v.visited_at))
+  const weightSparkData = [...weightLogs].reverse().map(w => Number(w.weight_kg))
+
+  // ── Render guards ───────────────────────────────────────────────────────────
+  if (isLoading) {
+    return <div className="p-4 text-center text-slate-500 text-sm py-16">Caricamento…</div>
+  }
+  if (isError || !pet) {
+    return (
+      <div className="p-4 text-center text-slate-500 text-sm py-16">
+        Animale non trovato.{' '}
+        <Link to="/app/pets" className="text-brand-600 font-medium">Torna alla lista</Link>
+      </div>
+    )
+  }
+
+  const species = SPECIES[pet.species]
+  const age     = petAge(pet.birth_date)
+
+  const subtitleParts = [
+    pet.breed,
+    pet.sex !== 'non_specificato'
+      ? (pet.sex === 'maschio' ? 'Maschio' : 'Femmina')
+      : null,
+  ].filter((x): x is string => x !== null)
+
+  const metaParts = [
+    age,
+    latestWeight !== null ? `${latestWeight} kg` : null,
+  ].filter((x): x is string => x !== null)
+
+  const weightSublabel = prevWeight !== null
+    ? `Prec. ${prevWeight} kg`
+    : latestWeight !== null ? 'Prima rilevazione' : 'Nessun dato'
 
   return (
-    <div className="p-4 space-y-4">
-      <div className="flex items-center justify-between pt-2">
-        {/* -ml-2.5: compensa il padding del tap target (2.5) per allineare
-            otticamente l'icona al bordo pagina, invariato per l'utente. */}
-        <Link
-          to="/app/pets"
-          className="-ml-2.5 p-2.5 rounded-full text-slate-900 hover:text-brand-600 active:bg-slate-100 transition-colors"
-          aria-label="Torna alla lista animali"
-        >
-          <ArrowLeft size={22} />
-        </Link>
-        {/* -mr-2.5: stesso principio, allinea l'ultima icona (Trash2) al bordo destro. */}
-        <div className="flex items-center gap-1 -mr-2.5">
-          <ExportPdfButton pet={pet} />
+    <div className="pb-28">
+
+      {/* ── HEADER ── */}
+      <div className="relative bg-gradient-to-b from-blue-50 to-slate-50 px-4 pt-4 pb-6">
+        {/* Nav row */}
+        <div className="flex items-center justify-between mb-5">
+          <Link
+            to="/app/pets"
+            className="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center active:bg-slate-50 transition-colors"
+            aria-label="Torna alla lista animali"
+          >
+            <ArrowLeft size={20} className="text-slate-700" />
+          </Link>
           <Link
             to={`/app/pets/${pet.id}/edit`}
-            className="p-2.5 rounded-full text-slate-500 hover:text-brand-600 active:bg-slate-100 transition-colors"
+            className="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center active:bg-slate-50 transition-colors"
             aria-label="Modifica animale"
           >
-            <Pencil size={20} />
+            <Settings size={20} className="text-slate-700" />
           </Link>
-          <button
-            onClick={onDelete}
-            disabled={deletePet.isPending}
-            className={`p-2.5 rounded-full transition-colors ${confirmDelete ? 'text-red-600 bg-red-50' : 'text-slate-500 hover:text-red-600 active:bg-slate-100'}`}
-            aria-label={confirmDelete ? 'Conferma rimozione' : 'Rimuovi animale'}
-          >
-            <Trash2 size={20} />
-          </button>
         </div>
-      </div>
 
-      {confirmDelete && (
-        <p className="text-center text-xs text-red-600 font-medium -mt-2">
-          Tocca di nuovo il cestino per confermare
-        </p>
-      )}
-
-      {/* Header profilo */}
-      <div className="flex flex-col items-center gap-2">
-        <div className="w-24 h-24 rounded-full bg-brand-50 ring-1 ring-brand-100 flex items-center justify-center overflow-hidden">
-          {photoUrl
-            ? <img src={photoUrl} alt={pet.name} className="w-full h-full object-cover" />
-            : <span className="text-4xl">{SPECIES[pet.species].emoji}</span>}
-        </div>
-        <h1 className="text-3xl font-bold text-slate-900 tracking-tight">{pet.name}</h1>
-      </div>
-
-      {/* Info */}
-      <div className="bg-white rounded-2xl border border-slate-100 divide-y divide-slate-100 shadow-sm shadow-slate-200/40">
-        {info.filter(([, v]) => v).map(([k, v]) => (
-          <div key={k} className="flex items-center justify-between gap-4 px-4 py-3.5 text-sm">
-            <span className="shrink-0 text-slate-500">{k}</span>
-            {/* Microchip: stringa numerica lunga → font leggermente ridotto,
-                tabular-nums per allineamento cifre, break-all come rete di
-                sicurezza sui viewport più stretti (<360px). */}
-            <span
-              className={
-                k === 'Microchip'
-                  ? 'text-right text-[13px] font-semibold tabular-nums tracking-tight text-slate-900 break-all'
-                  : 'text-right font-semibold text-slate-900'
+        {/* Photo + info row */}
+        <div className="flex items-start gap-4">
+          {/* Photo with ring + camera button */}
+          <div className="relative flex-shrink-0">
+            <div className="w-[140px] h-[140px] rounded-full border-4 border-blue-400 overflow-hidden bg-blue-50 flex items-center justify-center">
+              {photoUrl
+                ? <img src={photoUrl} alt={pet.name} className="w-full h-full object-cover" />
+                : <span className="text-5xl select-none">{species.emoji}</span>
               }
-            >
-              {v}
-            </span>
-          </div>
-        ))}
-      </div>
-
-      {pet.notes && (
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm shadow-slate-200/40 p-4">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-1">Note</p>
-          <p className="text-sm text-slate-700 whitespace-pre-wrap">{pet.notes}</p>
-        </div>
-      )}
-
-      {/* Sezioni sanitarie — MVP (vaccinazioni/visite/antiparassitari/peso) + Allergie/Assicurazioni */}
-      <div className="grid grid-cols-2 gap-3">
-        {SECTIONS.map(({ icon: Icon, label, path, ready, pro }) =>
-          ready ? (
-            <Link
-              key={label}
-              to={`/app/pets/${pet.id}/${path}`}
-              className="relative bg-white rounded-2xl border border-slate-100 shadow-sm shadow-slate-200/40 p-4 active:bg-slate-50 transition-colors"
-            >
-              {pro && !hasFullAccess && (
-                <span className="absolute top-3 right-3 w-5 h-5 rounded-full bg-slate-50 flex items-center justify-center">
-                  <Lock size={11} className="text-slate-400" />
-                </span>
-              )}
-              <Icon size={22} className="text-brand-600 mb-2" />
-              <p className="text-sm font-semibold text-slate-900">{label}</p>
-              <p className="text-xs text-slate-500 mt-0.5">
-                {pro && !hasFullAccess ? 'Premium' : 'Vedi tutte'}
-              </p>
-            </Link>
-          ) : (
-            <div key={label} className="bg-white rounded-2xl border border-slate-100 p-4 opacity-60">
-              <Icon size={22} className="text-brand-600 mb-2" />
-              <p className="text-sm font-semibold text-slate-900">{label}</p>
-              <p className="text-xs text-slate-500 mt-0.5">In arrivo</p>
             </div>
-          ),
-        )}
+            <button
+              type="button"
+              onClick={() => navigate(`/app/pets/${pet.id}/edit`)}
+              className="absolute bottom-1 right-1 w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center shadow-md active:bg-blue-700 transition-colors"
+              aria-label="Cambia foto animale"
+            >
+              <Camera size={16} className="text-white" />
+            </button>
+          </div>
+
+          {/* Name, species badge, subtitle, microchip */}
+          <div className="flex-1 min-w-0 pt-1">
+            <span className="inline-flex items-center gap-1.5 bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full mb-2">
+              {species.emoji} {species.label}
+            </span>
+            <h1 className="text-4xl font-bold text-slate-900 tracking-tight leading-tight">
+              {pet.name}
+            </h1>
+            {subtitleParts.length > 0 && (
+              <p className="text-sm text-slate-500 mt-1">{subtitleParts.join(' • ')}</p>
+            )}
+            {metaParts.length > 0 && (
+              <p className="text-sm text-slate-500">{metaParts.join(' • ')}</p>
+            )}
+            {pet.microchip && (
+              <div className="inline-flex items-center gap-1.5 mt-2 border border-slate-200 bg-white rounded-full px-3 py-1">
+                <Cpu size={11} className="text-slate-500" />
+                <span className="font-mono text-[11px] text-slate-600 tracking-tight">
+                  {pet.microchip}
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
-      {/* Report PDF completo — CTA piena larghezza, sotto la sezione Allergie.
-          Riusa la stessa logica di ExportPdfButton (variant='cta'): nessuna
-          duplicazione della generazione PDF già presente in header. */}
-      <ExportPdfButton pet={pet} variant="cta" />
+      <div className="px-4 space-y-4 mt-4">
+
+        {/* ── REMINDER BANNER ── */}
+        {nextReminder && (
+          <ReminderBanner
+            label={nextReminder.label}
+            sublabel={nextReminder.sublabel}
+            daysUntil={nextReminder.daysUntil}
+          />
+        )}
+
+        {/* ── STAT CARDS — 2×2 mobile / 4×1 desktop ── */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <StatCard
+            label="Vaccinazioni"
+            value={vaccinations.length}
+            sublabel="registrate"
+            icon={Syringe}
+            iconBg={SECTION_COLORS.vaccinations.iconBg}
+            iconText={SECTION_COLORS.vaccinations.iconText}
+            sparkData={vaccSparkData}
+            sparkHex={SECTION_COLORS.vaccinations.sparkHex}
+            locked={!hasFullAccess}
+          />
+          <StatCard
+            label="Visite"
+            value={vetVisits.length}
+            sublabel="effettuate"
+            icon={Stethoscope}
+            iconBg={SECTION_COLORS['vet-visits'].iconBg}
+            iconText={SECTION_COLORS['vet-visits'].iconText}
+            sparkData={visitSparkData}
+            sparkHex={SECTION_COLORS['vet-visits'].sparkHex}
+          />
+          <StatCard
+            label="Peso attuale"
+            value={latestWeight !== null ? `${latestWeight} kg` : '—'}
+            sublabel={weightSublabel}
+            icon={Scale}
+            iconBg={SECTION_COLORS.weight.iconBg}
+            iconText={SECTION_COLORS.weight.iconText}
+            sparkData={weightSparkData}
+            sparkHex={SECTION_COLORS.weight.sparkHex}
+            locked={!hasFullAccess}
+          />
+          <StatCard
+            label="Promemoria"
+            value={reminderCount}
+            sublabel="nei prossimi 30 gg"
+            icon={Bell}
+            iconBg="bg-amber-100"
+            iconText="text-amber-600"
+            sparkData={[]}
+            sparkHex="#d97706"
+            locked={!hasFullAccess}
+          />
+        </div>
+
+        {/* ── SECTION CARDS — 2 cols mobile / 3 cols desktop ── */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <SectionCard
+            petId={pet.id}
+            path="vaccinations"
+            label="Vaccinazioni"
+            icon={Syringe}
+            iconBg={SECTION_COLORS.vaccinations.iconBg}
+            iconText={SECTION_COLORS.vaccinations.iconText}
+            count={`${vaccinations.length} registrate`}
+            lastLabel={lastVacc ? `Ultima: ${fmtDate(lastVacc.administered_at)}` : undefined}
+            locked={!hasFullAccess}
+            onLockClick={() => setShowUpgrade(true)}
+          />
+          <SectionCard
+            petId={pet.id}
+            path="vet-visits"
+            label="Visite"
+            icon={Stethoscope}
+            iconBg={SECTION_COLORS['vet-visits'].iconBg}
+            iconText={SECTION_COLORS['vet-visits'].iconText}
+            count={`${vetVisits.length} ${vetVisits.length === 1 ? 'visita' : 'visite'}`}
+            lastLabel={vetVisits[0] ? `Ultima: ${fmtDate(vetVisits[0].visited_at)}` : undefined}
+            locked={false}
+            onLockClick={() => setShowUpgrade(true)}
+          />
+          <SectionCard
+            petId={pet.id}
+            path="weight"
+            label="Peso"
+            icon={Scale}
+            iconBg={SECTION_COLORS.weight.iconBg}
+            iconText={SECTION_COLORS.weight.iconText}
+            count={latestWeight !== null ? `${latestWeight} kg` : '—'}
+            lastLabel={weightLogs[0] ? `Aggiornato: ${fmtDate(weightLogs[0].measured_at)}` : undefined}
+            locked={!hasFullAccess}
+            onLockClick={() => setShowUpgrade(true)}
+          />
+          <SectionCard
+            petId={pet.id}
+            path="antiparasitics"
+            label="Antiparassitari"
+            icon={Bug}
+            iconBg={SECTION_COLORS.antiparasitics.iconBg}
+            iconText={SECTION_COLORS.antiparasitics.iconText}
+            count={antiparasitics.length > 0 ? 'Protezione attiva' : 'Nessun record'}
+            lastLabel={lastAnti ? `Ultimo: ${fmtDate(lastAnti.administered_at)}` : undefined}
+            locked={!hasFullAccess}
+            onLockClick={() => setShowUpgrade(true)}
+          />
+          <SectionCard
+            petId={pet.id}
+            path="allergies"
+            label="Allergie"
+            icon={AlertTriangle}
+            iconBg={SECTION_COLORS.allergies.iconBg}
+            iconText={SECTION_COLORS.allergies.iconText}
+            count={
+              allergies.length > 0
+                ? `${allergies.length} ${allergies.length === 1 ? 'nota' : 'note'}`
+                : 'Nessuna nota'
+            }
+            lastLabel={
+              allergies[0]
+                ? `Ultima: ${fmtDate(allergies[0].diagnosed_at ?? allergies[0].created_at)}`
+                : undefined
+            }
+            locked={false}
+            onLockClick={() => setShowUpgrade(true)}
+          />
+          <SectionCard
+            petId={pet.id}
+            path="insurance"
+            label="Assicurazioni"
+            icon={ShieldCheck}
+            iconBg={SECTION_COLORS.insurance.iconBg}
+            iconText={SECTION_COLORS.insurance.iconText}
+            count={
+              activeInsurance
+                ? 'Polizza attiva'
+                : insurancePolicies.length > 0 ? 'Scaduta' : 'Nessuna polizza'
+            }
+            lastLabel={insurancePolicies[0] ? `Dal: ${fmtDate(insurancePolicies[0].start_date)}` : undefined}
+            locked={!hasFullAccess}
+            onLockClick={() => setShowUpgrade(true)}
+          />
+        </div>
+
+        {/* ── ACTIVITY TIMELINE + PHOTO GALLERY ── */}
+        <div className="flex flex-col sm:flex-row gap-4">
+          {/* Timeline — 60% on desktop */}
+          <div className="sm:flex-[3] min-w-0 bg-white rounded-2xl border border-slate-100 shadow-sm shadow-slate-200/40 p-4">
+            <p className="text-sm font-semibold text-slate-900 mb-4">Attività recenti</p>
+            <ActivityTimeline items={recentActivity} />
+          </div>
+
+          {/* Gallery — 40% on desktop */}
+          <div className="sm:flex-[2] bg-white rounded-2xl border border-slate-100 shadow-sm shadow-slate-200/40 p-4">
+            <PhotoGallery
+              petId={pet.id}
+              petName={pet.name}
+              photoUrl={photoUrl}
+            />
+          </div>
+        </div>
+
+      </div>
+
+      {/* ── FLOATING PDF BUTTON — above bottom nav ── */}
+      {/* w-48 = 192px: enough for "Genera Report PDF" + icon + gap, no template literal needed */}
+      <div className="fixed bottom-20 right-4 z-40 shadow-xl rounded-2xl w-48">
+        <ExportPdfButton pet={pet} variant="cta" />
+      </div>
+
+      <UpgradeModal open={showUpgrade} onClose={() => setShowUpgrade(false)} />
     </div>
   )
 }

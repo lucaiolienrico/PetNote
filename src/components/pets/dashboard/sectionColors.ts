@@ -1,0 +1,54 @@
+export type SectionKey =
+  | 'vaccinations'
+  | 'vet-visits'
+  | 'weight'
+  | 'antiparasitics'
+  | 'allergies'
+  | 'insurance'
+
+export interface SectionColors {
+  iconBg:   string
+  iconText: string
+  dotBg:    string
+  sparkHex: string
+}
+
+// Static map — never use template literals for color classes (Tailwind JIT purge).
+export const SECTION_COLORS: Record<SectionKey, SectionColors> = {
+  vaccinations: {
+    iconBg:   'bg-blue-100',
+    iconText: 'text-blue-600',
+    dotBg:    'bg-blue-500',
+    sparkHex: '#2563eb',
+  },
+  'vet-visits': {
+    iconBg:   'bg-green-100',
+    iconText: 'text-green-600',
+    dotBg:    'bg-green-500',
+    sparkHex: '#16a34a',
+  },
+  weight: {
+    iconBg:   'bg-violet-100',
+    iconText: 'text-violet-600',
+    dotBg:    'bg-violet-500',
+    sparkHex: '#7c3aed',
+  },
+  antiparasitics: {
+    iconBg:   'bg-amber-100',
+    iconText: 'text-amber-600',
+    dotBg:    'bg-amber-500',
+    sparkHex: '#d97706',
+  },
+  allergies: {
+    iconBg:   'bg-red-100',
+    iconText: 'text-red-600',
+    dotBg:    'bg-red-500',
+    sparkHex: '#dc2626',
+  },
+  insurance: {
+    iconBg:   'bg-teal-100',
+    iconText: 'text-teal-600',
+    dotBg:    'bg-teal-500',
+    sparkHex: '#0d9488',
+  },
+}
