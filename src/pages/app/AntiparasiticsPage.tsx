@@ -12,6 +12,8 @@ import {
 import { ReminderBadge } from '@/components/shared/ReminderBadge'
 import { formatIt } from '@/lib/health'
 import { useConfirmTap } from '@/hooks/useConfirmTap'
+import { useAuthStore, selectHasFullAccess } from '@/stores/auth.store'
+import { LockedFeature } from '@/components/shared/LockedFeature'
 
 const today = () => new Date().toISOString().slice(0, 10)
 
@@ -37,7 +39,17 @@ const nn = (v?: string) => (v && v.trim() !== '' ? v.trim() : null)
 const inputCls = 'w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500'
 const labelCls = 'block text-xs font-medium text-gray-500 mb-1'
 
+// Pro-only totale — vedi VaccinationsPage.tsx per il razionale.
 export function AntiparasiticsPage() {
+  const { id: petId } = useParams<{ id: string }>()
+  const hasFullAccess = useAuthStore(selectHasFullAccess)
+  if (!hasFullAccess) {
+    return <LockedFeature title="Antiparassitari" icon={Bug} backTo={`/app/pets/${petId}`} />
+  }
+  return <AntiparasiticsPageContent />
+}
+
+function AntiparasiticsPageContent() {
   const { id: petId } = useParams<{ id: string }>()
   const { data: antiparasitics, isLoading } = useAntiparasitics(petId)
   const createA = useCreateAntiparasitic(petId!)

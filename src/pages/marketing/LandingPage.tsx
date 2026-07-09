@@ -42,7 +42,7 @@ const FAQ = [
   },
   {
     q: 'Posso tracciare più di un animale?',
-    a: 'Il piano Free include 1 animale con tutte le funzionalità sanitarie. Con Premium gli animali sono illimitati.',
+    a: 'Il piano Free include 1 animale, con 1 visita veterinaria e 1 allergia registrabili. Con Premium sblocchi vaccinazioni, antiparassitari, peso, assicurazioni e animali illimitati.',
   },
   {
     q: 'I miei dati sono privati?',
@@ -207,8 +207,8 @@ export function LandingPage() {
             <p className="text-xs text-gray-400 mb-5">per sempre</p>
             <ul className="space-y-2.5 text-sm text-gray-600">
               <li className="flex items-center gap-2"><Check size={15} className="text-brand-600 flex-shrink-0" /> 1 animale</li>
-              <li className="flex items-center gap-2"><Check size={15} className="text-brand-600 flex-shrink-0" /> Vaccinazioni, visite, antiparassitari</li>
-              <li className="flex items-center gap-2"><Check size={15} className="text-brand-600 flex-shrink-0" /> Grafico peso</li>
+              <li className="flex items-center gap-2"><Check size={15} className="text-brand-600 flex-shrink-0" /> 1 visita veterinaria</li>
+              <li className="flex items-center gap-2"><Check size={15} className="text-brand-600 flex-shrink-0" /> 1 allergia registrata</li>
             </ul>
           </div>
           <div className="bg-white rounded-2xl border-2 border-brand-600 p-6 relative">
@@ -220,8 +220,9 @@ export function LandingPage() {
             <p className="text-xs text-gray-400 mb-5">oppure €34,99/anno</p>
             <ul className="space-y-2.5 text-sm text-gray-600">
               <li className="flex items-center gap-2"><Check size={15} className="text-brand-600 flex-shrink-0" /> Animali illimitati</li>
-              <li className="flex items-center gap-2"><Check size={15} className="text-brand-600 flex-shrink-0" /> Tutto quello che c'è nel Free</li>
-              <li className="flex items-center gap-2"><Check size={15} className="text-brand-600 flex-shrink-0" /> Disdici quando vuoi, in un tap</li>
+              <li className="flex items-center gap-2"><Check size={15} className="text-brand-600 flex-shrink-0" /> Vaccinazioni, antiparassitari, peso</li>
+              <li className="flex items-center gap-2"><Check size={15} className="text-brand-600 flex-shrink-0" /> Visite e allergie illimitate</li>
+              <li className="flex items-center gap-2"><Check size={15} className="text-brand-600 flex-shrink-0" /> Assicurazioni, documenti, reminder</li>
             </ul>
           </div>
         </div>

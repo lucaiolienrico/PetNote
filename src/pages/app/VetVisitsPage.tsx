@@ -11,6 +11,9 @@ import {
 } from '@/lib/queries/vetVisits'
 import { formatIt } from '@/lib/health'
 import { useConfirmTap } from '@/hooks/useConfirmTap'
+import { useAuthStore, selectHasFullAccess } from '@/stores/auth.store'
+import { FREE_LIMITS, PlanLimitError } from '@/lib/planLimits'
+import { UpgradeModal } from '@/components/shared/UpgradeModal'
 
 const today = () => new Date().toISOString().slice(0, 10)
 
@@ -33,14 +36,19 @@ const eur = new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' 
 
 export function VetVisitsPage() {
   const { id: petId } = useParams<{ id: string }>()
+  const hasFullAccess = useAuthStore(selectHasFullAccess)
   const { data: visits, isLoading } = useVetVisits(petId)
-  const createVisit = useCreateVetVisit(petId!)
+  const createVisit = useCreateVetVisit(petId!, hasFullAccess)
   const updateVisit = useUpdateVetVisit(petId!)
   const deleteVisit = useDeleteVetVisit(petId!)
 
   const [editing, setEditing]   = useState<VetVisit | null>(null)
   const [showForm, setShowForm] = useState(false)
+  const [showUpgrade, setShowUpgrade] = useState(false)
   const { tap, isArmed } = useConfirmTap()
+
+  // Free: 1 visita per animale. Oltre soglia → upsell invece del form.
+  const canAdd = hasFullAccess || (visits?.length ?? 0) < FREE_LIMITS.vetVisitsPerPet
 
   const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -76,7 +84,12 @@ export function VetVisitsPage() {
       else         await createVisit.mutateAsync(payload)
       toast.success(editing ? 'Visita aggiornata' : 'Visita registrata')
       setShowForm(false)
-    } catch {
+    } catch (err) {
+      if (err instanceof PlanLimitError) {
+        setShowForm(false)
+        setShowUpgrade(true)
+        return
+      }
       toast.error('Salvataggio non riuscito')
     }
   }
@@ -98,7 +111,10 @@ export function VetVisitsPage() {
           <h1 className="text-xl font-bold text-gray-900">Visite veterinarie</h1>
         </div>
         {!showForm && (
-          <button onClick={openNew} className="flex items-center gap-1.5 bg-brand-600 text-white rounded-xl px-3.5 py-2 text-sm font-semibold hover:bg-brand-700">
+          <button
+            onClick={() => canAdd ? openNew() : setShowUpgrade(true)}
+            className="flex items-center gap-1.5 bg-brand-600 text-white rounded-xl px-3.5 py-2 text-sm font-semibold hover:bg-brand-700"
+          >
             <Plus size={16} strokeWidth={2.5} /> Aggiungi
           </button>
         )}
@@ -190,6 +206,8 @@ export function VetVisitsPage() {
           </div>
         ))}
       </div>
+
+      <UpgradeModal open={showUpgrade} onClose={() => setShowUpgrade(false)} />
     </div>
   )
 }

@@ -11,6 +11,8 @@ import {
 } from '@/lib/queries/insurance'
 import { formatIt } from '@/lib/health'
 import { useConfirmTap } from '@/hooks/useConfirmTap'
+import { useAuthStore, selectHasFullAccess } from '@/stores/auth.store'
+import { LockedFeature } from '@/components/shared/LockedFeature'
 
 const today = () => new Date().toISOString().slice(0, 10)
 
@@ -39,7 +41,17 @@ const inputCls = 'w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm f
 const labelCls = 'block text-xs font-medium text-gray-500 mb-1'
 const eur = new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' })
 
+// Pro-only totale — vedi VaccinationsPage.tsx per il razionale.
 export function InsurancePage() {
+  const { id: petId } = useParams<{ id: string }>()
+  const hasFullAccess = useAuthStore(selectHasFullAccess)
+  if (!hasFullAccess) {
+    return <LockedFeature title="Assicurazioni" icon={ShieldCheck} backTo={`/app/pets/${petId}`} />
+  }
+  return <InsurancePageContent />
+}
+
+function InsurancePageContent() {
   const { id: petId } = useParams<{ id: string }>()
   const { data: policies, isLoading } = useInsurancePolicies(petId)
   const createP = useCreateInsurancePolicy(petId!)

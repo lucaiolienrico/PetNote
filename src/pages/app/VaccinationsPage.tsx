@@ -12,6 +12,8 @@ import {
 import { ReminderBadge } from '@/components/shared/ReminderBadge'
 import { formatIt } from '@/lib/health'
 import { useConfirmTap } from '@/hooks/useConfirmTap'
+import { useAuthStore, selectHasFullAccess } from '@/stores/auth.store'
+import { LockedFeature } from '@/components/shared/LockedFeature'
 
 const today = () => new Date().toISOString().slice(0, 10)
 
@@ -32,7 +34,18 @@ const nn = (v?: string) => (v && v.trim() !== '' ? v.trim() : null)
 const inputCls = 'w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500'
 const labelCls = 'block text-xs font-medium text-gray-500 mb-1'
 
+// Pro-only totale: nessun hook dati viene montato per un utente Free, il
+// gate avviene prima — vedi LockedFeature.
 export function VaccinationsPage() {
+  const { id: petId } = useParams<{ id: string }>()
+  const hasFullAccess = useAuthStore(selectHasFullAccess)
+  if (!hasFullAccess) {
+    return <LockedFeature title="Vaccinazioni" icon={Syringe} backTo={`/app/pets/${petId}`} />
+  }
+  return <VaccinationsPageContent />
+}
+
+function VaccinationsPageContent() {
   const { id: petId } = useParams<{ id: string }>()
   const { data: vaccinations, isLoading } = useVaccinations(petId)
   const createV = useCreateVaccination(petId!)

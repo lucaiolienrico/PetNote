@@ -1,23 +1,28 @@
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft, Pencil, Trash2, Syringe, Stethoscope, Bug, Scale, AlertTriangle, ShieldCheck } from 'lucide-react'
+import { ArrowLeft, Pencil, Trash2, Syringe, Stethoscope, Bug, Scale, AlertTriangle, ShieldCheck, Lock } from 'lucide-react'
 import { toast } from 'sonner'
 import { usePet, usePetPhotoUrl, useDeletePet } from '@/lib/queries/pets'
 import { SPECIES, petAge } from '@/lib/species'
 import { useConfirmTap } from '@/hooks/useConfirmTap'
 import { ExportPdfButton } from '@/components/pets/ExportPdfButton'
+import { useAuthStore, selectHasFullAccess } from '@/stores/auth.store'
 
+// pro: sezione interamente Premium (0 per Free) — vedi LockedFeature.tsx.
+// Visite e Allergie restano fuori da questo flag: per Free sono
+// accessibili con cap 1 elemento, non bloccate in toto.
 const SECTIONS = [
-  { icon: Syringe,       label: 'Vaccinazioni',    path: 'vaccinations',   ready: true },
-  { icon: Stethoscope,   label: 'Visite',          path: 'vet-visits',     ready: true },
-  { icon: Bug,           label: 'Antiparassitari', path: 'antiparasitics', ready: true },
-  { icon: Scale,         label: 'Peso',            path: 'weight',         ready: true },
-  { icon: AlertTriangle, label: 'Allergie',        path: 'allergies',      ready: true },
-  { icon: ShieldCheck,   label: 'Assicurazioni',   path: 'insurance',      ready: true },
+  { icon: Syringe,       label: 'Vaccinazioni',    path: 'vaccinations',   ready: true, pro: true },
+  { icon: Stethoscope,   label: 'Visite',          path: 'vet-visits',     ready: true, pro: false },
+  { icon: Bug,           label: 'Antiparassitari', path: 'antiparasitics', ready: true, pro: true },
+  { icon: Scale,         label: 'Peso',            path: 'weight',         ready: true, pro: true },
+  { icon: AlertTriangle, label: 'Allergie',        path: 'allergies',      ready: true, pro: false },
+  { icon: ShieldCheck,   label: 'Assicurazioni',   path: 'insurance',      ready: true, pro: true },
 ] as const
 
 export function PetDetailPage() {
   const { id }   = useParams<{ id: string }>()
   const navigate = useNavigate()
+  const hasFullAccess = useAuthStore(selectHasFullAccess)
   const { data: pet, isLoading, isError } = usePet(id)
   const { data: photoUrl } = usePetPhotoUrl(pet?.photo_url ?? null)
   const deletePet = useDeletePet()
@@ -128,16 +133,23 @@ export function PetDetailPage() {
 
       {/* Sezioni sanitarie — MVP (vaccinazioni/visite/antiparassitari/peso) + Allergie/Assicurazioni */}
       <div className="grid grid-cols-2 gap-3">
-        {SECTIONS.map(({ icon: Icon, label, path, ready }) =>
+        {SECTIONS.map(({ icon: Icon, label, path, ready, pro }) =>
           ready ? (
             <Link
               key={label}
               to={`/app/pets/${pet.id}/${path}`}
-              className="bg-white rounded-2xl border border-slate-100 shadow-sm shadow-slate-200/40 p-4 active:bg-slate-50 transition-colors"
+              className="relative bg-white rounded-2xl border border-slate-100 shadow-sm shadow-slate-200/40 p-4 active:bg-slate-50 transition-colors"
             >
+              {pro && !hasFullAccess && (
+                <span className="absolute top-3 right-3 w-5 h-5 rounded-full bg-slate-50 flex items-center justify-center">
+                  <Lock size={11} className="text-slate-400" />
+                </span>
+              )}
               <Icon size={22} className="text-brand-600 mb-2" />
               <p className="text-sm font-semibold text-slate-900">{label}</p>
-              <p className="text-xs text-slate-500 mt-0.5">Vedi tutte</p>
+              <p className="text-xs text-slate-500 mt-0.5">
+                {pro && !hasFullAccess ? 'Premium' : 'Vedi tutte'}
+              </p>
             </Link>
           ) : (
             <div key={label} className="bg-white rounded-2xl border border-slate-100 p-4 opacity-60">

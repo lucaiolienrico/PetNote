@@ -12,6 +12,8 @@ import {
 } from '@/lib/queries/weightLogs'
 import { formatIt } from '@/lib/health'
 import { useConfirmTap } from '@/hooks/useConfirmTap'
+import { useAuthStore, selectHasFullAccess } from '@/stores/auth.store'
+import { LockedFeature } from '@/components/shared/LockedFeature'
 
 const today = () => new Date().toISOString().slice(0, 10)
 const BRAND_600 = '#2563eb' // tailwind.config.js brand.600 — Recharts non legge classi utility, serve hex
@@ -32,7 +34,17 @@ const labelCls = 'block text-xs font-medium text-gray-500 mb-1'
 const fmtKg = (v: number) => `${v.toLocaleString('it-IT', { maximumFractionDigits: 3 })} kg`
 const fmtAxisDate = (iso: string) => new Date(iso).toLocaleDateString('it-IT', { day: 'numeric', month: 'short' })
 
+// Pro-only totale — vedi VaccinationsPage.tsx per il razionale.
 export function WeightPage() {
+  const { id: petId } = useParams<{ id: string }>()
+  const hasFullAccess = useAuthStore(selectHasFullAccess)
+  if (!hasFullAccess) {
+    return <LockedFeature title="Peso" icon={Scale} backTo={`/app/pets/${petId}`} />
+  }
+  return <WeightPageContent />
+}
+
+function WeightPageContent() {
   const { id: petId } = useParams<{ id: string }>()
   const { data: logs, isLoading } = useWeightLogs(petId)
   const createLog = useCreateWeightLog(petId!)

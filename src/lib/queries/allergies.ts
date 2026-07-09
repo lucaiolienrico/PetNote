@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
+import { FREE_LIMITS, PlanLimitError } from '@/lib/planLimits'
 import type { Database } from '@/types/database.types'
 
 export type Allergy       = Database['public']['Tables']['allergies']['Row']
@@ -26,10 +27,24 @@ export function useAllergies(petId: string | undefined) {
   })
 }
 
-export function useCreateAllergy(petId: string) {
+// hasFullAccess: vedi vetVisits.ts — stesso pattern, stessa avvertenza su
+// enforcement solo applicativo (RLS resta ownership-only).
+export function useCreateAllergy(petId: string, hasFullAccess: boolean) {
   const qc = useQueryClient()
   return useMutation({
     mutationFn: async (input: Omit<AllergyInsert, 'pet_id'>) => {
+      if (!hasFullAccess) {
+        const { count, error: countError } = await supabase
+          .from('allergies')
+          .select('id', { count: 'exact', head: true })
+          .eq('pet_id', petId)
+        if (countError) throw countError
+        if ((count ?? 0) >= FREE_LIMITS.allergiesPerPet) {
+          throw new PlanLimitError(
+            `Piano Free: massimo ${FREE_LIMITS.allergiesPerPet} allergia per animale. Passa a Premium per aggiungerne altre.`
+          )
+        }
+      }
       const { data, error } = await supabase
         .from('allergies')
         .insert({ ...input, pet_id: petId })
