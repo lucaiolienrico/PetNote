@@ -34,9 +34,9 @@ export function PetDetailPage() {
     }
   })
 
-  if (isLoading) return <div className="p-4 text-center text-gray-400 text-sm py-16">Caricamento…</div>
+  if (isLoading) return <div className="p-4 text-center text-slate-500 text-sm py-16">Caricamento…</div>
   if (isError || !pet) return (
-    <div className="p-4 text-center text-gray-400 text-sm py-16">
+    <div className="p-4 text-center text-slate-500 text-sm py-16">
       Animale non trovato. <Link to="/app/pets" className="text-brand-600 font-medium">Torna alla lista</Link>
     </div>
   )
@@ -52,19 +52,32 @@ export function PetDetailPage() {
   return (
     <div className="p-4 space-y-4">
       <div className="flex items-center justify-between pt-2">
-        <Link to="/app/pets" className="p-1 text-gray-500"><ArrowLeft size={22} /></Link>
-        <div className="flex gap-1">
+        {/* -ml-2.5: compensa il padding del tap target (2.5) per allineare
+            otticamente l'icona al bordo pagina, invariato per l'utente. */}
+        <Link
+          to="/app/pets"
+          className="-ml-2.5 p-2.5 rounded-full text-slate-900 hover:text-brand-600 active:bg-slate-100 transition-colors"
+          aria-label="Torna alla lista animali"
+        >
+          <ArrowLeft size={22} />
+        </Link>
+        {/* -mr-2.5: stesso principio, allinea l'ultima icona (Trash2) al bordo destro. */}
+        <div className="flex items-center gap-1 -mr-2.5">
           <ExportPdfButton pet={pet} />
-          <Link to={`/app/pets/${pet.id}/edit`} className="p-2 text-gray-500 hover:text-brand-600">
-            <Pencil size={18} />
+          <Link
+            to={`/app/pets/${pet.id}/edit`}
+            className="p-2.5 rounded-full text-slate-500 hover:text-brand-600 active:bg-slate-100 transition-colors"
+            aria-label="Modifica animale"
+          >
+            <Pencil size={20} />
           </Link>
           <button
             onClick={onDelete}
             disabled={deletePet.isPending}
-            className={`p-2 transition-colors ${confirmDelete ? 'text-red-600' : 'text-gray-400 hover:text-red-500'}`}
+            className={`p-2.5 rounded-full transition-colors ${confirmDelete ? 'text-red-600 bg-red-50' : 'text-slate-500 hover:text-red-600 active:bg-slate-100'}`}
             aria-label={confirmDelete ? 'Conferma rimozione' : 'Rimuovi animale'}
           >
-            <Trash2 size={18} />
+            <Trash2 size={20} />
           </button>
         </div>
       </div>
@@ -77,28 +90,39 @@ export function PetDetailPage() {
 
       {/* Header profilo */}
       <div className="flex flex-col items-center gap-2">
-        <div className="w-24 h-24 rounded-full bg-brand-50 flex items-center justify-center overflow-hidden">
+        <div className="w-24 h-24 rounded-full bg-brand-50 ring-1 ring-brand-100 flex items-center justify-center overflow-hidden">
           {photoUrl
             ? <img src={photoUrl} alt={pet.name} className="w-full h-full object-cover" />
             : <span className="text-4xl">{SPECIES[pet.species].emoji}</span>}
         </div>
-        <h1 className="text-2xl font-bold text-gray-900">{pet.name}</h1>
+        <h1 className="text-3xl font-bold text-slate-900 tracking-tight">{pet.name}</h1>
       </div>
 
       {/* Info */}
-      <div className="bg-white rounded-2xl border border-gray-100 divide-y divide-gray-50">
+      <div className="bg-white rounded-2xl border border-slate-100 divide-y divide-slate-100 shadow-sm shadow-slate-200/40">
         {info.filter(([, v]) => v).map(([k, v]) => (
-          <div key={k} className="flex justify-between px-4 py-3 text-sm">
-            <span className="text-gray-500">{k}</span>
-            <span className="font-medium text-gray-900">{v}</span>
+          <div key={k} className="flex items-center justify-between gap-4 px-4 py-3.5 text-sm">
+            <span className="shrink-0 text-slate-500">{k}</span>
+            {/* Microchip: stringa numerica lunga → font leggermente ridotto,
+                tabular-nums per allineamento cifre, break-all come rete di
+                sicurezza sui viewport più stretti (<360px). */}
+            <span
+              className={
+                k === 'Microchip'
+                  ? 'text-right text-[13px] font-semibold tabular-nums tracking-tight text-slate-900 break-all'
+                  : 'text-right font-semibold text-slate-900'
+              }
+            >
+              {v}
+            </span>
           </div>
         ))}
       </div>
 
       {pet.notes && (
-        <div className="bg-white rounded-2xl border border-gray-100 p-4">
-          <p className="text-xs font-medium text-gray-500 mb-1">Note</p>
-          <p className="text-sm text-gray-700 whitespace-pre-wrap">{pet.notes}</p>
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm shadow-slate-200/40 p-4">
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-1">Note</p>
+          <p className="text-sm text-slate-700 whitespace-pre-wrap">{pet.notes}</p>
         </div>
       )}
 
@@ -109,21 +133,26 @@ export function PetDetailPage() {
             <Link
               key={label}
               to={`/app/pets/${pet.id}/${path}`}
-              className="bg-white rounded-2xl border border-gray-100 p-4 active:bg-gray-50 transition-colors"
+              className="bg-white rounded-2xl border border-slate-100 shadow-sm shadow-slate-200/40 p-4 active:bg-slate-50 transition-colors"
             >
-              <Icon size={20} className="text-brand-600 mb-2" />
-              <p className="text-sm font-semibold text-gray-900">{label}</p>
-              <p className="text-xs text-gray-400 mt-0.5">Vedi tutte</p>
+              <Icon size={22} className="text-brand-600 mb-2" />
+              <p className="text-sm font-semibold text-slate-900">{label}</p>
+              <p className="text-xs text-slate-500 mt-0.5">Vedi tutte</p>
             </Link>
           ) : (
-            <div key={label} className="bg-white rounded-2xl border border-gray-100 p-4 opacity-60">
-              <Icon size={20} className="text-brand-600 mb-2" />
-              <p className="text-sm font-semibold text-gray-900">{label}</p>
-              <p className="text-xs text-gray-400 mt-0.5">In arrivo</p>
+            <div key={label} className="bg-white rounded-2xl border border-slate-100 p-4 opacity-60">
+              <Icon size={22} className="text-brand-600 mb-2" />
+              <p className="text-sm font-semibold text-slate-900">{label}</p>
+              <p className="text-xs text-slate-500 mt-0.5">In arrivo</p>
             </div>
           ),
         )}
       </div>
+
+      {/* Report PDF completo — CTA piena larghezza, sotto la sezione Allergie.
+          Riusa la stessa logica di ExportPdfButton (variant='cta'): nessuna
+          duplicazione della generazione PDF già presente in header. */}
+      <ExportPdfButton pet={pet} variant="cta" />
     </div>
   )
 }
