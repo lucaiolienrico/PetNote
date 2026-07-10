@@ -449,6 +449,41 @@ export type Database = {
           },
         ]
       }
+      reminders: {
+        Row: {
+          created_at: string
+          due_date: string
+          id: string
+          notes: string | null
+          pet_id: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          due_date: string
+          id?: string
+          notes?: string | null
+          pet_id: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          due_date?: string
+          id?: string
+          notes?: string | null
+          pet_id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reminders_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       share_links: {
         Row: {
           created_at: string

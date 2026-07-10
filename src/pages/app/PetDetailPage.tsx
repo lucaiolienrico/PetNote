@@ -14,6 +14,7 @@ import { useInsurancePolicies } from '@/lib/queries/insurance'
 import { useHealthEvents }      from '@/lib/queries/healthEvents'
 import { useMedications }       from '@/lib/queries/medications'
 import { useDocuments }         from '@/lib/queries/documents'
+import { useReminders }         from '@/lib/queries/reminders'
 import { SPECIES, petAge }    from '@/lib/species'
 import { useAuthStore, selectHasFullAccess } from '@/stores/auth.store'
 import { ExportPdfButton }    from '@/components/pets/ExportPdfButton'
@@ -75,6 +76,7 @@ export function PetDetailPage() {
   const { data: healthEvents      = [] }   = useHealthEvents(id)
   const { data: medications       = [] }   = useMedications(id)
   const { data: documents         = [] }   = useDocuments(id)
+  const { data: reminders         = [] }   = useReminders(id)
 
   // ── Derived values ──────────────────────────────────────────────────────────
 
@@ -90,6 +92,12 @@ export function PetDetailPage() {
   const lastAnti = useMemo(
     () => [...antiparasitics].sort((a, b) => b.administered_at.localeCompare(a.administered_at))[0],
     [antiparasitics],
+  )
+  // Promemoria è prospettico (scadenze future), non storico → ordina ascendente
+  // per mostrare il più imminente, non il più recente.
+  const nextCustomReminder = useMemo(
+    () => [...reminders].sort((a, b) => a.due_date.localeCompare(b.due_date))[0],
+    [reminders],
   )
 
   const activeInsurance = insurancePolicies.find(
@@ -115,6 +123,10 @@ export function PetDetailPage() {
       const due = parseLocalDate(a.next_due_at)
       if (due >= today) candidates.push({ label: a.product_name, sublabel: 'Antiparassitario', dueDate: due })
     }
+    for (const r of reminders) {
+      const due = parseLocalDate(r.due_date)
+      if (due >= today) candidates.push({ label: r.title, sublabel: 'Promemoria', dueDate: due })
+    }
 
     if (!candidates.length) return null
     candidates.sort((a, b) => a.dueDate.getTime() - b.dueDate.getTime())
@@ -123,7 +135,7 @@ export function PetDetailPage() {
       (first.dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
     ))
     return { label: first.label, sublabel: first.sublabel, daysUntil }
-  }, [hasFullAccess, vaccinations, antiparasitics])
+  }, [hasFullAccess, vaccinations, antiparasitics, reminders])
 
   // Count of reminders due within 30 days (Premium only).
   const reminderCount = useMemo(() => {
@@ -137,8 +149,11 @@ export function PetDetailPage() {
     for (const a of antiparasitics) {
       if (a.next_due_at) { const d = parseLocalDate(a.next_due_at); if (d >= today && d <= in30) n++ }
     }
+    for (const r of reminders) {
+      const d = parseLocalDate(r.due_date); if (d >= today && d <= in30) n++
+    }
     return n
-  }, [hasFullAccess, vaccinations, antiparasitics])
+  }, [hasFullAccess, vaccinations, antiparasitics, reminders])
 
   // ── Activity timeline ───────────────────────────────────────────────────────
   const recentActivity = useMemo((): ActivityItem[] => {
@@ -172,11 +187,15 @@ export function PetDetailPage() {
       items.push({ key: `health-${h.id}`, section: 'health-events', title: h.event_type,
         subtitle: h.description ? h.description.slice(0, 60) : 'Evento sanitario', date: h.occurred_at })
     }
+    for (const m of medications) {
+      items.push({ key: `med-${m.id}`, section: 'medications', title: m.drug_name,
+        subtitle: [m.dosage, m.frequency].filter(Boolean).join(' · ') || 'Terapia', date: m.start_date })
+    }
 
     return items
       .sort((a, b) => b.date.localeCompare(a.date))
       .slice(0, 5)
-  }, [vaccinations, vetVisits, weightLogs, antiparasitics, allergies, insurancePolicies, healthEvents])
+  }, [vaccinations, vetVisits, weightLogs, antiparasitics, allergies, insurancePolicies, healthEvents, medications])
 
   // ── Sparklines ──────────────────────────────────────────────────────────────
   const vaccSparkData  = monthlyCount(vaccinations.map(v => v.administered_at))
@@ -307,6 +326,8 @@ export function PetDetailPage() {
             sparkData={vaccSparkData}
             sparkHex={SECTION_COLORS.vaccinations.sparkHex}
             locked={!hasFullAccess}
+            to={`/app/pets/${pet.id}/vaccinations`}
+            onLockClick={() => setShowUpgrade(true)}
           />
           <StatCard
             label="Visite"
@@ -317,6 +338,7 @@ export function PetDetailPage() {
             iconText={SECTION_COLORS['vet-visits'].iconText}
             sparkData={visitSparkData}
             sparkHex={SECTION_COLORS['vet-visits'].sparkHex}
+            to={`/app/pets/${pet.id}/vet-visits`}
           />
           <StatCard
             label="Peso attuale"
@@ -328,6 +350,8 @@ export function PetDetailPage() {
             sparkData={weightSparkData}
             sparkHex={SECTION_COLORS.weight.sparkHex}
             locked={!hasFullAccess}
+            to={`/app/pets/${pet.id}/weight`}
+            onLockClick={() => setShowUpgrade(true)}
           />
           <StatCard
             label="Promemoria"
@@ -339,6 +363,8 @@ export function PetDetailPage() {
             sparkData={[]}
             sparkHex="#d97706"
             locked={!hasFullAccess}
+            to={`/app/pets/${pet.id}/reminders`}
+            onLockClick={() => setShowUpgrade(true)}
           />
         </div>
 
@@ -473,6 +499,18 @@ export function PetDetailPage() {
                 : 'Nessun documento'
             }
             lastLabel={documents[0] ? `Caricato: ${fmtDate(documents[0].uploaded_at)}` : undefined}
+            locked={!hasFullAccess}
+            onLockClick={() => setShowUpgrade(true)}
+          />
+          <SectionCard
+            petId={pet.id}
+            path="reminders"
+            label="Promemoria"
+            icon={Bell}
+            iconBg={SECTION_COLORS.reminders.iconBg}
+            iconText={SECTION_COLORS.reminders.iconText}
+            count={reminders.length > 0 ? `${reminders.length} promemoria` : 'Nessun promemoria'}
+            lastLabel={nextCustomReminder ? `Prossimo: ${fmtDate(nextCustomReminder.due_date)}` : undefined}
             locked={!hasFullAccess}
             onLockClick={() => setShowUpgrade(true)}
           />

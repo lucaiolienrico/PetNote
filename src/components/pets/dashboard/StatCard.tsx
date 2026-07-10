@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { Lock } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { LineChart, Line, ResponsiveContainer } from 'recharts'
@@ -12,16 +13,18 @@ interface Props {
   sparkData: number[]
   sparkHex:  string
   locked?:   boolean
+  to?:          string      // se presente, la card diventa cliccabile
+  onLockClick?: () => void  // chiamato al tap quando locked (mostra upgrade invece di navigare)
 }
 
 export function StatCard({
   label, value, sublabel, icon: Icon,
-  iconBg, iconText, sparkData, sparkHex, locked,
+  iconBg, iconText, sparkData, sparkHex, locked, to, onLockClick,
 }: Props) {
   const hasSparkline = !locked && sparkData.length > 1
   const points = sparkData.map((v, i) => ({ i, v }))
 
-  return (
+  const body = (
     <div className="bg-white rounded-2xl border border-slate-100 shadow-sm shadow-slate-200/40 p-4 flex flex-col gap-1.5">
       <div className={`w-9 h-9 rounded-full ${iconBg} flex items-center justify-center`}>
         <Icon size={17} className={iconText} />
@@ -59,5 +62,26 @@ export function StatCard({
         </div>
       )}
     </div>
+  )
+
+  if (!to) return body
+
+  if (locked) {
+    return (
+      <button
+        type="button"
+        onClick={onLockClick}
+        className="block w-full text-left"
+        aria-label={`${label} — richiede Premium`}
+      >
+        {body}
+      </button>
+    )
+  }
+
+  return (
+    <Link to={to} className="block active:opacity-75 transition-opacity">
+      {body}
+    </Link>
   )
 }
