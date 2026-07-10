@@ -3,11 +3,12 @@ import { useSearchParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { LogOut, Pencil, Check, X } from 'lucide-react'
+import { LogOut, Pencil, Check, X, Bell, BellOff } from 'lucide-react'
 import { toast } from 'sonner'
 import { useAuthStore, selectIsPremium, selectIsAdmin } from '@/stores/auth.store'
 import { useUpdateProfile } from '@/lib/queries/profile'
 import { useCancelSubscription } from '@/lib/queries/subscription'
+import { usePushNotifications } from '@/hooks/usePushNotifications'
 import { UpgradeModal } from '@/components/shared/UpgradeModal'
 import { useConfirmTap } from '@/hooks/useConfirmTap'
 
@@ -27,6 +28,8 @@ export function SettingsPage() {
   const isAdmin             = useAuthStore(selectIsAdmin)
   const updateProfile       = useUpdateProfile()
   const cancelSubscription  = useCancelSubscription()
+  const push                = usePushNotifications()
+  const [pushLoading, setPushLoading] = useState(false)
 
   const [searchParams, setSearchParams] = useSearchParams()
   const [editingName, setEditingName] = useState(false)
@@ -109,6 +112,24 @@ export function SettingsPage() {
   }
 
   const onManageSubscription = () => tap('cancel-subscription', () => { void handleCancelSubscription() })
+
+  const handleTogglePush = async () => {
+    setPushLoading(true)
+    try {
+      if (push.isSubscribed) {
+        const ok = await push.unsubscribe()
+        toast[ok ? 'success' : 'error'](ok ? 'Notifiche disattivate' : 'Disattivazione non riuscita')
+      } else {
+        const result = await push.subscribe()
+        if (result === 'ok') toast.success('Notifiche attivate')
+        else if (result === 'denied') toast.error('Permesso negato. Abilita le notifiche dalle impostazioni del browser.')
+        else if (result === 'unsupported') toast.error('Il tuo browser non supporta le notifiche push')
+        else toast.error('Attivazione non riuscita, riprova')
+      }
+    } finally {
+      setPushLoading(false)
+    }
+  }
 
   const renewalDate = profile?.subscription_expires_at
     ? new Date(profile.subscription_expires_at).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' })
@@ -200,6 +221,42 @@ export function SettingsPage() {
           </button>
         )}
       </div>
+
+      {/* Notifiche push */}
+      {push.isSupported && (
+        <div className="bg-white rounded-2xl border border-gray-100 p-4 space-y-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              {push.isSubscribed
+                ? <Bell size={18} className="text-brand-600" />
+                : <BellOff size={18} className="text-gray-400" />
+              }
+              <div>
+                <p className="text-sm font-semibold text-gray-900">Promemoria push</p>
+                <p className="text-xs text-gray-500">
+                  {push.isSubscribed ? 'Attive su questo dispositivo' : 'Ricevi avvisi per vaccini e antiparassitari'}
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={handleTogglePush}
+              disabled={pushLoading || push.isLoading}
+              role="switch"
+              aria-checked={push.isSubscribed}
+              aria-label="Attiva o disattiva notifiche push"
+              className={`relative w-11 h-6 rounded-full transition-colors flex-shrink-0 disabled:opacity-50 ${
+                push.isSubscribed ? 'bg-brand-600' : 'bg-gray-200'
+              }`}
+            >
+              <span
+                className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${
+                  push.isSubscribed ? 'translate-x-[22px]' : 'translate-x-0.5'
+                }`}
+              />
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Logout */}
       <button

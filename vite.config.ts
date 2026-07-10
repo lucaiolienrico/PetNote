@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'badge-72x72.png'],
+      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'badge-72x72.png', 'push-sw.js'],
       manifest: {
         name: 'PetNote',
         short_name: 'PetNote',
@@ -26,6 +26,10 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+        // push-sw.js aggiunge i listener 'push'/'notificationclick' al SW
+        // generato — importScripts() lo esegue nello stesso contesto self,
+        // niente SW separato da registrare o coordinare con Workbox.
+        importScripts: ['/push-sw.js'],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/.*\.supabase\.co\/.*/i,
