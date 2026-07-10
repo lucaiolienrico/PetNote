@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import {
   ArrowLeft, Settings, Camera, Cpu,
-  Syringe, Stethoscope, Bug, Scale, AlertTriangle, ShieldCheck, Bell,
+  Syringe, Stethoscope, Bug, Scale, AlertTriangle, ShieldCheck, Bell, ClipboardList,
 } from 'lucide-react'
 import { usePet, usePetPhotoUrl } from '@/lib/queries/pets'
 import { useVaccinations }    from '@/lib/queries/vaccinations'
@@ -11,6 +11,7 @@ import { useWeightLogs }      from '@/lib/queries/weightLogs'
 import { useAntiparasitics }  from '@/lib/queries/antiparasitics'
 import { useAllergies }       from '@/lib/queries/allergies'
 import { useInsurancePolicies } from '@/lib/queries/insurance'
+import { useHealthEvents }      from '@/lib/queries/healthEvents'
 import { SPECIES, petAge }    from '@/lib/species'
 import { useAuthStore, selectHasFullAccess } from '@/stores/auth.store'
 import { ExportPdfButton }    from '@/components/pets/ExportPdfButton'
@@ -69,6 +70,7 @@ export function PetDetailPage() {
   const { data: antiparasitics  = [] }     = useAntiparasitics(id)
   const { data: allergies       = [] }     = useAllergies(id)
   const { data: insurancePolicies = [] }   = useInsurancePolicies(id)
+  const { data: healthEvents      = [] }   = useHealthEvents(id)
 
   // ── Derived values ──────────────────────────────────────────────────────────
 
@@ -162,11 +164,15 @@ export function PetDetailPage() {
       items.push({ key: `ins-${p.id}`, section: 'insurance', title: p.provider,
         subtitle: p.policy_number ? `N° ${p.policy_number}` : 'Assicurazione', date: p.start_date })
     }
+    for (const h of healthEvents) {
+      items.push({ key: `health-${h.id}`, section: 'health-events', title: h.event_type,
+        subtitle: h.description ? h.description.slice(0, 60) : 'Evento sanitario', date: h.occurred_at })
+    }
 
     return items
       .sort((a, b) => b.date.localeCompare(a.date))
       .slice(0, 5)
-  }, [vaccinations, vetVisits, weightLogs, antiparasitics, allergies, insurancePolicies])
+  }, [vaccinations, vetVisits, weightLogs, antiparasitics, allergies, insurancePolicies, healthEvents])
 
   // ── Sparklines ──────────────────────────────────────────────────────────────
   const vaccSparkData  = monthlyCount(vaccinations.map(v => v.administered_at))
@@ -416,6 +422,22 @@ export function PetDetailPage() {
             }
             lastLabel={insurancePolicies[0] ? `Dal: ${fmtDate(insurancePolicies[0].start_date)}` : undefined}
             locked={!hasFullAccess}
+            onLockClick={() => setShowUpgrade(true)}
+          />
+          <SectionCard
+            petId={pet.id}
+            path="health-events"
+            label="Diario sanitario"
+            icon={ClipboardList}
+            iconBg={SECTION_COLORS['health-events'].iconBg}
+            iconText={SECTION_COLORS['health-events'].iconText}
+            count={
+              healthEvents.length > 0
+                ? `${healthEvents.length} ${healthEvents.length === 1 ? 'evento' : 'eventi'}`
+                : 'Nessun evento'
+            }
+            lastLabel={healthEvents[0] ? `Ultimo: ${fmtDate(healthEvents[0].occurred_at)}` : undefined}
+            locked={false}
             onLockClick={() => setShowUpgrade(true)}
           />
         </div>
