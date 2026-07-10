@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import {
-  ArrowLeft, Settings, Camera, Cpu,
+  ArrowLeft, Settings, Camera, Cpu, Share2,
   Syringe, Stethoscope, Bug, Scale, AlertTriangle, ShieldCheck, Bell, ClipboardList, Pill, FileText,
 } from 'lucide-react'
 import { usePet, usePetPhotoUrl } from '@/lib/queries/pets'
@@ -19,6 +19,7 @@ import { SPECIES, petAge }    from '@/lib/species'
 import { useAuthStore, selectHasFullAccess } from '@/stores/auth.store'
 import { ExportPdfButton }    from '@/components/pets/ExportPdfButton'
 import { UpgradeModal }       from '@/components/shared/UpgradeModal'
+import { ShareLinkModal }     from '@/components/pets/ShareLinkModal'
 import { StatCard }           from '@/components/pets/dashboard/StatCard'
 import { SectionCard }        from '@/components/pets/dashboard/SectionCard'
 import { ActivityTimeline }   from '@/components/pets/dashboard/ActivityTimeline'
@@ -64,6 +65,7 @@ export function PetDetailPage() {
   const navigate       = useNavigate()
   const hasFullAccess  = useAuthStore(selectHasFullAccess)
   const [showUpgrade, setShowUpgrade] = useState(false)
+  const [showShareLink, setShowShareLink] = useState(false)
 
   const { data: pet, isLoading, isError }  = usePet(id)
   const { data: photoUrl }                 = usePetPhotoUrl(pet?.photo_url ?? null)
@@ -248,13 +250,23 @@ export function PetDetailPage() {
           >
             <ArrowLeft size={20} className="text-slate-700" />
           </Link>
-          <Link
-            to={`/app/pets/${pet.id}/edit`}
-            className="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center active:bg-slate-50 transition-colors"
-            aria-label="Modifica animale"
-          >
-            <Settings size={20} className="text-slate-700" />
-          </Link>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => (hasFullAccess ? setShowShareLink(true) : setShowUpgrade(true))}
+              className="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center active:bg-slate-50 transition-colors"
+              aria-label="Condividi scheda sanitaria"
+            >
+              <Share2 size={19} className="text-slate-700" />
+            </button>
+            <Link
+              to={`/app/pets/${pet.id}/edit`}
+              className="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center active:bg-slate-50 transition-colors"
+              aria-label="Modifica animale"
+            >
+              <Settings size={20} className="text-slate-700" />
+            </Link>
+          </div>
         </div>
 
         {/* Photo + info row */}
@@ -543,6 +555,12 @@ export function PetDetailPage() {
       </div>
 
       <UpgradeModal open={showUpgrade} onClose={() => setShowUpgrade(false)} />
+      <ShareLinkModal
+        petId={pet.id}
+        petName={pet.name}
+        open={showShareLink}
+        onClose={() => setShowShareLink(false)}
+      />
     </div>
   )
 }
