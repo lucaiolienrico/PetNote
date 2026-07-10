@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import {
   ArrowLeft, Settings, Camera, Cpu,
-  Syringe, Stethoscope, Bug, Scale, AlertTriangle, ShieldCheck, Bell, ClipboardList, Pill,
+  Syringe, Stethoscope, Bug, Scale, AlertTriangle, ShieldCheck, Bell, ClipboardList, Pill, FileText,
 } from 'lucide-react'
 import { usePet, usePetPhotoUrl } from '@/lib/queries/pets'
 import { useVaccinations }    from '@/lib/queries/vaccinations'
@@ -13,6 +13,7 @@ import { useAllergies }       from '@/lib/queries/allergies'
 import { useInsurancePolicies } from '@/lib/queries/insurance'
 import { useHealthEvents }      from '@/lib/queries/healthEvents'
 import { useMedications }       from '@/lib/queries/medications'
+import { useDocuments }         from '@/lib/queries/documents'
 import { SPECIES, petAge }    from '@/lib/species'
 import { useAuthStore, selectHasFullAccess } from '@/stores/auth.store'
 import { ExportPdfButton }    from '@/components/pets/ExportPdfButton'
@@ -73,6 +74,7 @@ export function PetDetailPage() {
   const { data: insurancePolicies = [] }   = useInsurancePolicies(id)
   const { data: healthEvents      = [] }   = useHealthEvents(id)
   const { data: medications       = [] }   = useMedications(id)
+  const { data: documents         = [] }   = useDocuments(id)
 
   // ── Derived values ──────────────────────────────────────────────────────────
 
@@ -455,6 +457,22 @@ export function PetDetailPage() {
                 : 'Nessuna terapia'
             }
             lastLabel={medications[0] ? `Ultima: ${fmtDate(medications[0].start_date)}` : undefined}
+            locked={!hasFullAccess}
+            onLockClick={() => setShowUpgrade(true)}
+          />
+          <SectionCard
+            petId={pet.id}
+            path="documents"
+            label="Documenti"
+            icon={FileText}
+            iconBg={SECTION_COLORS.documents.iconBg}
+            iconText={SECTION_COLORS.documents.iconText}
+            count={
+              documents.length > 0
+                ? `${documents.length} ${documents.length === 1 ? 'documento' : 'documenti'}`
+                : 'Nessun documento'
+            }
+            lastLabel={documents[0] ? `Caricato: ${fmtDate(documents[0].uploaded_at)}` : undefined}
             locked={!hasFullAccess}
             onLockClick={() => setShowUpgrade(true)}
           />

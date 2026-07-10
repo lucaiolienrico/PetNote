@@ -22,6 +22,7 @@ const AllergiesPage      = lazy(() => import('@/pages/app/AllergiesPage').then(m
 const InsurancePage      = lazy(() => import('@/pages/app/InsurancePage').then(m => ({ default: m.InsurancePage })))
 const HealthEventsPage   = lazy(() => import('@/pages/app/HealthEventsPage').then(m => ({ default: m.HealthEventsPage })))
 const MedicationsPage    = lazy(() => import('@/pages/app/MedicationsPage').then(m => ({ default: m.MedicationsPage })))
+const DocumentsPage      = lazy(() => import('@/pages/app/DocumentsPage').then(m => ({ default: m.DocumentsPage })))
 const SettingsPage   = lazy(() => import('@/pages/app/SettingsPage').then(m => ({ default: m.SettingsPage })))
 const AdminPage      = lazy(() => import('@/pages/admin/AdminPage').then(m => ({ default: m.AdminPage })))
 
@@ -67,6 +68,7 @@ export default function App() {
             <Route path="/app/pets/:id/insurance"      element={<InsurancePage />} />
             <Route path="/app/pets/:id/health-events" element={<HealthEventsPage />} />
             <Route path="/app/pets/:id/medications" element={<MedicationsPage />} />
+            <Route path="/app/pets/:id/documents" element={<DocumentsPage />} />
             <Route path="/app/settings"  element={<SettingsPage />} />
           </Route>
         </Route>
