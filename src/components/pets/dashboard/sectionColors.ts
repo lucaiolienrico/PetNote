@@ -6,6 +6,7 @@ export type SectionKey =
   | 'allergies'
   | 'insurance'
   | 'health-events'
+  | 'medications'
 
 export interface SectionColors {
   iconBg:   string
@@ -57,5 +58,11 @@ export const SECTION_COLORS: Record<SectionKey, SectionColors> = {
     iconText: 'text-orange-600',
     dotBg:    'bg-orange-500',
     sparkHex: '#ea580c',
+  },
+  medications: {
+    iconBg:   'bg-indigo-100',
+    iconText: 'text-indigo-600',
+    dotBg:    'bg-indigo-500',
+    sparkHex: '#4f46e5',
   },
 }

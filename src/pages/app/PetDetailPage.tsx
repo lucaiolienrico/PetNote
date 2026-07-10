@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import {
   ArrowLeft, Settings, Camera, Cpu,
-  Syringe, Stethoscope, Bug, Scale, AlertTriangle, ShieldCheck, Bell, ClipboardList,
+  Syringe, Stethoscope, Bug, Scale, AlertTriangle, ShieldCheck, Bell, ClipboardList, Pill,
 } from 'lucide-react'
 import { usePet, usePetPhotoUrl } from '@/lib/queries/pets'
 import { useVaccinations }    from '@/lib/queries/vaccinations'
@@ -12,6 +12,7 @@ import { useAntiparasitics }  from '@/lib/queries/antiparasitics'
 import { useAllergies }       from '@/lib/queries/allergies'
 import { useInsurancePolicies } from '@/lib/queries/insurance'
 import { useHealthEvents }      from '@/lib/queries/healthEvents'
+import { useMedications }       from '@/lib/queries/medications'
 import { SPECIES, petAge }    from '@/lib/species'
 import { useAuthStore, selectHasFullAccess } from '@/stores/auth.store'
 import { ExportPdfButton }    from '@/components/pets/ExportPdfButton'
@@ -71,6 +72,7 @@ export function PetDetailPage() {
   const { data: allergies       = [] }     = useAllergies(id)
   const { data: insurancePolicies = [] }   = useInsurancePolicies(id)
   const { data: healthEvents      = [] }   = useHealthEvents(id)
+  const { data: medications       = [] }   = useMedications(id)
 
   // ── Derived values ──────────────────────────────────────────────────────────
 
@@ -438,6 +440,22 @@ export function PetDetailPage() {
             }
             lastLabel={healthEvents[0] ? `Ultimo: ${fmtDate(healthEvents[0].occurred_at)}` : undefined}
             locked={false}
+            onLockClick={() => setShowUpgrade(true)}
+          />
+          <SectionCard
+            petId={pet.id}
+            path="medications"
+            label="Farmaci"
+            icon={Pill}
+            iconBg={SECTION_COLORS.medications.iconBg}
+            iconText={SECTION_COLORS.medications.iconText}
+            count={
+              medications.length > 0
+                ? `${medications.length} ${medications.length === 1 ? 'terapia' : 'terapie'}`
+                : 'Nessuna terapia'
+            }
+            lastLabel={medications[0] ? `Ultima: ${fmtDate(medications[0].start_date)}` : undefined}
+            locked={!hasFullAccess}
             onLockClick={() => setShowUpgrade(true)}
           />
         </div>
