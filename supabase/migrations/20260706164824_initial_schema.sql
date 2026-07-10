@@ -2,12 +2,8 @@
 -- PetNote — Initial Schema
 -- ============================================================
 
--- EXTENSIONS
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
--- ============================================================
--- PROFILES
--- ============================================================
 CREATE TABLE profiles (
   id                      UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   full_name               TEXT,
@@ -23,9 +19,6 @@ CREATE TABLE profiles (
   updated_at              TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- ============================================================
--- PETS
--- ============================================================
 CREATE TABLE pets (
   id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   owner_id    UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
@@ -45,9 +38,6 @@ CREATE TABLE pets (
   CONSTRAINT pets_microchip_unique UNIQUE NULLS NOT DISTINCT (microchip)
 );
 
--- ============================================================
--- VACCINATIONS
--- ============================================================
 CREATE TABLE vaccinations (
   id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   pet_id          UUID NOT NULL REFERENCES pets(id) ON DELETE CASCADE,
@@ -63,9 +53,6 @@ CREATE TABLE vaccinations (
     CHECK (next_due_at IS NULL OR next_due_at > administered_at)
 );
 
--- ============================================================
--- VET_VISITS
--- ============================================================
 CREATE TABLE vet_visits (
   id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   pet_id         UUID NOT NULL REFERENCES pets(id) ON DELETE CASCADE,
@@ -80,9 +67,6 @@ CREATE TABLE vet_visits (
   created_at     TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- ============================================================
--- ANTIPARASITICS
--- ============================================================
 CREATE TABLE antiparasitics (
   id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   pet_id          UUID NOT NULL REFERENCES pets(id) ON DELETE CASCADE,
@@ -96,9 +80,6 @@ CREATE TABLE antiparasitics (
     CHECK (next_due_at IS NULL OR next_due_at > administered_at)
 );
 
--- ============================================================
--- MEDICATIONS (V2)
--- ============================================================
 CREATE TABLE medications (
   id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   pet_id     UUID NOT NULL REFERENCES pets(id) ON DELETE CASCADE,
@@ -112,9 +93,6 @@ CREATE TABLE medications (
   CONSTRAINT med_dates_check CHECK (end_date IS NULL OR end_date >= start_date)
 );
 
--- ============================================================
--- WEIGHT_LOGS
--- ============================================================
 CREATE TABLE weight_logs (
   id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   pet_id      UUID NOT NULL REFERENCES pets(id) ON DELETE CASCADE,
@@ -124,9 +102,6 @@ CREATE TABLE weight_logs (
   created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- ============================================================
--- HEALTH_EVENTS
--- ============================================================
 CREATE TABLE health_events (
   id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   pet_id         UUID NOT NULL REFERENCES pets(id) ON DELETE CASCADE,
@@ -137,9 +112,6 @@ CREATE TABLE health_events (
   created_at     TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- ============================================================
--- DOCUMENTS (V2)
--- ============================================================
 CREATE TABLE documents (
   id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   pet_id        UUID NOT NULL REFERENCES pets(id) ON DELETE CASCADE,
@@ -152,9 +124,6 @@ CREATE TABLE documents (
   uploaded_at   TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- ============================================================
--- SHARE_LINKS (V2)
--- ============================================================
 CREATE TABLE share_links (
   id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   pet_id     UUID NOT NULL REFERENCES pets(id) ON DELETE CASCADE,
@@ -163,18 +132,12 @@ CREATE TABLE share_links (
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- ============================================================
--- PAYPAL IDEMPOTENCY
--- ============================================================
 CREATE TABLE processed_paypal_events (
   event_id     TEXT PRIMARY KEY,
   event_type   TEXT,
   processed_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- ============================================================
--- ADMIN AUDIT LOG
--- ============================================================
 CREATE TABLE admin_audit_log (
   id          BIGSERIAL PRIMARY KEY,
   admin_id    UUID REFERENCES profiles(id),
@@ -185,18 +148,12 @@ CREATE TABLE admin_audit_log (
   created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- ============================================================
--- INDICI
--- ============================================================
 CREATE INDEX idx_pets_owner        ON pets(owner_id) WHERE is_active = true;
 CREATE INDEX idx_vaccinations_pet  ON vaccinations(pet_id);
 CREATE INDEX idx_vaccinations_due  ON vaccinations(next_due_at) WHERE next_due_at IS NOT NULL;
 CREATE INDEX idx_antipar_due       ON antiparasitics(next_due_at) WHERE next_due_at IS NOT NULL;
 CREATE INDEX idx_weight_pet_date   ON weight_logs(pet_id, measured_at DESC);
 
--- ============================================================
--- TRIGGER updated_at
--- ============================================================
 CREATE OR REPLACE FUNCTION set_updated_at()
 RETURNS TRIGGER LANGUAGE plpgsql AS $$
 BEGIN
@@ -213,9 +170,6 @@ CREATE TRIGGER pets_updated_at
   BEFORE UPDATE ON pets
   FOR EACH ROW EXECUTE FUNCTION set_updated_at();
 
--- ============================================================
--- AUTO-CREATE PROFILE su signup
--- ============================================================
 CREATE OR REPLACE FUNCTION handle_new_user()
 RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER AS $$
 BEGIN
@@ -233,9 +187,6 @@ CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION handle_new_user();
 
--- ============================================================
--- RLS
--- ============================================================
 ALTER TABLE profiles               ENABLE ROW LEVEL SECURITY;
 ALTER TABLE pets                   ENABLE ROW LEVEL SECURITY;
 ALTER TABLE vaccinations           ENABLE ROW LEVEL SECURITY;
@@ -249,15 +200,12 @@ ALTER TABLE share_links            ENABLE ROW LEVEL SECURITY;
 ALTER TABLE processed_paypal_events ENABLE ROW LEVEL SECURITY;
 ALTER TABLE admin_audit_log        ENABLE ROW LEVEL SECURITY;
 
--- profiles — accesso diretto
 CREATE POLICY "profile_own" ON profiles
   FOR ALL USING (id = auth.uid());
 
--- pets — ownership diretta
 CREATE POLICY "pets_own" ON pets
   FOR ALL USING (owner_id = auth.uid());
 
--- tabelle figlie — ownership transitiva via pets
 CREATE POLICY "vaccinations_own" ON vaccinations
   FOR ALL USING (EXISTS (
     SELECT 1 FROM pets WHERE pets.id = vaccinations.pet_id AND pets.owner_id = auth.uid()
@@ -297,5 +245,3 @@ CREATE POLICY "share_links_own" ON share_links
   FOR ALL USING (EXISTS (
     SELECT 1 FROM pets WHERE pets.id = share_links.pet_id AND pets.owner_id = auth.uid()
   ));
-
--- processed_paypal_events + admin_audit_log → solo service_role (nessuna policy pubblica)
