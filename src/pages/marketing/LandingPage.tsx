@@ -282,7 +282,11 @@ export function LandingPage() {
       <footer className="border-t border-gray-100">
         <div className="max-w-5xl mx-auto px-4 py-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-gray-400">
           <span className="flex items-center gap-1.5">🐾 PetNote</span>
-          <Link to="/login" className="hover:text-gray-600 transition-colors">Accedi</Link>
+          <div className="flex items-center gap-4">
+            <Link to="/privacy" className="hover:text-gray-600 transition-colors">Privacy</Link>
+            <Link to="/termini" className="hover:text-gray-600 transition-colors">Termini</Link>
+            <Link to="/login" className="hover:text-gray-600 transition-colors">Accedi</Link>
+          </div>
         </div>
       </footer>
     </div>

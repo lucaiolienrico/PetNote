@@ -89,7 +89,10 @@ export function RegisterPage() {
       </form>
 
       <p className="text-center text-xs text-gray-400">
-        Registrandoti accetti i nostri Termini di servizio
+        Registrandoti accetti i nostri{' '}
+        <Link to="/termini" className="underline hover:text-gray-600">Termini di servizio</Link>
+        {' '}e la nostra{' '}
+        <Link to="/privacy" className="underline hover:text-gray-600">Privacy Policy</Link>
       </p>
 
       <p className="text-center text-sm text-gray-500">

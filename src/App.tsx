@@ -27,6 +27,8 @@ const DocumentsPage      = lazy(() => import('@/pages/app/DocumentsPage').then(m
 const SettingsPage   = lazy(() => import('@/pages/app/SettingsPage').then(m => ({ default: m.SettingsPage })))
 const AdminPage      = lazy(() => import('@/pages/admin/AdminPage').then(m => ({ default: m.AdminPage })))
 const SharedPetPage  = lazy(() => import('@/pages/public/SharedPetPage').then(m => ({ default: m.SharedPetPage })))
+const PrivacyPolicyPage   = lazy(() => import('@/pages/public/PrivacyPolicyPage').then(m => ({ default: m.PrivacyPolicyPage })))
+const TermsOfServicePage  = lazy(() => import('@/pages/public/TermsOfServicePage').then(m => ({ default: m.TermsOfServicePage })))
 
 function Spinner() {
   return (
@@ -83,6 +85,8 @@ export default function App() {
         {/* Pubblica e anonima — nessun guard: un utente loggato deve poterla
             vedere comunque (RequireGuest la bloccherebbe con redirect). */}
         <Route path="/shared/:token" element={<SharedPetPage />} />
+        <Route path="/privacy" element={<PrivacyPolicyPage />} />
+        <Route path="/termini" element={<TermsOfServicePage />} />
 
         <Route path="*" element={<Navigate to="/app/dashboard" replace />} />
       </Routes>
