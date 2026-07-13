@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -34,6 +34,7 @@ export function SettingsPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [editingName, setEditingName] = useState(false)
   const [showUpgrade, setShowUpgrade] = useState(false)
+  const navigate = useNavigate()
   const { tap, isArmed } = useConfirmTap()
   const confirmLogout = isArmed('logout')
   const confirmCancel = isArmed('cancel-subscription')
@@ -99,7 +100,7 @@ export function SettingsPage() {
     setEditingName(false)
   }
 
-  const onLogout = () => tap('logout', () => { void signOut() })
+  const onLogout = () => tap('logout', () => { void signOut().then(() => navigate('/', { replace: true })) })
 
   const handleCancelSubscription = async () => {
     try {
