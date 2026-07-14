@@ -97,7 +97,7 @@ export function TermsOfServicePage() {
       <LegalSection heading="10. Chiusura dell'account">
         <p>
           Puoi chiudere il tuo account in qualsiasi momento scrivendo a{' '}
-          <a href="mailto:lucaiolienrico@gmail.com" className="text-brand-600 underline">lucaiolienrico@gmail.com</a>.
+          <a href="mailto:supporto.petnote@gmail.com" className="text-brand-600 underline">supporto.petnote@gmail.com</a>.
           Ci riserviamo il diritto di sospendere account che violano questi termini o ne
           facciano un uso fraudolento o abusivo.
         </p>
@@ -121,7 +121,7 @@ export function TermsOfServicePage() {
       <LegalSection heading="13. Contatti">
         <p>
           Per qualsiasi domanda su questi termini scrivi a{' '}
-          <a href="mailto:lucaiolienrico@gmail.com" className="text-brand-600 underline">lucaiolienrico@gmail.com</a>.
+          <a href="mailto:supporto.petnote@gmail.com" className="text-brand-600 underline">supporto.petnote@gmail.com</a>.
         </p>
       </LegalSection>
     </LegalPageLayout>
