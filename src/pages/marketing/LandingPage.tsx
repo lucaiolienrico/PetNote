@@ -285,6 +285,7 @@ export function LandingPage() {
           <div className="flex items-center gap-4">
             <Link to="/privacy" className="hover:text-gray-600 transition-colors">Privacy</Link>
             <Link to="/termini" className="hover:text-gray-600 transition-colors">Termini</Link>
+            <a href="mailto:supporto.petnote@gmail.com" className="hover:text-gray-600 transition-colors">Supporto</a>
             <Link to="/login" className="hover:text-gray-600 transition-colors">Accedi</Link>
           </div>
         </div>
