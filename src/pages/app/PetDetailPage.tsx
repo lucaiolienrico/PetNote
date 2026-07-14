@@ -193,11 +193,15 @@ export function PetDetailPage() {
       items.push({ key: `med-${m.id}`, section: 'medications', title: m.drug_name,
         subtitle: [m.dosage, m.frequency].filter(Boolean).join(' · ') || 'Terapia', date: m.start_date })
     }
+    for (const d of documents) {
+      items.push({ key: `doc-${d.id}`, section: 'documents', title: d.title,
+        subtitle: d.document_type, date: d.uploaded_at })
+    }
 
     return items
       .sort((a, b) => b.date.localeCompare(a.date))
       .slice(0, 5)
-  }, [vaccinations, vetVisits, weightLogs, antiparasitics, allergies, insurancePolicies, healthEvents, medications])
+  }, [vaccinations, vetVisits, weightLogs, antiparasitics, allergies, insurancePolicies, healthEvents, medications, documents])
 
   // ── Sparklines ──────────────────────────────────────────────────────────────
   const vaccSparkData  = monthlyCount(vaccinations.map(v => v.administered_at))
