@@ -382,6 +382,7 @@ export type Database = {
           full_name: string | null
           id: string
           is_admin: boolean
+          onboarding_completed: boolean
           paypal_subscription_id: string | null
           plan: string
           subscription_expires_at: string | null
@@ -394,6 +395,7 @@ export type Database = {
           full_name?: string | null
           id: string
           is_admin?: boolean
+          onboarding_completed?: boolean
           paypal_subscription_id?: string | null
           plan?: string
           subscription_expires_at?: string | null
@@ -406,6 +408,7 @@ export type Database = {
           full_name?: string | null
           id?: string
           is_admin?: boolean
+          onboarding_completed?: boolean
           paypal_subscription_id?: string | null
           plan?: string
           subscription_expires_at?: string | null

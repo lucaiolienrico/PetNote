@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom'
 import { BottomNav } from './BottomNav'
+import { OnboardingWelcome } from '@/components/shared/OnboardingWelcome'
 
 export function AppShell() {
   return (
@@ -9,6 +10,7 @@ export function AppShell() {
         <Outlet />
       </main>
       <BottomNav />
+      <OnboardingWelcome />
     </div>
   )
 }
