@@ -552,10 +552,13 @@ export function PetDetailPage() {
 
       </div>
 
-      {/* ── FLOATING PDF BUTTON — above bottom nav ── */}
-      {/* w-48 = 192px: enough for "Genera Report PDF" + icon + gap, no template literal needed */}
-      <div className="fixed bottom-20 right-4 z-40 shadow-xl rounded-2xl w-48">
-        <ExportPdfButton pet={pet} variant="cta" />
+      {/* ── CTA PDF BUTTON — full width, sopra la bottom nav ── */}
+      {/* inset-x-0 + max-w-lg mx-auto + px-4: stesso pattern di AppShell/BottomNav,
+          garantisce allineamento col contenuto della pagina su ogni viewport. */}
+      <div className="fixed bottom-20 inset-x-0 z-40">
+        <div className="max-w-lg mx-auto px-4">
+          <ExportPdfButton pet={pet} variant="cta" />
+        </div>
       </div>
 
       <UpgradeModal open={showUpgrade} onClose={() => setShowUpgrade(false)} />
