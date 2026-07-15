@@ -301,6 +301,35 @@ export type Database = {
           },
         ]
       }
+      pet_photos: {
+        Row: {
+          created_at: string
+          id: string
+          pet_id: string
+          storage_path: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          pet_id: string
+          storage_path: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          pet_id?: string
+          storage_path?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pet_photos_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       pets: {
         Row: {
           birth_date: string | null
