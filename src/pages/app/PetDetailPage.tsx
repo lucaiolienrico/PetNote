@@ -554,12 +554,19 @@ export function PetDetailPage() {
 
       {/* ── CTA PDF BUTTON — full width, sopra la bottom nav ── */}
       {/* inset-x-0 + max-w-lg mx-auto + px-4: stesso pattern di AppShell/BottomNav,
-          garantisce allineamento col contenuto della pagina su ogni viewport. */}
-      <div className="fixed bottom-20 inset-x-0 z-40">
-        <div className="max-w-lg mx-auto px-4">
-          <ExportPdfButton pet={pet} variant="cta" />
+          garantisce allineamento col contenuto della pagina su ogni viewport.
+          Nascosta quando un modal di questa pagina è aperto (Upgrade/ShareLink):
+          z-40 < z-50 dei modal è corretto in teoria, ma un bundle PWA stale in
+          cache (registerType:autoUpdate non forza reload della tab già aperta)
+          può servire una versione precedente con stacking diverso — la guardia
+          rende il bug impossibile a prescindere dalla causa reale lato client. */}
+      {!showUpgrade && !showShareLink && (
+        <div className="fixed bottom-20 inset-x-0 z-40">
+          <div className="max-w-lg mx-auto px-4">
+            <ExportPdfButton pet={pet} variant="cta" />
+          </div>
         </div>
-      </div>
+      )}
 
       <UpgradeModal open={showUpgrade} onClose={() => setShowUpgrade(false)} />
       <ShareLinkModal
