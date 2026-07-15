@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { createPortal } from 'react-dom'
 import { X, Copy, Trash2, Check, Loader2, Share2 } from 'lucide-react'
 import { toast } from 'sonner'
 import {
@@ -73,7 +74,8 @@ export function ShareLinkModal({ petId, petName, open, onClose }: Props) {
     }
   })
 
-  return (
+  // Portal su document.body — vedi UpgradeModal per il razionale.
+  return createPortal(
     <div
       className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 p-0 sm:p-4"
       onClick={onClose}
@@ -172,6 +174,7 @@ export function ShareLinkModal({ petId, petName, open, onClose }: Props) {
           })}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }

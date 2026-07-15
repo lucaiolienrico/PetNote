@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { createPortal } from 'react-dom'
 import { X, Check, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { useCreateSubscription } from '@/lib/queries/subscription'
@@ -37,7 +38,10 @@ export function UpgradeModal({ open, onClose }: Props) {
     }
   }
 
-  return (
+  // Portal su document.body: il modal vive fuori dall'albero DOM del
+  // chiamante (pagina, BottomNav, LockedFeature...), quindi nessun
+  // stacking context antenato puo' intrappolarlo sotto altri elementi.
+  return createPortal(
     <div
       className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 p-0 sm:p-4"
       onClick={isBusy ? undefined : onClose}
@@ -108,6 +112,7 @@ export function UpgradeModal({ open, onClose }: Props) {
           Verrai reindirizzato a PayPal per completare il pagamento.
         </p>
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }
