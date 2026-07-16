@@ -25,7 +25,7 @@ export function StatCard({
   const points = sparkData.map((v, i) => ({ i, v }))
 
   const body = (
-    <div className="bg-white rounded-2xl border border-slate-100 shadow-md shadow-slate-200/50 p-4 flex flex-col gap-1.5">
+    <div className="bg-white rounded-2xl border border-slate-100 shadow-md shadow-slate-200/50 p-4 flex flex-col gap-1.5 h-full">
       <div className={`w-9 h-9 rounded-full ${iconBg} flex items-center justify-center`}>
         <Icon size={17} className={iconText} />
       </div>
@@ -71,7 +71,7 @@ export function StatCard({
       <button
         type="button"
         onClick={onLockClick}
-        className="block w-full text-left"
+        className="block w-full h-full text-left"
         aria-label={`${label} — richiede Premium`}
       >
         {body}
@@ -80,7 +80,7 @@ export function StatCard({
   }
 
   return (
-    <Link to={to} className="block active:opacity-75 transition-opacity">
+    <Link to={to} className="block h-full active:opacity-75 transition-opacity">
       {body}
     </Link>
   )

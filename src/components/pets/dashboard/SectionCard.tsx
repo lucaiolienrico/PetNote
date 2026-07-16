@@ -20,7 +20,7 @@ export function SectionCard({
   iconBg, iconText, count, lastLabel, locked, onLockClick,
 }: Props) {
   const body = (
-    <div className={`relative bg-white rounded-2xl border border-slate-100 shadow-md shadow-slate-200/50 p-4 flex flex-col gap-2 h-full${locked ? ' opacity-60' : ''}`}>
+    <div className="relative bg-white rounded-2xl border border-slate-100 shadow-md shadow-slate-200/50 p-4 flex flex-col gap-2 h-full">
       <div className="flex items-start justify-between">
         <div className={`w-10 h-10 rounded-full ${iconBg} flex items-center justify-center`}>
           <Icon size={18} className={iconText} />
@@ -50,7 +50,7 @@ export function SectionCard({
       <button
         type="button"
         onClick={onLockClick}
-        className="block w-full text-left"
+        className="block w-full h-full text-left"
         aria-label={`${label} — richiede Premium`}
       >
         {body}
@@ -61,7 +61,7 @@ export function SectionCard({
   return (
     <Link
       to={`/app/pets/${petId}/${path}`}
-      className="block active:opacity-75 transition-opacity"
+      className="block h-full active:opacity-75 transition-opacity"
     >
       {body}
     </Link>
