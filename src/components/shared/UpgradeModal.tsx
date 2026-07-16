@@ -52,8 +52,8 @@ export function UpgradeModal({ open, onClose }: Props) {
       >
         <div className="flex items-start justify-between">
           <div>
-            <h2 className="text-lg font-bold text-gray-900">Passa a Premium ⭐</h2>
-            <p className="text-sm text-gray-500 mt-1">
+            <h2 className="text-lg font-bold text-slate-900">Passa a Premium ⭐</h2>
+            <p className="text-sm text-slate-600 mt-1">
               Il piano Free include 1 animale, 1 visita veterinaria e 1 allergia. Sblocca tutto con Premium.
             </p>
           </div>
@@ -61,7 +61,7 @@ export function UpgradeModal({ open, onClose }: Props) {
             onClick={onClose}
             disabled={isBusy}
             aria-label="Chiudi"
-            className="p-1 text-gray-400 hover:text-gray-600 disabled:opacity-40"
+            className="p-1 text-slate-500 hover:text-slate-600 disabled:opacity-40"
           >
             <X size={20} />
           </button>
@@ -69,7 +69,7 @@ export function UpgradeModal({ open, onClose }: Props) {
 
         <ul className="space-y-2.5">
           {BENEFITS.map(b => (
-            <li key={b} className="flex items-center gap-2.5 text-sm text-gray-700">
+            <li key={b} className="flex items-center gap-2.5 text-sm text-slate-700">
               <span className="flex-shrink-0 w-5 h-5 rounded-full bg-brand-100 flex items-center justify-center">
                 <Check size={12} className="text-brand-700" strokeWidth={3} />
               </span>
@@ -85,8 +85,8 @@ export function UpgradeModal({ open, onClose }: Props) {
             className="w-full flex items-center justify-between bg-brand-50 hover:bg-brand-100 disabled:opacity-60 rounded-2xl p-4 text-left transition-colors"
           >
             <span>
-              <span className="block text-sm font-semibold text-gray-900">Mensile</span>
-              <span className="block text-xs text-gray-500">€4,99/mese</span>
+              <span className="block text-sm font-semibold text-slate-900">Mensile</span>
+              <span className="block text-xs text-slate-600">€4,99/mese</span>
             </span>
             {pendingPlan === 'monthly' && isBusy
               ? <Loader2 size={18} className="animate-spin text-brand-600" />
@@ -108,7 +108,7 @@ export function UpgradeModal({ open, onClose }: Props) {
           </button>
         </div>
 
-        <p className="text-center text-xs text-gray-400">
+        <p className="text-center text-xs text-slate-500">
           Verrai reindirizzato a PayPal per completare il pagamento.
         </p>
       </div>

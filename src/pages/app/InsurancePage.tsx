@@ -37,8 +37,8 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>
 const nn = (v?: string) => (v && v.trim() !== '' ? v.trim() : null)
 
-const inputCls = 'w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500'
-const labelCls = 'block text-xs font-medium text-gray-500 mb-1'
+const inputCls = 'w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500'
+const labelCls = 'block text-xs font-medium text-slate-600 mb-1'
 const eur = new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' })
 
 // Pro-only totale — vedi VaccinationsPage.tsx per il razionale.
@@ -114,8 +114,8 @@ function InsurancePageContent() {
     <div className="p-4 space-y-4">
       <div className="flex items-center justify-between pt-2">
         <div className="flex items-center gap-3">
-          <Link to={`/app/pets/${petId}`} className="p-1 text-gray-500"><ArrowLeft size={22} /></Link>
-          <h1 className="text-xl font-bold text-gray-900">Assicurazioni</h1>
+          <Link to={`/app/pets/${petId}`} className="p-1 text-slate-600"><ArrowLeft size={22} /></Link>
+          <h1 className="text-xl font-bold text-slate-900">Assicurazioni</h1>
         </div>
         {!showForm && (
           <button onClick={openNew} className="flex items-center gap-1.5 bg-brand-600 text-white rounded-xl px-3.5 py-2 text-sm font-semibold hover:bg-brand-700">
@@ -125,7 +125,7 @@ function InsurancePageContent() {
       </div>
 
       {showForm && (
-        <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-2xl border border-gray-100 p-4 space-y-3">
+        <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-2xl border border-slate-100 p-4 space-y-3">
           <div>
             <label className={labelCls}>Compagnia *</label>
             <input {...register('provider')} placeholder="Es. UnipolSai Pet" className={inputCls} />
@@ -166,7 +166,7 @@ function InsurancePageContent() {
             <textarea {...register('notes')} rows={2} className={inputCls} />
           </div>
           <div className="flex gap-2">
-            <button type="button" onClick={() => setShowForm(false)} className="flex-1 border border-gray-200 text-gray-600 rounded-xl py-2.5 text-sm font-semibold">
+            <button type="button" onClick={() => setShowForm(false)} className="flex-1 border border-slate-200 text-slate-600 rounded-xl py-2.5 text-sm font-semibold">
               Annulla
             </button>
             <button type="submit" disabled={isSubmitting} className="flex-1 bg-brand-600 text-white rounded-xl py-2.5 text-sm font-semibold disabled:opacity-50">
@@ -176,12 +176,12 @@ function InsurancePageContent() {
         </form>
       )}
 
-      {isLoading && <div className="h-16 bg-gray-100 rounded-2xl animate-pulse" />}
+      {isLoading && <div className="h-16 bg-slate-100 rounded-2xl animate-pulse" />}
 
       {!isLoading && policies?.length === 0 && !showForm && (
-        <div className="bg-white rounded-2xl border border-gray-100 p-8 text-center space-y-2">
+        <div className="bg-white rounded-2xl border border-slate-100 p-8 text-center space-y-2">
           <ShieldCheck size={26} className="text-brand-600 mx-auto" />
-          <p className="text-sm text-gray-500">Nessuna polizza registrata</p>
+          <p className="text-sm text-slate-600">Nessuna polizza registrata</p>
         </div>
       )}
 
@@ -189,27 +189,27 @@ function InsurancePageContent() {
         {policies?.map(p => {
           const isActive = !p.end_date || p.end_date >= today()
           return (
-            <div key={p.id} className="bg-white rounded-2xl border border-gray-100 p-4">
+            <div key={p.id} className="bg-white rounded-2xl border border-slate-100 p-4">
               <div className="flex items-start justify-between gap-2">
                 <button onClick={() => openEdit(p)} className="flex-1 min-w-0 text-left">
-                  <p className="font-semibold text-gray-900">{p.provider}</p>
-                  <p className="text-xs text-gray-500 mt-0.5">
+                  <p className="font-semibold text-slate-900">{p.provider}</p>
+                  <p className="text-xs text-slate-600 mt-0.5">
                     {eur.format(p.premium_amount)} · {FREQUENCY_LABEL[p.billing_frequency] ?? p.billing_frequency}
                   </p>
-                  <p className="text-xs text-gray-400 mt-0.5">
+                  <p className="text-xs text-slate-500 mt-0.5">
                     Dal {formatIt(p.start_date)}{p.end_date && ` al ${formatIt(p.end_date)}`}
                     {p.policy_number && ` · Polizza ${p.policy_number}`}
                   </p>
                 </button>
                 <div className="flex items-center gap-2 flex-shrink-0">
                   <span className={`text-xs px-2 py-0.5 rounded-full font-medium whitespace-nowrap ${
-                    isActive ? 'bg-brand-50 text-brand-700' : 'bg-gray-100 text-gray-500'
+                    isActive ? 'bg-brand-50 text-brand-700' : 'bg-slate-100 text-slate-600'
                   }`}>
                     {isActive ? 'Attiva' : 'Scaduta'}
                   </span>
                   <button
                     onClick={() => onDelete(p.id)}
-                    className={`p-1 ${isArmed(p.id) ? 'text-red-600' : 'text-gray-300'}`}
+                    className={`p-1 ${isArmed(p.id) ? 'text-red-600' : 'text-slate-300'}`}
                     aria-label="Elimina"
                   >
                     <Trash2 size={16} />

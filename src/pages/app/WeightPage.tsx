@@ -28,8 +28,8 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>
 const nn = (v?: string) => (v && v.trim() !== '' ? v.trim() : null)
 
-const inputCls = 'w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500'
-const labelCls = 'block text-xs font-medium text-gray-500 mb-1'
+const inputCls = 'w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500'
+const labelCls = 'block text-xs font-medium text-slate-600 mb-1'
 
 const fmtKg = (v: number) => `${v.toLocaleString('it-IT', { maximumFractionDigits: 3 })} kg`
 const fmtAxisDate = (iso: string) => new Date(iso).toLocaleDateString('it-IT', { day: 'numeric', month: 'short' })
@@ -102,8 +102,8 @@ function WeightPageContent() {
     <div className="p-4 space-y-4">
       <div className="flex items-center justify-between pt-2">
         <div className="flex items-center gap-3">
-          <Link to={`/app/pets/${petId}`} className="p-1 text-gray-500"><ArrowLeft size={22} /></Link>
-          <h1 className="text-xl font-bold text-gray-900">Peso</h1>
+          <Link to={`/app/pets/${petId}`} className="p-1 text-slate-600"><ArrowLeft size={22} /></Link>
+          <h1 className="text-xl font-bold text-slate-900">Peso</h1>
         </div>
         {!showForm && (
           <button onClick={openNew} className="flex items-center gap-1.5 bg-brand-600 text-white rounded-xl px-3.5 py-2 text-sm font-semibold hover:bg-brand-700">
@@ -113,7 +113,7 @@ function WeightPageContent() {
       </div>
 
       {showForm && (
-        <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-2xl border border-gray-100 p-4 space-y-3">
+        <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-2xl border border-slate-100 p-4 space-y-3">
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className={labelCls}>Peso (kg) *</label>
@@ -131,7 +131,7 @@ function WeightPageContent() {
             <textarea {...register('notes')} rows={2} className={inputCls} />
           </div>
           <div className="flex gap-2">
-            <button type="button" onClick={() => setShowForm(false)} className="flex-1 border border-gray-200 text-gray-600 rounded-xl py-2.5 text-sm font-semibold">
+            <button type="button" onClick={() => setShowForm(false)} className="flex-1 border border-slate-200 text-slate-600 rounded-xl py-2.5 text-sm font-semibold">
               Annulla
             </button>
             <button type="submit" disabled={isSubmitting} className="flex-1 bg-brand-600 text-white rounded-xl py-2.5 text-sm font-semibold disabled:opacity-50">
@@ -141,17 +141,17 @@ function WeightPageContent() {
         </form>
       )}
 
-      {isLoading && <div className="h-48 bg-gray-100 rounded-2xl animate-pulse" />}
+      {isLoading && <div className="h-48 bg-slate-100 rounded-2xl animate-pulse" />}
 
       {!isLoading && logs?.length === 0 && !showForm && (
-        <div className="bg-white rounded-2xl border border-gray-100 p-8 text-center space-y-2">
+        <div className="bg-white rounded-2xl border border-slate-100 p-8 text-center space-y-2">
           <Scale size={26} className="text-brand-600 mx-auto" />
-          <p className="text-sm text-gray-500">Nessuna misurazione registrata</p>
+          <p className="text-sm text-slate-600">Nessuna misurazione registrata</p>
         </div>
       )}
 
       {!isLoading && chartData.length > 0 && (
-        <div className="bg-white rounded-2xl border border-gray-100 p-4">
+        <div className="bg-white rounded-2xl border border-slate-100 p-4">
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={chartData} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
@@ -189,16 +189,16 @@ function WeightPageContent() {
 
       <div className="space-y-2.5">
         {logs?.map(l => (
-          <div key={l.id} className="bg-white rounded-2xl border border-gray-100 p-4">
+          <div key={l.id} className="bg-white rounded-2xl border border-slate-100 p-4">
             <div className="flex items-start justify-between gap-2">
               <button onClick={() => openEdit(l)} className="flex-1 min-w-0 text-left">
-                <p className="font-semibold text-gray-900">{fmtKg(l.weight_kg)}</p>
-                <p className="text-xs text-gray-500 mt-0.5">{formatIt(l.measured_at)}</p>
-                {l.notes && <p className="text-xs text-gray-400 mt-1 line-clamp-2">{l.notes}</p>}
+                <p className="font-semibold text-slate-900">{fmtKg(l.weight_kg)}</p>
+                <p className="text-xs text-slate-600 mt-0.5">{formatIt(l.measured_at)}</p>
+                {l.notes && <p className="text-xs text-slate-500 mt-1 line-clamp-2">{l.notes}</p>}
               </button>
               <button
                 onClick={() => onDelete(l.id)}
-                className={`p-1 flex-shrink-0 ${isArmed(l.id) ? 'text-red-600' : 'text-gray-300'}`}
+                className={`p-1 flex-shrink-0 ${isArmed(l.id) ? 'text-red-600' : 'text-slate-300'}`}
                 aria-label="Elimina"
               >
                 <Trash2 size={16} />

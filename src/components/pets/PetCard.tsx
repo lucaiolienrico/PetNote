@@ -15,7 +15,7 @@ export function PetCard({ pet }: { pet: Pet }) {
   // ExportPdfButton come elemento fratello → export disponibile dalla dashboard
   // senza entrare nel dettaglio, sia per admin sia per utente (nessun gate).
   return (
-    <div className="flex items-center gap-1 bg-white rounded-2xl border border-gray-100 p-3.5">
+    <div className="flex items-center gap-1 bg-white rounded-2xl border border-slate-100 p-3.5">
       <Link
         to={`/app/pets/${pet.id}`}
         className="flex items-center gap-3 flex-1 min-w-0 active:opacity-70 transition-opacity"
@@ -26,15 +26,15 @@ export function PetCard({ pet }: { pet: Pet }) {
             : <span className="text-2xl">{SPECIES[pet.species].emoji}</span>}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="font-semibold text-gray-900 truncate">{pet.name}</p>
-          <p className="text-xs text-gray-500 truncate">{meta}</p>
+          <p className="font-semibold text-slate-900 truncate">{pet.name}</p>
+          <p className="text-xs text-slate-600 truncate">{meta}</p>
         </div>
       </Link>
 
       <ExportPdfButton pet={pet} />
 
       <Link to={`/app/pets/${pet.id}`} aria-label={`Apri ${pet.name}`} className="flex-shrink-0">
-        <ChevronRight size={18} className="text-gray-300" />
+        <ChevronRight size={18} className="text-slate-300" />
       </Link>
     </div>
   )

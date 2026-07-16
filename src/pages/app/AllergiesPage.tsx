@@ -33,8 +33,8 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>
 const nn = (v?: string) => (v && v.trim() !== '' ? v.trim() : null)
 
-const inputCls = 'w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500'
-const labelCls = 'block text-xs font-medium text-gray-500 mb-1'
+const inputCls = 'w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500'
+const labelCls = 'block text-xs font-medium text-slate-600 mb-1'
 
 export function AllergiesPage() {
   const { id: petId } = useParams<{ id: string }>()
@@ -105,8 +105,8 @@ export function AllergiesPage() {
     <div className="p-4 space-y-4">
       <div className="flex items-center justify-between pt-2">
         <div className="flex items-center gap-3">
-          <Link to={`/app/pets/${petId}`} className="p-1 text-gray-500"><ArrowLeft size={22} /></Link>
-          <h1 className="text-xl font-bold text-gray-900">Allergie</h1>
+          <Link to={`/app/pets/${petId}`} className="p-1 text-slate-600"><ArrowLeft size={22} /></Link>
+          <h1 className="text-xl font-bold text-slate-900">Allergie</h1>
         </div>
         {!showForm && (
           <button
@@ -119,7 +119,7 @@ export function AllergiesPage() {
       </div>
 
       {showForm && (
-        <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-2xl border border-gray-100 p-4 space-y-3">
+        <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-2xl border border-slate-100 p-4 space-y-3">
           <div>
             <label className={labelCls}>Allergene *</label>
             <input {...register('allergen')} placeholder="Es. Polline, Pollo, Penicillina" className={inputCls} />
@@ -148,7 +148,7 @@ export function AllergiesPage() {
             <textarea {...register('notes')} rows={2} className={inputCls} />
           </div>
           <div className="flex gap-2">
-            <button type="button" onClick={() => setShowForm(false)} className="flex-1 border border-gray-200 text-gray-600 rounded-xl py-2.5 text-sm font-semibold">
+            <button type="button" onClick={() => setShowForm(false)} className="flex-1 border border-slate-200 text-slate-600 rounded-xl py-2.5 text-sm font-semibold">
               Annulla
             </button>
             <button type="submit" disabled={isSubmitting} className="flex-1 bg-brand-600 text-white rounded-xl py-2.5 text-sm font-semibold disabled:opacity-50">
@@ -158,33 +158,33 @@ export function AllergiesPage() {
         </form>
       )}
 
-      {isLoading && <div className="h-16 bg-gray-100 rounded-2xl animate-pulse" />}
+      {isLoading && <div className="h-16 bg-slate-100 rounded-2xl animate-pulse" />}
 
       {!isLoading && allergies?.length === 0 && !showForm && (
-        <div className="bg-white rounded-2xl border border-gray-100 p-8 text-center space-y-2">
+        <div className="bg-white rounded-2xl border border-slate-100 p-8 text-center space-y-2">
           <AlertTriangle size={26} className="text-brand-600 mx-auto" />
-          <p className="text-sm text-gray-500">Nessuna allergia registrata</p>
+          <p className="text-sm text-slate-600">Nessuna allergia registrata</p>
         </div>
       )}
 
       <div className="space-y-2.5">
         {allergies?.map(a => (
-          <div key={a.id} className="bg-white rounded-2xl border border-gray-100 p-4">
+          <div key={a.id} className="bg-white rounded-2xl border border-slate-100 p-4">
             <div className="flex items-start justify-between gap-2">
               <button onClick={() => openEdit(a)} className="flex-1 min-w-0 text-left">
-                <p className="font-semibold text-gray-900">{a.allergen}</p>
-                <p className="text-xs text-gray-500 mt-0.5">
+                <p className="font-semibold text-slate-900">{a.allergen}</p>
+                <p className="text-xs text-slate-600 mt-0.5">
                   {a.reaction || 'Reazione non specificata'}
                   {a.diagnosed_at && ` · diagnosticata il ${formatIt(a.diagnosed_at)}`}
                 </p>
               </button>
               <div className="flex items-center gap-2 flex-shrink-0">
-                <span className={`text-xs px-2 py-0.5 rounded-full font-medium whitespace-nowrap ${SEVERITY_META[a.severity]?.cls ?? 'bg-gray-100 text-gray-500'}`}>
+                <span className={`text-xs px-2 py-0.5 rounded-full font-medium whitespace-nowrap ${SEVERITY_META[a.severity]?.cls ?? 'bg-slate-100 text-slate-600'}`}>
                   {SEVERITY_META[a.severity]?.label ?? a.severity}
                 </span>
                 <button
                   onClick={() => onDelete(a.id)}
-                  className={`p-1 ${isArmed(a.id) ? 'text-red-600' : 'text-gray-300'}`}
+                  className={`p-1 ${isArmed(a.id) ? 'text-red-600' : 'text-slate-300'}`}
                   aria-label="Elimina"
                 >
                   <Trash2 size={16} />

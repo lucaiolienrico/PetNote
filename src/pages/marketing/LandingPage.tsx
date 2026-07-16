@@ -56,15 +56,15 @@ const FAQ = [
 
 export function LandingPage() {
   return (
-    <div className="min-h-screen bg-white text-gray-900">
+    <div className="min-h-screen bg-white text-slate-900">
       {/* Nav */}
-      <header className="border-b border-gray-100">
+      <header className="border-b border-slate-100">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
           <span className="font-bold text-lg flex items-center gap-1.5">
             <span aria-hidden>🐾</span> PetNote
           </span>
           <div className="flex items-center gap-3">
-            <Link to="/login" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
+            <Link to="/login" className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
               Accedi
             </Link>
             <Link
@@ -86,7 +86,7 @@ export function LandingPage() {
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight leading-[1.08]">
             Il libretto sanitario che tiene traccia al posto tuo.
           </h1>
-          <p className="text-gray-500 text-base md:text-lg mt-5 max-w-md">
+          <p className="text-slate-600 text-base md:text-lg mt-5 max-w-md">
             Vaccinazioni, visite, antiparassitari e peso di cane, gatto, coniglio o qualsiasi altro animale.
             Un posto solo, sempre a portata di mano.
           </p>
@@ -99,7 +99,7 @@ export function LandingPage() {
             </Link>
             <Link
               to="/login"
-              className="text-sm font-semibold text-gray-600 hover:text-gray-900 transition-colors px-5 py-3"
+              className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors px-5 py-3"
             >
               Ho già un account
             </Link>
@@ -108,22 +108,22 @@ export function LandingPage() {
 
         {/* Signature: mockup "libretto" con timbro — stessa palette badge dell'app reale */}
         <div className="relative motion-safe:animate-[fadeUp_0.7s_ease-out_0.15s_forwards] motion-safe:opacity-0">
-          <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-5 max-w-sm mx-auto">
-            <div className="flex items-center gap-3 pb-4 border-b border-gray-50">
+          <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5 max-w-sm mx-auto">
+            <div className="flex items-center gap-3 pb-4 border-b border-slate-50">
               <div className="w-11 h-11 rounded-full bg-brand-50 flex items-center justify-center text-xl flex-shrink-0">
                 🐕
               </div>
               <div>
-                <p className="font-semibold text-gray-900 leading-tight">Luna</p>
-                <p className="text-xs text-gray-400">Cane · labrador · 3 anni</p>
+                <p className="font-semibold text-slate-900 leading-tight">Luna</p>
+                <p className="text-xs text-slate-500">Cane · labrador · 3 anni</p>
               </div>
             </div>
 
-            <div className="divide-y divide-gray-50">
+            <div className="divide-y divide-slate-50">
               <div className="flex items-center justify-between py-3">
                 <div className="flex items-center gap-2.5 min-w-0">
                   <Syringe size={16} className="text-brand-600 flex-shrink-0" />
-                  <span className="text-sm text-gray-700 truncate">Trivalente</span>
+                  <span className="text-sm text-slate-700 truncate">Trivalente</span>
                 </div>
                 <span className="text-xs px-2 py-0.5 rounded-full font-medium whitespace-nowrap bg-brand-50 text-brand-700">
                   In regola
@@ -132,7 +132,7 @@ export function LandingPage() {
               <div className="flex items-center justify-between py-3">
                 <div className="flex items-center gap-2.5 min-w-0">
                   <Bug size={16} className="text-brand-600 flex-shrink-0" />
-                  <span className="text-sm text-gray-700 truncate">Advantics</span>
+                  <span className="text-sm text-slate-700 truncate">Advantics</span>
                 </div>
                 <span className="text-xs px-2 py-0.5 rounded-full font-medium whitespace-nowrap bg-red-50 text-red-600">
                   Scaduto
@@ -141,9 +141,9 @@ export function LandingPage() {
               <div className="flex items-center justify-between py-3">
                 <div className="flex items-center gap-2.5 min-w-0">
                   <Scale size={16} className="text-brand-600 flex-shrink-0" />
-                  <span className="text-sm text-gray-700 truncate">Peso</span>
+                  <span className="text-sm text-slate-700 truncate">Peso</span>
                 </div>
-                <span className="text-xs text-gray-400 whitespace-nowrap">30,0 kg ↘</span>
+                <span className="text-xs text-slate-500 whitespace-nowrap">30,0 kg ↘</span>
               </div>
             </div>
           </div>
@@ -161,26 +161,26 @@ export function LandingPage() {
       </section>
 
       {/* Feature grid */}
-      <section className="max-w-5xl mx-auto px-4 py-16 border-t border-gray-100">
+      <section className="max-w-5xl mx-auto px-4 py-16 border-t border-slate-100">
         <h2 className="text-2xl md:text-3xl font-bold text-center mb-2">
           Tutto quello che serve, niente di superfluo
         </h2>
-        <p className="text-gray-500 text-center max-w-md mx-auto mb-10">
+        <p className="text-slate-600 text-center max-w-md mx-auto mb-10">
           Quattro cose da ricordare per ogni animale. Una sola app che se ne ricorda per te.
         </p>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {FEATURES.map(({ icon: Icon, title, body }) => (
-            <div key={title} className="bg-white rounded-2xl border border-gray-100 p-5">
+            <div key={title} className="bg-white rounded-2xl border border-slate-100 p-5">
               <Icon size={22} className="text-brand-600 mb-3" />
-              <p className="font-semibold text-gray-900 mb-1">{title}</p>
-              <p className="text-sm text-gray-500 leading-snug">{body}</p>
+              <p className="font-semibold text-slate-900 mb-1">{title}</p>
+              <p className="text-sm text-slate-600 leading-snug">{body}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* Come funziona — sequenza reale, numerazione giustificata */}
-      <section className="bg-brand-50/40 border-t border-gray-100">
+      <section className="bg-brand-50/40 border-t border-slate-100">
         <div className="max-w-5xl mx-auto px-4 py-16">
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-10">Come funziona</h2>
           <div className="grid sm:grid-cols-3 gap-8">
@@ -189,8 +189,8 @@ export function LandingPage() {
                 <span className="inline-flex w-8 h-8 rounded-full bg-brand-600 text-white text-sm font-bold items-center justify-center mb-3">
                   {n}
                 </span>
-                <p className="font-semibold text-gray-900 mb-1">{title}</p>
-                <p className="text-sm text-gray-500">{body}</p>
+                <p className="font-semibold text-slate-900 mb-1">{title}</p>
+                <p className="text-sm text-slate-600">{body}</p>
               </div>
             ))}
           </div>
@@ -198,14 +198,14 @@ export function LandingPage() {
       </section>
 
       {/* Pricing */}
-      <section className="max-w-5xl mx-auto px-4 py-16 border-t border-gray-100">
+      <section className="max-w-5xl mx-auto px-4 py-16 border-t border-slate-100">
         <h2 className="text-2xl md:text-3xl font-bold text-center mb-10">Un piano per ogni esigenza</h2>
         <div className="grid sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
-          <div className="bg-white rounded-2xl border border-gray-100 p-6">
-            <p className="font-semibold text-gray-900">Free</p>
+          <div className="bg-white rounded-2xl border border-slate-100 p-6">
+            <p className="font-semibold text-slate-900">Free</p>
             <p className="text-3xl font-bold mt-2">€0</p>
-            <p className="text-xs text-gray-400 mb-5">per sempre</p>
-            <ul className="space-y-2.5 text-sm text-gray-600">
+            <p className="text-xs text-slate-500 mb-5">per sempre</p>
+            <ul className="space-y-2.5 text-sm text-slate-600">
               <li className="flex items-center gap-2"><Check size={15} className="text-brand-600 flex-shrink-0" /> 1 animale</li>
               <li className="flex items-center gap-2"><Check size={15} className="text-brand-600 flex-shrink-0" /> 1 visita veterinaria</li>
               <li className="flex items-center gap-2"><Check size={15} className="text-brand-600 flex-shrink-0" /> 1 allergia registrata</li>
@@ -215,10 +215,10 @@ export function LandingPage() {
             <span className="absolute -top-3 right-6 bg-brand-600 text-white text-[11px] font-semibold px-2.5 py-1 rounded-full">
               -42% annuale
             </span>
-            <p className="font-semibold text-gray-900">Premium</p>
-            <p className="text-3xl font-bold mt-2">€4,99<span className="text-sm font-normal text-gray-400">/mese</span></p>
-            <p className="text-xs text-gray-400 mb-5">oppure €34,99/anno</p>
-            <ul className="space-y-2.5 text-sm text-gray-600">
+            <p className="font-semibold text-slate-900">Premium</p>
+            <p className="text-3xl font-bold mt-2">€4,99<span className="text-sm font-normal text-slate-500">/mese</span></p>
+            <p className="text-xs text-slate-500 mb-5">oppure €34,99/anno</p>
+            <ul className="space-y-2.5 text-sm text-slate-600">
               <li className="flex items-center gap-2"><Check size={15} className="text-brand-600 flex-shrink-0" /> Animali illimitati</li>
               <li className="flex items-center gap-2"><Check size={15} className="text-brand-600 flex-shrink-0" /> Vaccinazioni, antiparassitari, peso</li>
               <li className="flex items-center gap-2"><Check size={15} className="text-brand-600 flex-shrink-0" /> Visite e allergie illimitate</li>
@@ -229,34 +229,34 @@ export function LandingPage() {
       </section>
 
       {/* Fiducia — solo affermazioni verificabili, nessun numero inventato */}
-      <section className="border-t border-gray-100">
+      <section className="border-t border-slate-100">
         <div className="max-w-5xl mx-auto px-4 py-14 grid sm:grid-cols-3 gap-8 text-center sm:text-left">
           <div>
             <Lock size={20} className="text-brand-600 mx-auto sm:mx-0 mb-2" />
-            <p className="font-semibold text-gray-900 text-sm">Dati privati per design</p>
-            <p className="text-sm text-gray-500 mt-1">Ogni animale è visibile solo al suo proprietario, imposto a livello di database.</p>
+            <p className="font-semibold text-slate-900 text-sm">Dati privati per design</p>
+            <p className="text-sm text-slate-600 mt-1">Ogni animale è visibile solo al suo proprietario, imposto a livello di database.</p>
           </div>
           <div>
             <Smartphone size={20} className="text-brand-600 mx-auto sm:mx-0 mb-2" />
-            <p className="font-semibold text-gray-900 text-sm">Nessun app store</p>
-            <p className="text-sm text-gray-500 mt-1">È un'app web installabile: apri il sito, aggiungila alla schermata Home.</p>
+            <p className="font-semibold text-slate-900 text-sm">Nessun app store</p>
+            <p className="text-sm text-slate-600 mt-1">È un'app web installabile: apri il sito, aggiungila alla schermata Home.</p>
           </div>
           <div>
             <CalendarClock size={20} className="text-brand-600 mx-auto sm:mx-0 mb-2" />
-            <p className="font-semibold text-gray-900 text-sm">Scadenze sempre visibili</p>
-            <p className="text-sm text-gray-500 mt-1">Ogni vaccino e trattamento mostra da solo se è in regola o scaduto.</p>
+            <p className="font-semibold text-slate-900 text-sm">Scadenze sempre visibili</p>
+            <p className="text-sm text-slate-600 mt-1">Ogni vaccino e trattamento mostra da solo se è in regola o scaduto.</p>
           </div>
         </div>
       </section>
 
       {/* FAQ */}
-      <section className="max-w-3xl mx-auto px-4 py-16 border-t border-gray-100">
+      <section className="max-w-3xl mx-auto px-4 py-16 border-t border-slate-100">
         <h2 className="text-2xl md:text-3xl font-bold text-center mb-10">Domande frequenti</h2>
         <div className="space-y-6">
           {FAQ.map(({ q, a }) => (
             <div key={q}>
-              <p className="font-semibold text-gray-900">{q}</p>
-              <p className="text-sm text-gray-500 mt-1">{a}</p>
+              <p className="font-semibold text-slate-900">{q}</p>
+              <p className="text-sm text-slate-600 mt-1">{a}</p>
             </div>
           ))}
         </div>
@@ -279,14 +279,14 @@ export function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-gray-100">
-        <div className="max-w-5xl mx-auto px-4 py-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-gray-400">
+      <footer className="border-t border-slate-100">
+        <div className="max-w-5xl mx-auto px-4 py-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-slate-500">
           <span className="flex items-center gap-1.5">🐾 PetNote</span>
           <div className="flex items-center gap-4">
-            <Link to="/privacy" className="hover:text-gray-600 transition-colors">Privacy</Link>
-            <Link to="/termini" className="hover:text-gray-600 transition-colors">Termini</Link>
-            <a href="mailto:supporto.petnote@gmail.com" className="hover:text-gray-600 transition-colors">Supporto</a>
-            <Link to="/login" className="hover:text-gray-600 transition-colors">Accedi</Link>
+            <Link to="/privacy" className="hover:text-slate-600 transition-colors">Privacy</Link>
+            <Link to="/termini" className="hover:text-slate-600 transition-colors">Termini</Link>
+            <a href="mailto:supporto.petnote@gmail.com" className="hover:text-slate-600 transition-colors">Supporto</a>
+            <Link to="/login" className="hover:text-slate-600 transition-colors">Accedi</Link>
           </div>
         </div>
       </footer>

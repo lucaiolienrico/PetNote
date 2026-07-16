@@ -53,7 +53,7 @@ export function ExportPdfButton({ pet, variant = 'icon' }: ExportPdfButtonProps)
     <button
       onClick={onExport}
       disabled={isGenerating}
-      className="p-2 text-gray-500 hover:text-brand-600 transition-colors disabled:opacity-50"
+      className="p-2 text-slate-600 hover:text-brand-600 transition-colors disabled:opacity-50"
       aria-label="Esporta scheda in PDF"
     >
       {isGenerating ? <Loader2 size={18} className="animate-spin" /> : <FileDown size={18} />}

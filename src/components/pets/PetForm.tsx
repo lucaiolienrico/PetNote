@@ -27,8 +27,8 @@ interface Props {
   submitting: boolean
 }
 
-const inputCls = 'w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white'
-const labelCls = 'block text-xs font-medium text-gray-500 mb-1'
+const inputCls = 'w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white'
+const labelCls = 'block text-xs font-medium text-slate-600 mb-1'
 const MAX_PHOTO_BYTES = 5 * 1024 * 1024 // limite bucket pet-photos
 
 export function PetForm({ pet, onSubmit, submitting }: Props) {

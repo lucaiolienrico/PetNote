@@ -31,11 +31,11 @@ export function LoginPage() {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-semibold text-gray-900">Accedi</h2>
+      <h2 className="text-lg font-semibold text-slate-900">Accedi</h2>
 
       <button
         onClick={loginWithGoogle}
-        className="w-full flex items-center justify-center gap-2 border border-gray-200 rounded-xl py-2.5 text-sm font-medium hover:bg-gray-50 transition-colors"
+        className="w-full flex items-center justify-center gap-2 border border-slate-200 rounded-xl py-2.5 text-sm font-medium hover:bg-slate-50 transition-colors"
       >
         <svg className="w-4 h-4" viewBox="0 0 24 24">
           <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -46,10 +46,10 @@ export function LoginPage() {
         Continua con Google
       </button>
 
-      <div className="flex items-center gap-2 text-xs text-gray-400">
-        <div className="flex-1 h-px bg-gray-100" />
+      <div className="flex items-center gap-2 text-xs text-slate-500">
+        <div className="flex-1 h-px bg-slate-100" />
         oppure
-        <div className="flex-1 h-px bg-gray-100" />
+        <div className="flex-1 h-px bg-slate-100" />
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
@@ -59,7 +59,7 @@ export function LoginPage() {
             type="email"
             placeholder="Email"
             autoComplete="email"
-            className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+            className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
           />
           {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
         </div>
@@ -69,7 +69,7 @@ export function LoginPage() {
             type="password"
             placeholder="Password"
             autoComplete="current-password"
-            className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+            className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
           />
           {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
         </div>
@@ -82,7 +82,7 @@ export function LoginPage() {
         </button>
       </form>
 
-      <p className="text-center text-sm text-gray-500">
+      <p className="text-center text-sm text-slate-600">
         Nessun account?{' '}
         <Link to="/register" className="text-brand-600 font-medium">Registrati</Link>
       </p>

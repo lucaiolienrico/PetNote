@@ -138,10 +138,10 @@ export function SettingsPage() {
 
   return (
     <div className="p-4 space-y-4">
-      <h1 className="text-xl font-bold text-gray-900 pt-2">Impostazioni</h1>
+      <h1 className="text-xl font-bold text-slate-900 pt-2">Impostazioni</h1>
 
       {/* Profilo */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-4 space-y-3">
+      <div className="bg-white rounded-2xl border border-slate-100 p-4 space-y-3">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 rounded-full bg-brand-100 flex items-center justify-center text-brand-700 font-bold text-lg flex-shrink-0">
             {(profile?.full_name || user?.email || '?').charAt(0).toUpperCase()}
@@ -152,35 +152,35 @@ export function SettingsPage() {
                 <input
                   {...register('full_name')}
                   autoFocus
-                  className="flex-1 min-w-0 border border-gray-200 rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                  className="flex-1 min-w-0 border border-slate-200 rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
                 />
                 <button type="submit" disabled={updateProfile.isPending} className="p-1.5 text-brand-600" aria-label="Salva">
                   <Check size={16} />
                 </button>
-                <button type="button" onClick={cancelEdit} className="p-1.5 text-gray-400" aria-label="Annulla">
+                <button type="button" onClick={cancelEdit} className="p-1.5 text-slate-500" aria-label="Annulla">
                   <X size={16} />
                 </button>
               </form>
             ) : (
               <button
                 onClick={() => setEditingName(true)}
-                className="flex items-center gap-1.5 font-semibold text-gray-900 truncate"
+                className="flex items-center gap-1.5 font-semibold text-slate-900 truncate"
               >
                 <span className="truncate">{profile?.full_name || 'Aggiungi nome'}</span>
-                <Pencil size={13} className="text-gray-300 flex-shrink-0" />
+                <Pencil size={13} className="text-slate-300 flex-shrink-0" />
               </button>
             )}
-            <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+            <p className="text-xs text-slate-600 truncate">{user?.email}</p>
           </div>
         </div>
       </div>
 
       {/* Piano */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-4 space-y-3">
+      <div className="bg-white rounded-2xl border border-slate-100 p-4 space-y-3">
         <div className="flex items-center justify-between">
-          <p className="text-sm font-semibold text-gray-900">Il tuo piano</p>
+          <p className="text-sm font-semibold text-slate-900">Il tuo piano</p>
           <span className={`text-xs px-2 py-1 rounded-full font-medium ${
-            isAdmin ? 'bg-purple-100 text-purple-700' : isPremium ? 'bg-brand-100 text-brand-700' : 'bg-gray-100 text-gray-500'
+            isAdmin ? 'bg-purple-100 text-purple-700' : isPremium ? 'bg-brand-100 text-brand-700' : 'bg-slate-100 text-slate-600'
           }`}>
             {isAdmin ? '🔧 Admin' : isPremium ? '⭐ Premium' : 'Free'}
           </span>
@@ -189,13 +189,13 @@ export function SettingsPage() {
         {isAdmin ? (
           // Bypass amministrativo: nessuna subscription PayPal reale dietro,
           // quindi niente rinnovo/cancellazione — sarebbero fuorvianti.
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-slate-600">
             Accesso completo come amministratore — nessun abbonamento richiesto.
           </p>
         ) : isPremium ? (
           <>
             {renewalDate && (
-              <p className="text-xs text-gray-500">Rinnovo il {renewalDate}</p>
+              <p className="text-xs text-slate-600">Rinnovo il {renewalDate}</p>
             )}
             <button
               onClick={onManageSubscription}
@@ -203,7 +203,7 @@ export function SettingsPage() {
               className={`w-full border rounded-xl py-2.5 text-sm font-semibold transition-colors disabled:opacity-50 ${
                 confirmCancel
                   ? 'border-red-200 bg-red-50 text-red-600'
-                  : 'border-gray-200 text-gray-600 hover:bg-gray-50'
+                  : 'border-slate-200 text-slate-600 hover:bg-slate-50'
               }`}
             >
               {cancelSubscription.isPending
@@ -225,16 +225,16 @@ export function SettingsPage() {
 
       {/* Notifiche push */}
       {push.isSupported && (
-        <div className="bg-white rounded-2xl border border-gray-100 p-4 space-y-2">
+        <div className="bg-white rounded-2xl border border-slate-100 p-4 space-y-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               {push.isSubscribed
                 ? <Bell size={18} className="text-brand-600" />
-                : <BellOff size={18} className="text-gray-400" />
+                : <BellOff size={18} className="text-slate-500" />
               }
               <div>
-                <p className="text-sm font-semibold text-gray-900">Promemoria push</p>
-                <p className="text-xs text-gray-500">
+                <p className="text-sm font-semibold text-slate-900">Promemoria push</p>
+                <p className="text-xs text-slate-600">
                   {push.isSubscribed ? 'Attive su questo dispositivo' : 'Ricevi avvisi per vaccini e antiparassitari'}
                 </p>
               </div>
@@ -246,7 +246,7 @@ export function SettingsPage() {
               aria-checked={push.isSubscribed}
               aria-label="Attiva o disattiva notifiche push"
               className={`relative w-11 h-6 rounded-full transition-colors flex-shrink-0 disabled:opacity-50 ${
-                push.isSubscribed ? 'bg-brand-600' : 'bg-gray-200'
+                push.isSubscribed ? 'bg-brand-600' : 'bg-slate-200'
               }`}
             >
               <span
@@ -265,14 +265,14 @@ export function SettingsPage() {
         className={`w-full flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold transition-colors ${
           confirmLogout
             ? 'bg-red-50 text-red-600'
-            : 'bg-white border border-gray-100 text-gray-600 hover:bg-gray-50'
+            : 'bg-white border border-slate-100 text-slate-600 hover:bg-slate-50'
         }`}
       >
         <LogOut size={16} />
         {confirmLogout ? 'Tocca di nuovo per confermare' : 'Esci'}
       </button>
 
-      <p className="text-center text-xs text-gray-300 pt-2">PetNote v{APP_VERSION}</p>
+      <p className="text-center text-xs text-slate-300 pt-2">PetNote v{APP_VERSION}</p>
 
       <UpgradeModal open={showUpgrade} onClose={() => setShowUpgrade(false)} />
     </div>

@@ -19,7 +19,7 @@ export function PetsPage() {
   return (
     <div className="p-4 space-y-4">
       <div className="flex items-center justify-between pt-2">
-        <h1 className="text-xl font-bold text-gray-900">I tuoi animali</h1>
+        <h1 className="text-xl font-bold text-slate-900">I tuoi animali</h1>
         <button
           onClick={onAdd}
           className="flex items-center gap-1.5 bg-brand-600 text-white rounded-xl px-3.5 py-2 text-sm font-semibold hover:bg-brand-700 transition-colors"
@@ -30,18 +30,18 @@ export function PetsPage() {
 
       {isLoading && (
         <div className="space-y-3">
-          {[0, 1].map(i => <div key={i} className="h-20 bg-gray-100 rounded-2xl animate-pulse" />)}
+          {[0, 1].map(i => <div key={i} className="h-20 bg-slate-100 rounded-2xl animate-pulse" />)}
         </div>
       )}
 
       {!isLoading && pets?.length === 0 && (
-        <div className="bg-white rounded-2xl border border-gray-100 p-8 text-center space-y-3">
+        <div className="bg-white rounded-2xl border border-slate-100 p-8 text-center space-y-3">
           <div className="w-14 h-14 mx-auto rounded-full bg-brand-50 flex items-center justify-center">
             <PawPrint size={26} className="text-brand-600" />
           </div>
           <div>
-            <p className="font-semibold text-gray-900">Nessun animale</p>
-            <p className="text-sm text-gray-500 mt-1">Aggiungi il tuo primo amico a quattro zampe</p>
+            <p className="font-semibold text-slate-900">Nessun animale</p>
+            <p className="text-sm text-slate-600 mt-1">Aggiungi il tuo primo amico a quattro zampe</p>
           </div>
           <button
             onClick={onAdd}

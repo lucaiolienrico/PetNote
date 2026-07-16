@@ -86,22 +86,22 @@ export function ShareLinkModal({ petId, petName, open, onClose }: Props) {
       >
         <div className="flex items-start justify-between">
           <div>
-            <h2 className="text-lg font-bold text-gray-900">Condividi {petName}</h2>
-            <p className="text-sm text-gray-500 mt-1">
+            <h2 className="text-lg font-bold text-slate-900">Condividi {petName}</h2>
+            <p className="text-sm text-slate-600 mt-1">
               Chiunque abbia il link vede la scheda sanitaria in sola lettura — utile per il veterinario. Nessun accesso account richiesto.
             </p>
           </div>
           <button
             onClick={onClose}
             aria-label="Chiudi"
-            className="p-1 text-gray-400 hover:text-gray-600 flex-shrink-0"
+            className="p-1 text-slate-500 hover:text-slate-600 flex-shrink-0"
           >
             <X size={20} />
           </button>
         </div>
 
         <div className="bg-slate-50 rounded-2xl p-3.5 space-y-3">
-          <p className="text-xs font-medium text-gray-500">Nuovo link</p>
+          <p className="text-xs font-medium text-slate-600">Nuovo link</p>
           <div className="flex gap-2">
             {(Object.keys(EXPIRY_LABEL) as ExpiryOption[]).map(opt => (
               <button
@@ -110,7 +110,7 @@ export function ShareLinkModal({ petId, petName, open, onClose }: Props) {
                 className={`flex-1 text-xs font-semibold rounded-xl py-2 transition-colors ${
                   expiry === opt
                     ? 'bg-brand-600 text-white'
-                    : 'bg-white text-gray-600 border border-gray-200'
+                    : 'bg-white text-slate-600 border border-slate-200'
                 }`}
               >
                 {EXPIRY_LABEL[opt]}
@@ -130,23 +130,23 @@ export function ShareLinkModal({ petId, petName, open, onClose }: Props) {
         </div>
 
         <div className="space-y-2">
-          <p className="text-xs font-medium text-gray-500">Link attivi</p>
+          <p className="text-xs font-medium text-slate-600">Link attivi</p>
 
-          {isLoading && <div className="h-12 bg-gray-100 rounded-xl animate-pulse" />}
+          {isLoading && <div className="h-12 bg-slate-100 rounded-xl animate-pulse" />}
 
           {!isLoading && links?.length === 0 && (
-            <p className="text-sm text-gray-400 text-center py-4">Nessun link creato</p>
+            <p className="text-sm text-slate-500 text-center py-4">Nessun link creato</p>
           )}
 
           {links?.map(link => {
             const isExpired = link.expires_at !== null && new Date(link.expires_at) < new Date()
             return (
-              <div key={link.id} className="border border-gray-100 rounded-xl p-3 flex items-center gap-2">
+              <div key={link.id} className="border border-slate-100 rounded-xl p-3 flex items-center gap-2">
                 <div className="flex-1 min-w-0">
-                  <p className={`text-xs font-mono truncate ${isExpired ? 'text-gray-300 line-through' : 'text-gray-600'}`}>
+                  <p className={`text-xs font-mono truncate ${isExpired ? 'text-slate-300 line-through' : 'text-slate-600'}`}>
                     {shareUrl(link.token)}
                   </p>
-                  <p className={`text-xs mt-0.5 ${isExpired ? 'text-red-400' : 'text-gray-400'}`}>
+                  <p className={`text-xs mt-0.5 ${isExpired ? 'text-red-400' : 'text-slate-500'}`}>
                     {isExpired
                       ? 'Scaduto'
                       : link.expires_at
@@ -158,14 +158,14 @@ export function ShareLinkModal({ petId, petName, open, onClose }: Props) {
                   onClick={() => onCopy(link.id, link.token)}
                   disabled={isExpired}
                   aria-label="Copia link"
-                  className="p-1.5 text-gray-400 hover:text-brand-600 disabled:opacity-30 flex-shrink-0"
+                  className="p-1.5 text-slate-500 hover:text-brand-600 disabled:opacity-30 flex-shrink-0"
                 >
                   {copiedId === link.id ? <Check size={16} className="text-green-600" /> : <Copy size={16} />}
                 </button>
                 <button
                   onClick={() => onDelete(link.id)}
                   aria-label="Revoca link"
-                  className={`p-1.5 flex-shrink-0 ${isArmed(link.id) ? 'text-red-600' : 'text-gray-300'}`}
+                  className={`p-1.5 flex-shrink-0 ${isArmed(link.id) ? 'text-red-600' : 'text-slate-300'}`}
                 >
                   <Trash2 size={16} />
                 </button>

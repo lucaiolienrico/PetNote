@@ -24,8 +24,8 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>
 const nn = (v?: string) => (v && v.trim() !== '' ? v.trim() : null)
 
-const inputCls = 'w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500'
-const labelCls = 'block text-xs font-medium text-gray-500 mb-1'
+const inputCls = 'w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500'
+const labelCls = 'block text-xs font-medium text-slate-600 mb-1'
 
 // Pro-only totale — vedi VaccinationsPage.tsx per il razionale.
 export function RemindersPage() {
@@ -92,8 +92,8 @@ function RemindersPageContent() {
     <div className="p-4 space-y-4">
       <div className="flex items-center justify-between pt-2">
         <div className="flex items-center gap-3">
-          <Link to={`/app/pets/${petId}`} className="p-1 text-gray-500"><ArrowLeft size={22} /></Link>
-          <h1 className="text-xl font-bold text-gray-900">Promemoria</h1>
+          <Link to={`/app/pets/${petId}`} className="p-1 text-slate-600"><ArrowLeft size={22} /></Link>
+          <h1 className="text-xl font-bold text-slate-900">Promemoria</h1>
         </div>
         {!showForm && (
           <button onClick={openNew} className="flex items-center gap-1.5 bg-brand-600 text-white rounded-xl px-3.5 py-2 text-sm font-semibold hover:bg-brand-700">
@@ -103,7 +103,7 @@ function RemindersPageContent() {
       </div>
 
       {showForm && (
-        <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-2xl border border-gray-100 p-4 space-y-3">
+        <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-2xl border border-slate-100 p-4 space-y-3">
           <div>
             <label className={labelCls}>Titolo *</label>
             <input {...register('title')} placeholder="Es. Portare libretto sanitario dal vet" className={inputCls} />
@@ -119,7 +119,7 @@ function RemindersPageContent() {
             <textarea {...register('notes')} rows={2} className={inputCls} />
           </div>
           <div className="flex gap-2">
-            <button type="button" onClick={() => setShowForm(false)} className="flex-1 border border-gray-200 text-gray-600 rounded-xl py-2.5 text-sm font-semibold">
+            <button type="button" onClick={() => setShowForm(false)} className="flex-1 border border-slate-200 text-slate-600 rounded-xl py-2.5 text-sm font-semibold">
               Annulla
             </button>
             <button type="submit" disabled={isSubmitting} className="flex-1 bg-brand-600 text-white rounded-xl py-2.5 text-sm font-semibold disabled:opacity-50">
@@ -129,12 +129,12 @@ function RemindersPageContent() {
         </form>
       )}
 
-      {isLoading && <div className="h-16 bg-gray-100 rounded-2xl animate-pulse" />}
+      {isLoading && <div className="h-16 bg-slate-100 rounded-2xl animate-pulse" />}
 
       {!isLoading && reminders?.length === 0 && !showForm && (
-        <div className="bg-white rounded-2xl border border-gray-100 p-8 text-center space-y-2">
+        <div className="bg-white rounded-2xl border border-slate-100 p-8 text-center space-y-2">
           <Bell size={26} className="text-brand-600 mx-auto" />
-          <p className="text-sm text-gray-500">Nessun promemoria creato</p>
+          <p className="text-sm text-slate-600">Nessun promemoria creato</p>
         </div>
       )}
 
@@ -142,14 +142,14 @@ function RemindersPageContent() {
         {reminders?.map(r => {
           const isPast = r.due_date < today()
           return (
-            <div key={r.id} className="bg-white rounded-2xl border border-gray-100 p-4">
+            <div key={r.id} className="bg-white rounded-2xl border border-slate-100 p-4">
               <div className="flex items-start justify-between gap-2">
                 <button onClick={() => openEdit(r)} className="flex-1 min-w-0 text-left">
-                  <p className="font-semibold text-gray-900">{r.title}</p>
-                  <p className="text-xs text-gray-500 mt-0.5">
+                  <p className="font-semibold text-slate-900">{r.title}</p>
+                  <p className="text-xs text-slate-600 mt-0.5">
                     {isPast ? 'Scaduto il' : 'Previsto per il'} {formatIt(r.due_date)}
                   </p>
-                  {r.notes && <p className="text-xs text-gray-400 mt-0.5 line-clamp-2">{r.notes}</p>}
+                  {r.notes && <p className="text-xs text-slate-500 mt-0.5 line-clamp-2">{r.notes}</p>}
                 </button>
                 <div className="flex items-center gap-2 flex-shrink-0">
                   {isPast && (
@@ -159,7 +159,7 @@ function RemindersPageContent() {
                   )}
                   <button
                     onClick={() => onDelete(r.id)}
-                    className={`p-1 ${isArmed(r.id) ? 'text-red-600' : 'text-gray-300'}`}
+                    className={`p-1 ${isArmed(r.id) ? 'text-red-600' : 'text-slate-300'}`}
                     aria-label="Elimina"
                   >
                     <Trash2 size={16} />

@@ -35,8 +35,8 @@ const schema = z.object({
 })
 type FormData = z.infer<typeof schema>
 
-const inputCls = 'w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500'
-const labelCls = 'block text-xs font-medium text-gray-500 mb-1'
+const inputCls = 'w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500'
+const labelCls = 'block text-xs font-medium text-slate-600 mb-1'
 
 function formatBytes(bytes: number | null): string {
   if (bytes === null) return ''
@@ -151,8 +151,8 @@ function DocumentsPageContent() {
     <div className="p-4 space-y-4">
       <div className="flex items-center justify-between pt-2">
         <div className="flex items-center gap-3">
-          <Link to={`/app/pets/${petId}`} className="p-1 text-gray-500"><ArrowLeft size={22} /></Link>
-          <h1 className="text-xl font-bold text-gray-900">Documenti</h1>
+          <Link to={`/app/pets/${petId}`} className="p-1 text-slate-600"><ArrowLeft size={22} /></Link>
+          <h1 className="text-xl font-bold text-slate-900">Documenti</h1>
         </div>
         {!showForm && (
           <button onClick={openNew} className="flex items-center gap-1.5 bg-brand-600 text-white rounded-xl px-3.5 py-2 text-sm font-semibold hover:bg-brand-700">
@@ -162,7 +162,7 @@ function DocumentsPageContent() {
       </div>
 
       {showForm && (
-        <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-2xl border border-gray-100 p-4 space-y-3">
+        <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-2xl border border-slate-100 p-4 space-y-3">
           <div>
             <label className={labelCls}>Titolo *</label>
             <input {...register('title')} placeholder="Es. Passaporto europeo" className={inputCls} />
@@ -180,13 +180,13 @@ function DocumentsPageContent() {
               type="file"
               accept=".pdf,.jpg,.jpeg,.png,.webp"
               onChange={onFileChange}
-              className="w-full text-sm text-gray-600 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:bg-brand-50 file:text-brand-700 file:text-sm file:font-semibold"
+              className="w-full text-sm text-slate-600 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:bg-brand-50 file:text-brand-700 file:text-sm file:font-semibold"
             />
-            <p className="text-xs text-gray-400 mt-1">PDF, JPEG, PNG o WEBP · max 20MB</p>
+            <p className="text-xs text-slate-500 mt-1">PDF, JPEG, PNG o WEBP · max 20MB</p>
             {fileError && <p className="text-red-500 text-xs mt-1">{fileError}</p>}
           </div>
           <div className="flex gap-2">
-            <button type="button" onClick={() => setShowForm(false)} className="flex-1 border border-gray-200 text-gray-600 rounded-xl py-2.5 text-sm font-semibold">
+            <button type="button" onClick={() => setShowForm(false)} className="flex-1 border border-slate-200 text-slate-600 rounded-xl py-2.5 text-sm font-semibold">
               Annulla
             </button>
             <button type="submit" disabled={isSubmitting || uploading} className="flex-1 bg-brand-600 text-white rounded-xl py-2.5 text-sm font-semibold disabled:opacity-50">
@@ -196,18 +196,18 @@ function DocumentsPageContent() {
         </form>
       )}
 
-      {isLoading && <div className="h-16 bg-gray-100 rounded-2xl animate-pulse" />}
+      {isLoading && <div className="h-16 bg-slate-100 rounded-2xl animate-pulse" />}
 
       {!isLoading && documents?.length === 0 && !showForm && (
-        <div className="bg-white rounded-2xl border border-gray-100 p-8 text-center space-y-2">
+        <div className="bg-white rounded-2xl border border-slate-100 p-8 text-center space-y-2">
           <Upload size={26} className="text-brand-600 mx-auto" />
-          <p className="text-sm text-gray-500">Nessun documento caricato</p>
+          <p className="text-sm text-slate-600">Nessun documento caricato</p>
         </div>
       )}
 
       <div className="space-y-2.5">
         {documents?.map(d => (
-          <div key={d.id} className="bg-white rounded-2xl border border-gray-100 p-4">
+          <div key={d.id} className="bg-white rounded-2xl border border-slate-100 p-4">
             <div className="flex items-start justify-between gap-2">
               <button
                 onClick={() => onOpen(d)}
@@ -218,17 +218,17 @@ function DocumentsPageContent() {
                   <FileText size={18} className="text-brand-600" />
                 </span>
                 <span className="min-w-0">
-                  <p className="font-semibold text-gray-900 truncate">{d.title}</p>
-                  <p className="text-xs text-gray-500 mt-0.5">
+                  <p className="font-semibold text-slate-900 truncate">{d.title}</p>
+                  <p className="text-xs text-slate-600 mt-0.5">
                     {DOC_TYPE_LABEL[d.document_type] ?? d.document_type}
                     {d.file_size !== null && ` · ${formatBytes(d.file_size)}`}
                   </p>
-                  <p className="text-xs text-gray-400 mt-0.5">{formatIt(d.uploaded_at)}</p>
+                  <p className="text-xs text-slate-500 mt-0.5">{formatIt(d.uploaded_at)}</p>
                 </span>
               </button>
               <button
                 onClick={() => onDelete(d)}
-                className={`p-1 flex-shrink-0 ${isArmed(d.id) ? 'text-red-600' : 'text-gray-300'}`}
+                className={`p-1 flex-shrink-0 ${isArmed(d.id) ? 'text-red-600' : 'text-slate-300'}`}
                 aria-label="Elimina"
               >
                 <Trash2 size={16} />

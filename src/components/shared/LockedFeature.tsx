@@ -21,20 +21,20 @@ export function LockedFeature({ title, icon: Icon, backTo, description }: Props)
   return (
     <div className="p-4 space-y-4">
       <div className="flex items-center gap-3 pt-2">
-        <Link to={backTo} className="p-1 text-gray-500"><ArrowLeft size={22} /></Link>
-        <h1 className="text-xl font-bold text-gray-900">{title}</h1>
+        <Link to={backTo} className="p-1 text-slate-600"><ArrowLeft size={22} /></Link>
+        <h1 className="text-xl font-bold text-slate-900">{title}</h1>
       </div>
 
-      <div className="bg-white rounded-2xl border border-gray-100 p-8 text-center space-y-3">
+      <div className="bg-white rounded-2xl border border-slate-100 p-8 text-center space-y-3">
         <div className="w-14 h-14 mx-auto rounded-full bg-brand-50 flex items-center justify-center relative">
           <Icon size={26} className="text-brand-600" />
-          <span className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-white border border-gray-100 flex items-center justify-center">
-            <Lock size={12} className="text-gray-500" />
+          <span className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-white border border-slate-100 flex items-center justify-center">
+            <Lock size={12} className="text-slate-600" />
           </span>
         </div>
         <div>
-          <p className="font-semibold text-gray-900">Funzione Premium</p>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="font-semibold text-slate-900">Funzione Premium</p>
+          <p className="text-sm text-slate-600 mt-1">
             {description ?? `${title} è disponibile solo con il piano Premium.`}
           </p>
         </div>

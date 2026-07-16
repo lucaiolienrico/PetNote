@@ -50,16 +50,16 @@ export function PetFormPage() {
   }
 
   if (isEdit && isLoading) {
-    return <div className="p-4 text-center text-gray-400 text-sm py-16">Caricamento…</div>
+    return <div className="p-4 text-center text-slate-500 text-sm py-16">Caricamento…</div>
   }
 
   return (
     <div className="p-4 space-y-4">
       <div className="flex items-center gap-3 pt-2">
-        <Link to={isEdit ? `/app/pets/${id}` : '/app/pets'} className="p-1 text-gray-500">
+        <Link to={isEdit ? `/app/pets/${id}` : '/app/pets'} className="p-1 text-slate-600">
           <ArrowLeft size={22} />
         </Link>
-        <h1 className="text-xl font-bold text-gray-900">
+        <h1 className="text-xl font-bold text-slate-900">
           {isEdit ? 'Modifica animale' : 'Nuovo animale'}
         </h1>
       </div>
