@@ -244,7 +244,7 @@ export function PetDetailPage() {
     <div>
 
       {/* ── HEADER ── */}
-      <div className="relative bg-gradient-to-b from-blue-50 to-slate-50 border-b border-slate-200/60 shadow-sm px-4 pt-4 pb-6">
+      <div className="relative bg-gradient-to-b from-blue-100 to-slate-100 border-b border-slate-200/60 shadow-sm px-4 pt-4 pb-6">
         {/* Nav row */}
         <div className="flex items-center justify-between mb-5">
           <Link
@@ -302,10 +302,10 @@ export function PetDetailPage() {
               {pet.name}
             </h1>
             {subtitleParts.length > 0 && (
-              <p className="text-sm text-slate-500 mt-1">{subtitleParts.join(' • ')}</p>
+              <p className="text-sm text-slate-600 mt-1">{subtitleParts.join(' • ')}</p>
             )}
             {metaParts.length > 0 && (
-              <p className="text-sm text-slate-500">{metaParts.join(' • ')}</p>
+              <p className="text-sm text-slate-600">{metaParts.join(' • ')}</p>
             )}
             {pet.microchip && (
               <div className="inline-flex items-center gap-1.5 mt-2 border border-slate-200 bg-white rounded-full px-3 py-1">

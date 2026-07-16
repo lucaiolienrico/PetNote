@@ -34,8 +34,8 @@ export function StatCard({
 
       {locked ? (
         <div className="flex items-center gap-1.5 py-0.5">
-          <Lock size={13} className="text-slate-400" />
-          <span className="text-sm font-semibold text-slate-400">Premium</span>
+          <Lock size={13} className="text-slate-500" />
+          <span className="text-sm font-semibold text-slate-600">Premium</span>
         </div>
       ) : (
         <p className="text-2xl font-bold text-slate-900 leading-none tabular-nums">{value}</p>
