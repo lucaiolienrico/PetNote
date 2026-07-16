@@ -10,6 +10,7 @@ import { useUpdateProfile } from '@/lib/queries/profile'
 import { useCancelSubscription } from '@/lib/queries/subscription'
 import { usePushNotifications } from '@/hooks/usePushNotifications'
 import { UpgradeModal } from '@/components/shared/UpgradeModal'
+import { DeleteAccountModal } from '@/components/shared/DeleteAccountModal'
 import { useConfirmTap } from '@/hooks/useConfirmTap'
 
 const schema = z.object({
@@ -34,6 +35,7 @@ export function SettingsPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [editingName, setEditingName] = useState(false)
   const [showUpgrade, setShowUpgrade] = useState(false)
+  const [showDeleteAccount, setShowDeleteAccount] = useState(false)
   const navigate = useNavigate()
   const { tap, isArmed } = useConfirmTap()
   const confirmLogout = isArmed('logout')
@@ -272,9 +274,22 @@ export function SettingsPage() {
         {confirmLogout ? 'Tocca di nuovo per confermare' : 'Esci'}
       </button>
 
+      {/* Zona pericolosa — deliberatamente sobria, separata dal Logout:
+          non è un'azione quotidiana e non deve competere visivamente con
+          quelle sopra. Conferma a testo digitato nella modale, non
+          doppio-tap come Logout/Cancella abbonamento — frizione maggiore
+          per un'azione irreversibile. */}
+      <button
+        onClick={() => setShowDeleteAccount(true)}
+        className="w-full text-center text-xs text-red-500 hover:text-red-600 py-2"
+      >
+        Elimina account
+      </button>
+
       <p className="text-center text-xs text-slate-300 pt-2">PetNote v{APP_VERSION}</p>
 
       <UpgradeModal open={showUpgrade} onClose={() => setShowUpgrade(false)} />
+      <DeleteAccountModal open={showDeleteAccount} onClose={() => setShowDeleteAccount(false)} />
     </div>
   )
 }
