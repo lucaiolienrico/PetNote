@@ -17,7 +17,6 @@ import { useDocuments }         from '@/lib/queries/documents'
 import { useReminders }         from '@/lib/queries/reminders'
 import { SPECIES, petAge }    from '@/lib/species'
 import { useAuthStore, selectHasFullAccess } from '@/stores/auth.store'
-import { ExportPdfButton }    from '@/components/pets/ExportPdfButton'
 import { UpgradeModal }       from '@/components/shared/UpgradeModal'
 import { ShareLinkModal }     from '@/components/pets/ShareLinkModal'
 import { StatCard }           from '@/components/pets/dashboard/StatCard'
@@ -242,10 +241,10 @@ export function PetDetailPage() {
     : latestWeight !== null ? 'Prima rilevazione' : 'Nessun dato'
 
   return (
-    <div className="pb-28">
+    <div>
 
       {/* ── HEADER ── */}
-      <div className="relative bg-gradient-to-b from-blue-50 to-slate-50 px-4 pt-4 pb-6">
+      <div className="relative bg-gradient-to-b from-blue-50 to-slate-50 border-b border-slate-200/60 shadow-sm px-4 pt-4 pb-6">
         {/* Nav row */}
         <div className="flex items-center justify-between mb-5">
           <Link
@@ -299,7 +298,7 @@ export function PetDetailPage() {
             <span className="inline-flex items-center gap-1.5 bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full mb-2">
               {species.emoji} {species.label}
             </span>
-            <h1 className="text-4xl font-bold text-slate-900 tracking-tight leading-tight">
+            <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
               {pet.name}
             </h1>
             {subtitleParts.length > 0 && (
@@ -537,13 +536,13 @@ export function PetDetailPage() {
         {/* ── ACTIVITY TIMELINE + PHOTO GALLERY ── */}
         <div className="flex flex-col sm:flex-row gap-4">
           {/* Timeline — 60% on desktop */}
-          <div className="sm:flex-[3] min-w-0 bg-white rounded-2xl border border-slate-100 shadow-sm shadow-slate-200/40 p-4">
+          <div className="sm:flex-[3] min-w-0 bg-white rounded-2xl border border-slate-100 shadow-md shadow-slate-200/50 p-4">
             <p className="text-sm font-semibold text-slate-900 mb-4">Attività recenti</p>
             <ActivityTimeline items={recentActivity} />
           </div>
 
           {/* Gallery — 40% on desktop */}
-          <div className="sm:flex-[2] bg-white rounded-2xl border border-slate-100 shadow-sm shadow-slate-200/40 p-4">
+          <div className="sm:flex-[2] bg-white rounded-2xl border border-slate-100 shadow-md shadow-slate-200/50 p-4">
             <PhotoGallery
               petId={pet.id}
               petName={pet.name}
@@ -552,16 +551,6 @@ export function PetDetailPage() {
           </div>
         </div>
 
-        {/* ── CTA PDF BUTTON — sticky in-flow, sopra la bottom nav ── */}
-        {/* Non più `fixed` overlay: `sticky` resta nel flusso del documento,
-            quindi (a) non copre mai il contenuto della pagina (occupa spazio
-            proprio) e (b) ha z-10 < z-50 dei modal, che sono renderizzati in
-            portal su document.body — nessuna guardia di stato necessaria,
-            nessuna dipendenza da quale componente (pagina o BottomNav) apre
-            il modal, nessun rischio da bundle PWA stale con stacking diverso. */}
-        <div className="sticky bottom-20 z-10">
-          <ExportPdfButton pet={pet} variant="cta" />
-        </div>
       </div>
 
       <UpgradeModal open={showUpgrade} onClose={() => setShowUpgrade(false)} />

@@ -40,7 +40,7 @@ export function ReportPdfCard({ pet }: Props) {
       className="block w-full text-left active:opacity-75 transition-opacity disabled:cursor-not-allowed disabled:opacity-75"
       aria-label="Genera report PDF completo dell'animale"
     >
-      <div className="relative bg-white rounded-2xl border border-slate-100 shadow-sm shadow-slate-200/40 p-4 flex flex-col gap-2 h-full">
+      <div className="relative bg-white rounded-2xl border border-slate-100 shadow-md shadow-slate-200/50 p-4 flex flex-col gap-2 h-full">
         <div className="flex items-start justify-between">
           <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
             <FileDown size={18} className="text-purple-600" />
