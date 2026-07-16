@@ -22,6 +22,7 @@ import { UpgradeModal }       from '@/components/shared/UpgradeModal'
 import { ShareLinkModal }     from '@/components/pets/ShareLinkModal'
 import { StatCard }           from '@/components/pets/dashboard/StatCard'
 import { SectionCard }        from '@/components/pets/dashboard/SectionCard'
+import { ReportPdfCard }      from '@/components/pets/dashboard/ReportPdfCard'
 import { ActivityTimeline }   from '@/components/pets/dashboard/ActivityTimeline'
 import type { ActivityItem }  from '@/components/pets/dashboard/ActivityTimeline'
 import { PhotoGallery }       from '@/components/pets/dashboard/PhotoGallery'
@@ -530,6 +531,7 @@ export function PetDetailPage() {
             locked={!hasFullAccess}
             onLockClick={() => setShowUpgrade(true)}
           />
+          <ReportPdfCard pet={pet} />
         </div>
 
         {/* ── ACTIVITY TIMELINE + PHOTO GALLERY ── */}
