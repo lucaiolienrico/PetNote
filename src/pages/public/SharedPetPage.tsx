@@ -6,6 +6,7 @@ import {
 import { useSharedPetData } from '@/lib/queries/sharedPet'
 import { SPECIES, petAge } from '@/lib/species'
 import { formatIt } from '@/lib/health'
+import { useDocumentMeta } from '@/hooks/useDocumentMeta'
 
 const TYPE_LABEL: Record<string, string> = {
   interno: 'Interno', esterno: 'Esterno', entrambi: 'Interno + Esterno',
@@ -41,6 +42,14 @@ const rowCls = 'border-t border-slate-50 pt-2.5 first:border-t-0 first:pt-0'
 export function SharedPetPage() {
   const { token } = useParams<{ token: string }>()
   const { data: result, isLoading } = useSharedPetData(token)
+
+  const petName = result?.data?.pet?.name
+  useDocumentMeta({
+    title: petName ? `${petName} — Libretto condiviso | PetNote` : 'Libretto condiviso — PetNote',
+    description: 'Scheda sanitaria condivisa in sola lettura tramite PetNote.',
+    canonicalPath: `/shared/${token ?? ''}`,
+    noindex: true, // dati sanitari reali di terzi — mai indicizzabile, difesa in profondità oltre a robots.txt
+  })
 
   if (isLoading) {
     return (

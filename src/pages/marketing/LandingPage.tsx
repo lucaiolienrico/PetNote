@@ -3,6 +3,7 @@ import {
   Syringe, Stethoscope, Bug, Scale, Check, ArrowRight,
   Smartphone, Lock, CalendarClock,
 } from 'lucide-react'
+import { useDocumentMeta } from '@/hooks/useDocumentMeta'
 
 // Copy delle 4 sezioni sanitarie — stessa icona/ordine di PetDetailPage.tsx,
 // per coerenza visiva reale col prodotto (non icone generiche inventate).
@@ -55,6 +56,13 @@ const FAQ = [
 ] as const
 
 export function LandingPage() {
+  useDocumentMeta({
+    title: 'PetNote — Gestione salute animali domestici',
+    description:
+      "Tieni traccia di vaccinazioni, visite veterinarie, antiparassitari e peso del tuo animale, tutto in un'unica app. Gratis per un animale.",
+    canonicalPath: '/',
+  })
+
   return (
     <div className="min-h-screen bg-white text-slate-900">
       {/* Nav */}

@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { supabase } from '@/lib/supabase'
+import { useDocumentMeta } from '@/hooks/useDocumentMeta'
 
 const schema = z.object({
   full_name: z.string().min(2, 'Nome troppo corto'),
@@ -13,6 +14,13 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>
 
 export function RegisterPage() {
+  useDocumentMeta({
+    title: 'Registrati — PetNote',
+    description: 'Crea il tuo account PetNote, gratis per un animale.',
+    canonicalPath: '/register',
+    noindex: true,
+  })
+
   const navigate = useNavigate()
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormData>({
     resolver: zodResolver(schema),

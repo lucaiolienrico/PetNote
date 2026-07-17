@@ -1,4 +1,5 @@
 import { LegalPageLayout, LegalSection, LegalList } from '@/components/shared/LegalPageLayout'
+import { useDocumentMeta } from '@/hooks/useDocumentMeta'
 
 /**
  * BOZZA tecnica — contenuto basato sui dati realmente raccolti (verificato
@@ -9,6 +10,13 @@ import { LegalPageLayout, LegalSection, LegalList } from '@/components/shared/Le
  * disponibili).
  */
 export function PrivacyPolicyPage() {
+  useDocumentMeta({
+    title: 'Privacy Policy — PetNote',
+    description:
+      'Informativa sulla privacy di PetNote: quali dati raccogliamo su di te e sul tuo animale, come li usiamo e come li proteggiamo.',
+    canonicalPath: '/privacy',
+  })
+
   return (
     <LegalPageLayout title="Informativa sulla privacy" lastUpdated="13 luglio 2026">
       <LegalSection heading="1. Titolare del trattamento">

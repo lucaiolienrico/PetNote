@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { LegalPageLayout, LegalSection } from '@/components/shared/LegalPageLayout'
+import { useDocumentMeta } from '@/hooks/useDocumentMeta'
 
 /**
  * BOZZA tecnica — struttura standard ToS per SaaS B2C italiano con
@@ -9,6 +10,12 @@ import { LegalPageLayout, LegalSection } from '@/components/shared/LegalPageLayo
  * generale (foro del consumatore inderogabile), non una scelta specifica.
  */
 export function TermsOfServicePage() {
+  useDocumentMeta({
+    title: 'Termini di Servizio — PetNote',
+    description: "Termini e condizioni d'uso di PetNote: piani, abbonamento, recesso e responsabilità del servizio.",
+    canonicalPath: '/termini',
+  })
+
   return (
     <LegalPageLayout title="Termini di servizio" lastUpdated="13 luglio 2026">
       <LegalSection heading="1. Il servizio">

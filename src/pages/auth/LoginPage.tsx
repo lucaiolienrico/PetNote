@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
 import { supabase } from '@/lib/supabase'
+import { useDocumentMeta } from '@/hooks/useDocumentMeta'
 
 const schema = z.object({
   email:    z.string().email('Email non valida'),
@@ -12,6 +13,13 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>
 
 export function LoginPage() {
+  useDocumentMeta({
+    title: 'Accedi — PetNote',
+    description: 'Accedi al tuo account PetNote.',
+    canonicalPath: '/login',
+    noindex: true,
+  })
+
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormData>({
     resolver: zodResolver(schema),
   })

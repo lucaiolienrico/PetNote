@@ -1,0 +1,34 @@
+User-agent: *
+Allow: /
+Disallow: /app/
+Disallow: /sys-admin
+Disallow: /shared/
+Disallow: /login
+Disallow: /register
+
+# Motori generativi / GEO — esplicitamente permessi, non bloccare
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: GoogleOther
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+Sitemap: https://pet-note.vercel.app/sitemap.xml
