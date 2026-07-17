@@ -1,10 +1,11 @@
 import { lazy, Suspense, useEffect } from 'react'
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '@/stores/auth.store'
 import { AppShell }    from '@/components/layout/AppShell'
 import { AuthLayout }  from '@/components/layout/AuthLayout'
 import { RequireAuth }  from '@/components/shared/RequireAuth'
 import { RequireGuest } from '@/components/shared/RequireGuest'
+import { ErrorBoundary } from '@/components/shared/ErrorBoundary'
 
 // Lazy pages — ogni route = chunk separato
 const LandingPage    = lazy(() => import('@/pages/marketing/LandingPage').then(m => ({ default: m.LandingPage })))
@@ -41,55 +42,62 @@ function Spinner() {
 export default function App() {
   const initialize = useAuthStore(s => s.initialize)
   const loading    = useAuthStore(s => s.loading)
+  const location   = useLocation()
+  const navigate   = useNavigate()
 
   useEffect(() => { initialize() }, [initialize])
 
   if (loading) return <Spinner />
 
   return (
-    <Suspense fallback={<Spinner />}>
-      <Routes>
-        <Route element={<RequireGuest />}>
-          <Route path="/" element={<LandingPage />} />
-          <Route element={<AuthLayout />}>
-            <Route path="/login"    element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
+    <ErrorBoundary
+      key={location.pathname}
+      onAction={() => navigate('/app/dashboard')}
+    >
+      <Suspense fallback={<Spinner />}>
+        <Routes>
+          <Route element={<RequireGuest />}>
+            <Route path="/" element={<LandingPage />} />
+            <Route element={<AuthLayout />}>
+              <Route path="/login"    element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+            </Route>
           </Route>
-        </Route>
 
-        <Route element={<RequireAuth />}>
-          <Route element={<AppShell />}>
-            <Route path="/app/dashboard" element={<DashboardPage />} />
-            <Route path="/app/pets"          element={<PetsPage />} />
-            <Route path="/app/pets/new"      element={<PetFormPage />} />
-            <Route path="/app/pets/:id"      element={<PetDetailPage />} />
-            <Route path="/app/pets/:id/edit" element={<PetFormPage />} />
-            <Route path="/app/pets/:id/vaccinations"   element={<VaccinationsPage />} />
-            <Route path="/app/pets/:id/antiparasitics" element={<AntiparasiticsPage />} />
-            <Route path="/app/pets/:id/vet-visits"     element={<VetVisitsPage />} />
-            <Route path="/app/pets/:id/weight"         element={<WeightPage />} />
-            <Route path="/app/pets/:id/allergies"      element={<AllergiesPage />} />
-            <Route path="/app/pets/:id/insurance"      element={<InsurancePage />} />
-            <Route path="/app/pets/:id/health-events" element={<HealthEventsPage />} />
-            <Route path="/app/pets/:id/medications" element={<MedicationsPage />} />
-            <Route path="/app/pets/:id/reminders" element={<RemindersPage />} />
-            <Route path="/app/pets/:id/documents" element={<DocumentsPage />} />
-            <Route path="/app/settings"  element={<SettingsPage />} />
+          <Route element={<RequireAuth />}>
+            <Route element={<AppShell />}>
+              <Route path="/app/dashboard" element={<DashboardPage />} />
+              <Route path="/app/pets"          element={<PetsPage />} />
+              <Route path="/app/pets/new"      element={<PetFormPage />} />
+              <Route path="/app/pets/:id"      element={<PetDetailPage />} />
+              <Route path="/app/pets/:id/edit" element={<PetFormPage />} />
+              <Route path="/app/pets/:id/vaccinations"   element={<VaccinationsPage />} />
+              <Route path="/app/pets/:id/antiparasitics" element={<AntiparasiticsPage />} />
+              <Route path="/app/pets/:id/vet-visits"     element={<VetVisitsPage />} />
+              <Route path="/app/pets/:id/weight"         element={<WeightPage />} />
+              <Route path="/app/pets/:id/allergies"      element={<AllergiesPage />} />
+              <Route path="/app/pets/:id/insurance"      element={<InsurancePage />} />
+              <Route path="/app/pets/:id/health-events" element={<HealthEventsPage />} />
+              <Route path="/app/pets/:id/medications" element={<MedicationsPage />} />
+              <Route path="/app/pets/:id/reminders" element={<RemindersPage />} />
+              <Route path="/app/pets/:id/documents" element={<DocumentsPage />} />
+              <Route path="/app/settings"  element={<SettingsPage />} />
+            </Route>
           </Route>
-        </Route>
 
-        <Route element={<RequireAuth />}>
-          <Route path="/sys-admin" element={<AdminPage />} />
-        </Route>
+          <Route element={<RequireAuth />}>
+            <Route path="/sys-admin" element={<AdminPage />} />
+          </Route>
 
-        {/* Pubblica e anonima — nessun guard: un utente loggato deve poterla
-            vedere comunque (RequireGuest la bloccherebbe con redirect). */}
-        <Route path="/shared/:token" element={<SharedPetPage />} />
-        <Route path="/privacy" element={<PrivacyPolicyPage />} />
-        <Route path="/termini" element={<TermsOfServicePage />} />
+          {/* Pubblica e anonima — nessun guard: un utente loggato deve poterla
+              vedere comunque (RequireGuest la bloccherebbe con redirect). */}
+          <Route path="/shared/:token" element={<SharedPetPage />} />
+          <Route path="/privacy" element={<PrivacyPolicyPage />} />
+          <Route path="/termini" element={<TermsOfServicePage />} />
 
-        <Route path="*" element={<Navigate to="/app/dashboard" replace />} />
-      </Routes>
-    </Suspense>
+          <Route path="*" element={<Navigate to="/app/dashboard" replace />} />
+        </Routes>
+      </Suspense>
+    </ErrorBoundary>
   )
 }
