@@ -23,21 +23,22 @@ deployata (via MCP o Dashboard), il file corrispondente qui va aggiornato
 **nello stesso commit/sessione** — altrimenti questa cartella droppa di
 nuovo dal vero stato live (stesso tipo di drift già visto su SKILL.md).
 
-## Baseline versioni — audit 2026-07-14
+## Baseline versioni — audit 2026-07-17
 
 Verificato diff byte-per-byte (`get_edge_function` vs file in questa cartella):
-**zero drift** su tutte le 6 function. Numero versione Supabase al momento
+**zero drift** su tutte le 7 function. Numero versione Supabase al momento
 dell'audit — se un audit futuro trova un numero diverso da questo senza un
 commit corrispondente qui, è drift da investigare subito:
 
 | Function | Versione Supabase | Verificato |
 |---|---|---|
-| `create-paypal-subscription` | 10 | ✅ sync |
-| `paypal-webhook` | 8 | ✅ sync |
-| `cancel-paypal-subscription` | 8 | ✅ sync |
-| `admin-metrics` | 8 | ✅ sync |
-| `send-reminders` | 10 | ✅ sync |
-| `get-shared-pet-data` | 4 | ✅ sync |
+| `create-paypal-subscription` | 10 | ✅ sync (audit 2026-07-14) |
+| `paypal-webhook` | 8 | ✅ sync (audit 2026-07-14) |
+| `cancel-paypal-subscription` | 8 | ✅ sync (audit 2026-07-14) |
+| `admin-metrics` | 8 | ✅ sync (audit 2026-07-14) |
+| `send-reminders` | 10 | ✅ sync (audit 2026-07-14) |
+| `get-shared-pet-data` | 4 | ✅ sync (audit 2026-07-14) |
+| `delete-account` | 1 | ✅ versionata per la prima volta 2026-07-17 — deployata il 16/07 via MCP, sorgente mai committata fino ad ora (gap trovato in audit struttura app) |
 
 ## Elenco function versionate — verify_jwt critico
 
@@ -55,6 +56,7 @@ un JWT Supabase). Tabella di riferimento obbligatoria prima di ogni redeploy:
 | `admin-metrics` | `true` | Richiede sessione utente + check `is_admin` applicativo interno |
 | `send-reminders` | **`false`** | Chiamante = pg_cron/pg_net, auth reale è header `x-cron-secret` |
 | `get-shared-pet-data` | **`false`** | Endpoint pubblico anonimo, auth reale è il token in `share_links` |
+| `delete-account` | `true` | Richiede sessione utente Supabase — azione irreversibile, mai anonima |
 
 ## Escluse deliberatamente da questa cartella
 
