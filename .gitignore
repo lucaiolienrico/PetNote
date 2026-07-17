@@ -1,6 +1,7 @@
 node_modules/
 dist/
 dist-ssr/
+scripts/prerender/.ssr-build/
 .env.local
 .env.*.local
 *.log
