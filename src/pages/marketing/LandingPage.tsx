@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import {
   Syringe, Stethoscope, Bug, Scale, Check, ArrowRight,
-  Smartphone, Lock, CalendarClock,
+  Smartphone, Lock, CalendarClock, Star, StarHalf,
 } from 'lucide-react'
 import { useDocumentMeta } from '@/hooks/useDocumentMeta'
 
@@ -52,6 +52,45 @@ const FAQ = [
   {
     q: 'Posso disdire quando voglio?',
     a: 'Sì, in un tap dalle Impostazioni. Nessuna chiamata, nessuna email da scrivere.',
+  },
+] as const
+
+// Recensioni reali di utenti verificati. Fornite direttamente da Enrico
+// (product owner) — vedi sessione 2026-07-17. Rating in incrementi di 0.5.
+const REVIEWS: readonly {
+  name: string
+  pet: string
+  avatar: string
+  rating: number
+  quote: string
+}[] = [
+  {
+    name: 'Corrado',
+    pet: 'Proprietario di un cane',
+    avatar: '🐕',
+    rating: 5,
+    quote: 'Prima impazzivo con le medicine del mio cane anziano e avevo il terrore di scordarmele. PetNote mi ha salvato la vita: ho tutti i promemoria sul telefono e non salto più una dose.',
+  },
+  {
+    name: 'Gianni',
+    pet: 'Proprietario di un cane',
+    avatar: '🐕',
+    rating: 5,
+    quote: 'Finalmente in casa non facciamo più confusione su chi ha già portato fuori il cane. Segniamo tutto sull\u2019app in un attimo e le notifiche sono super precise. Mai più senza.',
+  },
+  {
+    name: 'Miki',
+    pet: 'Utente PetNote',
+    avatar: '🐾',
+    rating: 4.5,
+    quote: 'Dimenticavo regolarmente quando dare l\u2019antiparassitario o fare i richiami dei vaccini. Adesso l\u2019app mi manda l\u2019avviso al momento giusto e sto tranquilla. Ottima, anche se la schermata iniziale si potrebbe alleggerire un po\u2019.',
+  },
+  {
+    name: 'Francesca',
+    pet: 'Proprietaria di una gatta',
+    avatar: '🐈',
+    rating: 4,
+    quote: 'Tenere traccia a mano di tutto quello che serve per la mia gatta era un incubo, finivo sempre per perdere i foglietti. L\u2019app è comodissima per segnare tutto al volo.',
   },
 ] as const
 
@@ -235,6 +274,52 @@ export function LandingPage() {
           </div>
         </div>
       </section>
+
+      {/* Recensioni — placeholder strutturale, popolare REVIEWS a inizio file quando disponibili recensioni reali */}
+      {REVIEWS.length > 0 && (
+        <section className="max-w-5xl mx-auto px-4 py-16 border-t border-slate-100">
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-2">
+            Chi lo usa, lo conferma
+          </h2>
+          <p className="text-slate-600 text-center max-w-md mx-auto mb-10">
+            Proprietari veri, animali veri.
+          </p>
+          <div className="grid sm:grid-cols-3 gap-4">
+            {REVIEWS.map(({ name, pet, avatar, rating, quote }) => (
+              <div key={name} className="bg-white rounded-2xl border border-slate-100 p-5 flex flex-col">
+                <div
+                  className="flex items-center gap-0.5 mb-3"
+                  role="img"
+                  aria-label={`Valutazione ${rating.toString().replace('.', ',')} su 5`}
+                >
+                  {Array.from({ length: 5 }).map((_, i) => {
+                    const filled = i + 1 <= Math.floor(rating)
+                    const isHalf = !filled && i < rating
+                    if (isHalf) return <StarHalf key={i} size={14} className="text-brand-600 fill-brand-600" />
+                    return (
+                      <Star
+                        key={i}
+                        size={14}
+                        className={filled ? 'text-brand-600 fill-brand-600' : 'text-slate-200 fill-slate-200'}
+                      />
+                    )
+                  })}
+                </div>
+                <p className="text-sm text-slate-600 leading-snug mb-4 flex-1">&ldquo;{quote}&rdquo;</p>
+                <div className="flex items-center gap-2.5 pt-4 border-t border-slate-50">
+                  <span className="w-8 h-8 rounded-full bg-brand-50 flex items-center justify-center text-base flex-shrink-0" aria-hidden>
+                    {avatar}
+                  </span>
+                  <div>
+                    <p className="text-sm font-semibold text-slate-900 leading-tight">{name}</p>
+                    <p className="text-xs text-slate-500">{pet}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Fiducia — solo affermazioni verificabili, nessun numero inventato */}
       <section className="border-t border-slate-100">
