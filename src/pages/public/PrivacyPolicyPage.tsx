@@ -23,7 +23,7 @@ export function PrivacyPolicyPage() {
         <p>
           Il titolare del trattamento dei dati raccolti tramite PetNote è Enrico Lucaioli,
           contattabile all'indirizzo{' '}
-          <a href="mailto:lucaiolienrico@gmail.com" className="text-brand-600 underline">lucaiolienrico@gmail.com</a>.
+          <a href="mailto:supporto.petnote@gmail.com" className="text-brand-600 underline">supporto.petnote@gmail.com</a>.
         </p>
       </LegalSection>
 
@@ -86,7 +86,7 @@ export function PrivacyPolicyPage() {
         />
         <p>
           Per esercitare questi diritti scrivi a{' '}
-          <a href="mailto:lucaiolienrico@gmail.com" className="text-brand-600 underline">lucaiolienrico@gmail.com</a>.
+          <a href="mailto:supporto.petnote@gmail.com" className="text-brand-600 underline">supporto.petnote@gmail.com</a>.
           Hai inoltre diritto di proporre reclamo al Garante per la protezione dei dati personali
           (<a href="https://www.garanteprivacy.it" target="_blank" rel="noreferrer" className="text-brand-600 underline">garanteprivacy.it</a>).
         </p>
