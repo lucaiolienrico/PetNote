@@ -3,7 +3,7 @@
 // insurance_policies, medications, health_events, documents, share_links.
 export const FREE_LIMITS = {
   pets:             1,
-  vetVisitsPerPet:  1,
+  vetVisitsPerPet:  2,
   allergiesPerPet:  1,
 } as const
 

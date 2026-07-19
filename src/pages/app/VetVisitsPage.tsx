@@ -47,7 +47,7 @@ export function VetVisitsPage() {
   const [showUpgrade, setShowUpgrade] = useState(false)
   const { tap, isArmed } = useConfirmTap()
 
-  // Free: 1 visita per animale. Oltre soglia → upsell invece del form.
+  // Free: 2 visite per animale. Oltre soglia → upsell invece del form.
   const canAdd = hasFullAccess || (visits?.length ?? 0) < FREE_LIMITS.vetVisitsPerPet
 
   const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormData>({

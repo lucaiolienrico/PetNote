@@ -42,7 +42,7 @@ export function useCreateVetVisit(petId: string, hasFullAccess: boolean) {
         if (countError) throw countError
         if ((count ?? 0) >= FREE_LIMITS.vetVisitsPerPet) {
           throw new PlanLimitError(
-            `Piano Free: massimo ${FREE_LIMITS.vetVisitsPerPet} visita per animale. Passa a Premium per aggiungerne altre.`
+            `Piano Free: massimo ${FREE_LIMITS.vetVisitsPerPet} visite per animale. Passa a Premium per aggiungerne altre.`
           )
         }
       }

@@ -54,7 +54,7 @@ export function UpgradeModal({ open, onClose }: Props) {
           <div>
             <h2 className="text-lg font-bold text-slate-900">Passa a Premium ⭐</h2>
             <p className="text-sm text-slate-600 mt-1">
-              Il piano Free include 1 animale, 1 visita veterinaria e 1 allergia. Sblocca tutto con Premium.
+              Il piano Free include 1 animale, 2 visite veterinarie e 1 allergia. Sblocca tutto con Premium.
             </p>
           </div>
           <button

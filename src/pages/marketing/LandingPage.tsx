@@ -43,7 +43,7 @@ const FAQ = [
   },
   {
     q: 'Posso tracciare più di un animale?',
-    a: 'Il piano Free include 1 animale, con 1 visita veterinaria e 1 allergia registrabili. Con Premium sblocchi vaccinazioni, antiparassitari, peso, assicurazioni e animali illimitati.',
+    a: 'Il piano Free include 1 animale, con 2 visite veterinarie e 1 allergia registrabili. Con Premium sblocchi vaccinazioni, antiparassitari, peso, assicurazioni e animali illimitati.',
   },
   {
     q: 'I miei dati sono privati?',
@@ -254,7 +254,7 @@ export function LandingPage() {
             <p className="text-xs text-slate-500 mb-5">per sempre</p>
             <ul className="space-y-2.5 text-sm text-slate-600">
               <li className="flex items-center gap-2"><Check size={15} className="text-brand-600 flex-shrink-0" /> 1 animale</li>
-              <li className="flex items-center gap-2"><Check size={15} className="text-brand-600 flex-shrink-0" /> 1 visita veterinaria</li>
+              <li className="flex items-center gap-2"><Check size={15} className="text-brand-600 flex-shrink-0" /> 2 visite veterinarie</li>
               <li className="flex items-center gap-2"><Check size={15} className="text-brand-600 flex-shrink-0" /> 1 allergia registrata</li>
             </ul>
           </div>
