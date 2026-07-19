@@ -8,6 +8,13 @@ import { CookieBanner } from './components/shared/CookieBanner'
 import { ErrorBoundary } from './components/shared/ErrorBoundary'
 import './styles/index.css'
 
+// Se siamo arrivati fin qui, l'entry chunk corrente ha caricato con successo:
+// eventuali ChunkLoadError catturati da un deploy PRECEDENTE in questa stessa
+// sessione non sono più rilevanti. Pulire la guardia permette a ErrorBoundary
+// di tentare un nuovo auto-reload se in futuro (stessa tab, nuovo deploy)
+// si ripresenta un chunk error, invece di restare bloccata al primo tentativo.
+sessionStorage.removeItem('petnote:chunk-reload-attempted')
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
