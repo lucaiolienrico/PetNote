@@ -244,7 +244,7 @@ export function PetDetailPage() {
     <div>
 
       {/* ── HEADER ── */}
-      <div className="relative bg-gradient-to-b from-blue-100 to-slate-100 border-b border-slate-200/60 shadow-sm px-4 pt-4 pb-6">
+      <div className="relative bg-gradient-to-b from-blue-100 to-slate-100 border-b border-slate-200/60 shadow-sm px-4 xl:px-8 pt-4 xl:pt-8 pb-6 xl:pb-10">
         {/* Nav row */}
         <div className="flex items-center justify-between mb-5">
           <Link
@@ -274,10 +274,10 @@ export function PetDetailPage() {
         </div>
 
         {/* Photo + info row */}
-        <div className="flex items-start gap-4">
+        <div className="flex items-start gap-4 xl:gap-6">
           {/* Photo with ring + camera button */}
           <div className="relative flex-shrink-0">
-            <div className="w-[140px] h-[140px] rounded-full border-4 border-blue-400 overflow-hidden bg-blue-50 flex items-center justify-center">
+            <div className="w-[140px] h-[140px] xl:w-[168px] xl:h-[168px] rounded-full border-4 border-blue-400 overflow-hidden bg-blue-50 flex items-center justify-center">
               {photoUrl
                 ? <img src={photoUrl} alt={pet.name} className="w-full h-full object-cover" />
                 : <span className="text-5xl select-none">{species.emoji}</span>
@@ -298,7 +298,7 @@ export function PetDetailPage() {
             <span className="inline-flex items-center gap-1.5 bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full mb-2">
               {species.emoji} {species.label}
             </span>
-            <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
+            <h1 className="text-4xl xl:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
               {pet.name}
             </h1>
             {subtitleParts.length > 0 && (
@@ -319,7 +319,7 @@ export function PetDetailPage() {
         </div>
       </div>
 
-      <div className="px-4 space-y-4 mt-4">
+      <div className="px-4 xl:px-8 space-y-4 xl:space-y-6 mt-4 xl:mt-6">
 
         {/* ── REMINDER BANNER ── */}
         {nextReminder && (
@@ -331,7 +331,7 @@ export function PetDetailPage() {
         )}
 
         {/* ── STAT CARDS — 2×2 mobile / 4×1 desktop ── */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 xl:gap-4">
           <StatCard
             label="Vaccinazioni"
             value={vaccinations.length}
@@ -384,8 +384,8 @@ export function PetDetailPage() {
           />
         </div>
 
-        {/* ── SECTION CARDS — 2 cols mobile / 3 cols desktop ── */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        {/* ── SECTION CARDS — 2 cols mobile / 3 cols tablet / 4 cols desktop ── */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3 xl:gap-4">
           <SectionCard
             petId={pet.id}
             path="vaccinations"
@@ -534,15 +534,15 @@ export function PetDetailPage() {
         </div>
 
         {/* ── ACTIVITY TIMELINE + PHOTO GALLERY ── */}
-        <div className="flex flex-col sm:flex-row gap-4">
+        <div className="flex flex-col sm:flex-row gap-4 xl:gap-6">
           {/* Timeline — 60% on desktop */}
-          <div className="sm:flex-[3] min-w-0 bg-white rounded-2xl border border-slate-100 shadow-md shadow-slate-200/50 p-4">
+          <div className="sm:flex-[3] min-w-0 bg-white rounded-2xl border border-slate-100 shadow-md shadow-slate-200/50 p-4 xl:p-5">
             <p className="text-sm font-semibold text-slate-900 mb-4">Attività recenti</p>
             <ActivityTimeline items={recentActivity} />
           </div>
 
           {/* Gallery — 40% on desktop */}
-          <div className="sm:flex-[2] bg-white rounded-2xl border border-slate-100 shadow-md shadow-slate-200/50 p-4">
+          <div className="sm:flex-[2] bg-white rounded-2xl border border-slate-100 shadow-md shadow-slate-200/50 p-4 xl:p-5">
             <PhotoGallery
               petId={pet.id}
               petName={pet.name}
