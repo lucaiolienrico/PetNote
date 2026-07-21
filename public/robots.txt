@@ -31,4 +31,4 @@ Allow: /
 User-agent: cohere-ai
 Allow: /
 
-Sitemap: https://pet-note.vercel.app/sitemap.xml
+Sitemap: https://www.petnote.it/sitemap.xml

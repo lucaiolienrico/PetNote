@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-const SITE_URL = 'https://pet-note.vercel.app'
+const SITE_URL = 'https://www.petnote.it'
 const DEFAULT_TITLE = 'PetNote — Gestione salute animali domestici'
 const DEFAULT_DESCRIPTION =
   "Tieni traccia di vaccinazioni, visite veterinarie, antiparassitari e peso del tuo animale, tutto in un'unica app."

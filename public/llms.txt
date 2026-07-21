@@ -3,9 +3,9 @@
 > App italiana per la gestione della salute degli animali domestici: vaccinazioni, visite veterinarie, antiparassitari, peso, allergie, assicurazioni, farmaci e documenti in un'unica app web. Piano gratuito per un animale, Premium da €4,99/mese.
 
 ## Prodotto
-- [Sito](https://pet-note.vercel.app/): landing page, funzionalità e prezzi
-- [Registrazione](https://pet-note.vercel.app/register): crea un account gratuito
+- [Sito](https://www.petnote.it/): landing page, funzionalità e prezzi
+- [Registrazione](https://www.petnote.it/register): crea un account gratuito
 
 ## Legal
-- [Privacy Policy](https://pet-note.vercel.app/privacy)
-- [Termini di Servizio](https://pet-note.vercel.app/termini)
+- [Privacy Policy](https://www.petnote.it/privacy)
+- [Termini di Servizio](https://www.petnote.it/termini)

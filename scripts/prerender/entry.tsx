@@ -26,7 +26,7 @@ import { TermsOfServicePage } from '@/pages/public/TermsOfServicePage'
  */
 
 const DIST_DIR = path.resolve(process.cwd(), 'dist')
-const SITE_URL = 'https://pet-note.vercel.app'
+const SITE_URL = 'https://www.petnote.it'
 
 const ORGANIZATION_JSON_LD = {
   '@context': 'https://schema.org',
