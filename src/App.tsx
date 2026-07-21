@@ -28,8 +28,9 @@ const DocumentsPage      = lazy(() => import('@/pages/app/DocumentsPage').then(m
 const SettingsPage   = lazy(() => import('@/pages/app/SettingsPage').then(m => ({ default: m.SettingsPage })))
 const AdminPage      = lazy(() => import('@/pages/admin/AdminPage').then(m => ({ default: m.AdminPage })))
 const SharedPetPage  = lazy(() => import('@/pages/public/SharedPetPage').then(m => ({ default: m.SharedPetPage })))
-const PrivacyPolicyPage   = lazy(() => import('@/pages/public/PrivacyPolicyPage').then(m => ({ default: m.PrivacyPolicyPage })))
-const TermsOfServicePage  = lazy(() => import('@/pages/public/TermsOfServicePage').then(m => ({ default: m.TermsOfServicePage })))
+const PrivacyPolicyPage      = lazy(() => import('@/pages/public/PrivacyPolicyPage').then(m => ({ default: m.PrivacyPolicyPage })))
+const TermsOfServicePage     = lazy(() => import('@/pages/public/TermsOfServicePage').then(m => ({ default: m.TermsOfServicePage })))
+const LibrettoSanitarioPage  = lazy(() => import('@/pages/guide/LibrettoSanitarioPage').then(m => ({ default: m.LibrettoSanitarioPage })))
 
 function Spinner() {
   return (
@@ -94,6 +95,7 @@ export default function App() {
           <Route path="/shared/:token" element={<SharedPetPage />} />
           <Route path="/privacy" element={<PrivacyPolicyPage />} />
           <Route path="/termini" element={<TermsOfServicePage />} />
+          <Route path="/guide/libretto-sanitario-digitale-cane-gatto" element={<LibrettoSanitarioPage />} />
 
           <Route path="*" element={<Navigate to="/app/dashboard" replace />} />
         </Routes>

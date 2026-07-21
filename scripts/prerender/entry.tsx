@@ -7,6 +7,7 @@ import type { ComponentType } from 'react'
 import { LandingPage } from '@/pages/marketing/LandingPage'
 import { PrivacyPolicyPage } from '@/pages/public/PrivacyPolicyPage'
 import { TermsOfServicePage } from '@/pages/public/TermsOfServicePage'
+import { LibrettoSanitarioPage } from '@/pages/guide/LibrettoSanitarioPage'
 
 /**
  * Perché questo script esiste:
@@ -76,6 +77,110 @@ interface RouteDef {
   jsonLd?: object[]
 }
 
+const LIBRETTO_BREADCRUMB_JSON_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+    { '@type': 'ListItem', position: 2, name: 'Guide', item: `${SITE_URL}/guide/` },
+    {
+      '@type': 'ListItem',
+      position: 3,
+      name: 'Libretto Sanitario Digitale per Cane e Gatto',
+      item: `${SITE_URL}/guide/libretto-sanitario-digitale-cane-gatto/`,
+    },
+  ],
+}
+
+const LIBRETTO_ARTICLE_JSON_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: 'Il Libretto Sanitario Digitale per Cane e Gatto — Guida Completa',
+  description:
+    'Scopri cos\'è il libretto sanitario digitale per cane e gatto, cosa deve contenere, i vantaggi rispetto a quello cartaceo e come gestirlo con PetNote.',
+  url: `${SITE_URL}/guide/libretto-sanitario-digitale-cane-gatto/`,
+  datePublished: '2026-07-21',
+  dateModified: '2026-07-21',
+  author: { '@type': 'Organization', name: 'PetNote', url: SITE_URL },
+  publisher: {
+    '@type': 'Organization',
+    name: 'PetNote',
+    logo: { '@type': 'ImageObject', url: `${SITE_URL}/pwa-512x512.png` },
+  },
+  inLanguage: 'it-IT',
+  about: { '@type': 'Thing', name: 'Libretto sanitario animali domestici' },
+}
+
+const LIBRETTO_FAQ_JSON_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'Il libretto sanitario digitale ha valore legale?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Il libretto digitale ha lo stesso valore del cartaceo per l\'uso quotidiano (visite, informazioni al veterinario, promemoria). Per documenti con valore legale obbligatorio come il passaporto europeo per animali per i viaggi internazionali, il formato cartaceo ufficiale rimane necessario.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'PetNote è gratuito?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Sì. PetNote ha un piano gratuito permanente che permette di gestire 1 animale con tutte le funzioni base. Il piano Premium da €4,99/mese sblocca animali illimitati e funzioni avanzate.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Posso condividere il libretto sanitario con il mio veterinario?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Sì. Con la funzione Share Link di PetNote puoi generare un link temporaneo che il veterinario può aprire dal suo smartphone senza creare un account. Il link mostra vaccinazioni, visite, antiparassitari, peso, farmaci e diario sanitario.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Cosa succede se perdo il libretto cartaceo?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Con PetNote tutti i dati sono salvati in cloud. Anche se perdi o rompi il telefono, i dati rimangono accessibili da qualsiasi altro dispositivo.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'PetNote funziona su iPhone e Android?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Sì. PetNote è una PWA (Progressive Web App) che funziona nel browser di iPhone, Android, Mac e PC senza dover installare nulla dallo store. Puoi aggiungerla alla schermata home per usarla come una vera app.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Quanti animali posso gestire con PetNote?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Con il piano gratuito puoi gestire 1 animale. Con il piano Premium (€4,99/mese o €34,99/anno) puoi gestire animali illimitati.',
+      },
+    },
+  ],
+}
+
+const LIBRETTO_HOWTO_JSON_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'Come creare il libretto sanitario digitale con PetNote',
+  description: 'Guida passo passo per creare il libretto digitale del tuo cane o gatto con PetNote in meno di 5 minuti.',
+  totalTime: 'PT5M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Crea un account gratuito', text: 'Vai su www.petnote.it e registrati con email e password oppure con Google. Il piano gratuito non richiede carta di credito.' },
+    { '@type': 'HowToStep', position: 2, name: 'Aggiungi il tuo animale', text: 'Inserisci nome, specie, razza, data di nascita e microchip. Puoi aggiungere una foto profilo.' },
+    { '@type': 'HowToStep', position: 3, name: 'Inserisci i dati dal vecchio libretto cartaceo', text: 'Registra le vaccinazioni passate con data e veterinario. PetNote calcolerà automaticamente le prossime scadenze.' },
+    { '@type': 'HowToStep', position: 4, name: 'Attiva i promemoria push', text: 'Dalle impostazioni, abilita le notifiche push. Riceverai un avviso 7 giorni prima di ogni scadenza.' },
+    { '@type': 'HowToStep', position: 5, name: 'Condividi con il veterinario', text: 'Con la funzione Share Link, il tuo vet può consultare la scheda sanitaria completa dal suo smartphone, senza bisogno di un account PetNote.' },
+  ],
+}
+
 const ROUTES: RouteDef[] = [
   {
     urlPath: '/',
@@ -101,6 +206,20 @@ const ROUTES: RouteDef[] = [
     title: 'Termini di Servizio — PetNote',
     description:
       "Termini e condizioni d'uso di PetNote: piani, abbonamento, recesso e responsabilità del servizio.",
+  },
+  {
+    urlPath: '/guide/libretto-sanitario-digitale-cane-gatto/',
+    outFile: 'guide/libretto-sanitario-digitale-cane-gatto/index.html',
+    Component: LibrettoSanitarioPage,
+    title: 'Libretto Sanitario Digitale per Cane e Gatto — Guida Completa | PetNote',
+    description:
+      "Scopri cos'è il libretto sanitario digitale per cane e gatto, cosa deve contenere, i vantaggi rispetto a quello cartaceo e come gestirlo con PetNote. Guida 2026.",
+    jsonLd: [
+      LIBRETTO_BREADCRUMB_JSON_LD,
+      LIBRETTO_ARTICLE_JSON_LD,
+      LIBRETTO_FAQ_JSON_LD,
+      LIBRETTO_HOWTO_JSON_LD,
+    ],
   },
 ]
 
