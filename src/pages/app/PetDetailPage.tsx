@@ -384,7 +384,7 @@ export function PetDetailPage() {
           />
         </div>
 
-        {/* ── SECTION CARDS — 2 cols mobile / 3 cols tablet / 4 cols desktop ── */}
+        {/* ── SECTION CARDS — vet-visits/weight rimosse (ridondanti con StatCard sopra) — 2 cols mobile / 3 cols tablet / 4 cols desktop ── */}
         <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3 xl:gap-4">
           <SectionCard
             petId={pet.id}
@@ -395,30 +395,6 @@ export function PetDetailPage() {
             iconText={SECTION_COLORS.vaccinations.iconText}
             count={`${vaccinations.length} registrate`}
             lastLabel={lastVacc ? `Ultima: ${fmtDate(lastVacc.administered_at)}` : undefined}
-            locked={!hasFullAccess}
-            onLockClick={() => setShowUpgrade(true)}
-          />
-          <SectionCard
-            petId={pet.id}
-            path="vet-visits"
-            label="Visite"
-            icon={Stethoscope}
-            iconBg={SECTION_COLORS['vet-visits'].iconBg}
-            iconText={SECTION_COLORS['vet-visits'].iconText}
-            count={`${vetVisits.length} ${vetVisits.length === 1 ? 'visita' : 'visite'}`}
-            lastLabel={vetVisits[0] ? `Ultima: ${fmtDate(vetVisits[0].visited_at)}` : undefined}
-            locked={false}
-            onLockClick={() => setShowUpgrade(true)}
-          />
-          <SectionCard
-            petId={pet.id}
-            path="weight"
-            label="Peso"
-            icon={Scale}
-            iconBg={SECTION_COLORS.weight.iconBg}
-            iconText={SECTION_COLORS.weight.iconText}
-            count={latestWeight !== null ? `${latestWeight} kg` : '—'}
-            lastLabel={weightLogs[0] ? `Aggiornato: ${fmtDate(weightLogs[0].measured_at)}` : undefined}
             locked={!hasFullAccess}
             onLockClick={() => setShowUpgrade(true)}
           />
