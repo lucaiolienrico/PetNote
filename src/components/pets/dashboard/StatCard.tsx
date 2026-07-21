@@ -32,17 +32,19 @@ export function StatCard({
 
       <p className="text-xs text-slate-500">{label}</p>
 
-      {locked ? (
-        <div className="flex items-center gap-1.5 py-0.5">
-          <Lock size={13} className="text-slate-500" />
-          <span className="text-sm font-semibold text-slate-600">Premium</span>
-        </div>
-      ) : (
-        <p className="text-2xl font-bold text-slate-900 leading-none tabular-nums">{value}</p>
+      <p className={`text-3xl font-extrabold leading-none tabular-nums ${iconText}`}>{value}</p>
+
+      {sublabel && (
+        <p className="text-xs text-slate-400">{sublabel}</p>
       )}
 
-      {!locked && sublabel && (
-        <p className="text-xs text-slate-400">{sublabel}</p>
+      {locked && (
+        <span
+          className={`inline-flex items-center gap-1 self-start mt-0.5 px-2 py-0.5 rounded-full ${iconBg} ${iconText} text-[10px] font-semibold uppercase tracking-wide`}
+        >
+          <Lock size={10} />
+          Premium
+        </span>
       )}
 
       {hasSparkline && (

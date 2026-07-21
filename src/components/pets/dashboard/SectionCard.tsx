@@ -15,10 +15,22 @@ interface Props {
   onLockClick: () => void
 }
 
+// Estrae il valore primario (numero o "—") in testa alla stringa `count`,
+// separandolo dalla descrizione secondaria, per replicare la gerarchia
+// tipografica delle StatCard senza toccare i dati calcolati a monte.
+function splitCount(count?: string): { primary: string; secondary?: string } | null {
+  if (!count) return null
+  const match = count.match(/^(\d+(?:[.,]\d+)?|—)(?:\s+(.+))?$/)
+  if (match) return { primary: match[1], secondary: match[2] }
+  return { primary: count }
+}
+
 export function SectionCard({
   petId, path, label, icon: Icon,
   iconBg, iconText, count, lastLabel, locked, onLockClick,
 }: Props) {
+  const parsedCount = splitCount(count)
+
   const body = (
     <div className="relative bg-white rounded-2xl border border-slate-100 shadow-md shadow-slate-200/50 p-4 xl:p-5 flex flex-col gap-2 h-full">
       <div className="flex items-start justify-between">
@@ -35,8 +47,15 @@ export function SectionCard({
       </div>
 
       <div>
-        <p className="text-sm font-semibold text-slate-900 leading-tight">{label}</p>
-        {count && <p className="text-xs text-slate-500 mt-0.5">{count}</p>}
+        <p className="text-xs text-slate-500 leading-tight">{label}</p>
+        {parsedCount && (
+          <p className={`text-2xl font-extrabold leading-none tabular-nums mt-1 ${iconText}`}>
+            {parsedCount.primary}
+          </p>
+        )}
+        {parsedCount?.secondary && (
+          <p className="text-xs text-slate-400 mt-0.5">{parsedCount.secondary}</p>
+        )}
       </div>
 
       {lastLabel && (
