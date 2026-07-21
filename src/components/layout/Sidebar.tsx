@@ -58,7 +58,7 @@ export function Sidebar() {
           <button
             type="button"
             onClick={() => setShowUpgrade(true)}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-600 hover:bg-slate-50 transition-colors"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 transition-colors shadow-sm"
           >
             <Crown size={19} strokeWidth={1.8} />
             Premium
