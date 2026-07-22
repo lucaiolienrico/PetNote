@@ -139,7 +139,7 @@ export function LandingPage() {
             Gratis per sempre per 1 animale
           </p>
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight leading-[1.08]">
-            Il libretto sanitario che tiene traccia al posto tuo.
+            Il libretto sanitario che non dimentica mai una scadenza.
           </h1>
           <p className="text-slate-600 text-base md:text-lg mt-5 max-w-md">
             Vaccinazioni, visite, antiparassitari e peso di cane, gatto, coniglio o qualsiasi altro animale.
