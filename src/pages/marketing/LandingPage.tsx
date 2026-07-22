@@ -10,31 +10,45 @@ import { useDocumentMeta } from '@/hooks/useDocumentMeta'
 // 5a card (Share Link): stessa icona Share2 usata in ShareLinkModal.tsx e
 // nell'header di PetDetailPage.tsx — hook di acquisizione canale vet, priorità
 // strategica #1 da feature audit, prima assente da questa pagina.
+// iconBg/iconText: stessi hue reali delle sezioni dell'app (sectionColors.ts),
+// mappati 1:1 (vaccinations→blue, vet-visits→green, antiparasitics→amber,
+// weight→violet). Share non è una sezione DB → resta brand, come in-app.
+// Stringhe classe COMPLETE (mai template literal per i colori: Tailwind JIT).
 const FEATURES = [
   {
     icon: Syringe,
     title: 'Vaccinazioni',
     body: 'Segna vaccino e data. PetNote calcola da solo quando è ora del richiamo.',
+    iconBg: 'bg-blue-100',
+    iconText: 'text-blue-600',
   },
   {
     icon: Stethoscope,
     title: 'Visite veterinarie',
     body: 'Motivo, diagnosi, costo — uno storico consultabile in un tap, anche a distanza di anni.',
+    iconBg: 'bg-green-100',
+    iconText: 'text-green-600',
   },
   {
     icon: Bug,
     title: 'Antiparassitari',
     body: 'Interno, esterno o entrambi. Mai più affidato alla memoria.',
+    iconBg: 'bg-amber-100',
+    iconText: 'text-amber-600',
   },
   {
     icon: Scale,
     title: 'Peso nel tempo',
     body: 'Ogni misurazione diventa un punto su un grafico che racconta la crescita.',
+    iconBg: 'bg-violet-100',
+    iconText: 'text-violet-600',
   },
   {
     icon: Share2,
     title: 'Condividi col veterinario',
     body: 'Genera un link: il veterinario vede vaccinazioni, visite e trattamenti — senza account, senza stampare nulla.',
+    iconBg: 'bg-brand-50',
+    iconText: 'text-brand-600',
   },
 ] as const
 
@@ -233,9 +247,11 @@ export function LandingPage() {
           Le cose che contano per ogni animale. Una sola app che se ne ricorda per te.
         </p>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {FEATURES.map(({ icon: Icon, title, body }) => (
+          {FEATURES.map(({ icon: Icon, title, body, iconBg, iconText }) => (
             <div key={title} className="bg-white rounded-2xl border border-slate-100 p-5">
-              <Icon size={22} className="text-brand-600 mb-3" />
+              <div className={`w-11 h-11 rounded-xl ${iconBg} flex items-center justify-center mb-3`}>
+                <Icon size={22} className={iconText} />
+              </div>
               <p className="font-semibold text-slate-900 mb-1">{title}</p>
               <p className="text-sm text-slate-600 leading-snug">{body}</p>
             </div>
@@ -342,17 +358,17 @@ export function LandingPage() {
       <section className="border-t border-slate-100">
         <div className="max-w-5xl mx-auto px-4 py-14 grid sm:grid-cols-3 gap-8 text-center sm:text-left">
           <div>
-            <Lock size={20} className="text-brand-600 mx-auto sm:mx-0 mb-2" />
+            <Lock size={20} className="text-teal-600 mx-auto sm:mx-0 mb-2" />
             <p className="font-semibold text-slate-900 text-sm">Dati privati per design</p>
             <p className="text-sm text-slate-600 mt-1">Ogni animale è visibile solo al suo proprietario, imposto a livello di database.</p>
           </div>
           <div>
-            <Smartphone size={20} className="text-brand-600 mx-auto sm:mx-0 mb-2" />
+            <Smartphone size={20} className="text-indigo-600 mx-auto sm:mx-0 mb-2" />
             <p className="font-semibold text-slate-900 text-sm">Nessun app store</p>
             <p className="text-sm text-slate-600 mt-1">È un'app web installabile: apri il sito, aggiungila alla schermata Home.</p>
           </div>
           <div>
-            <CalendarClock size={20} className="text-brand-600 mx-auto sm:mx-0 mb-2" />
+            <CalendarClock size={20} className="text-pink-600 mx-auto sm:mx-0 mb-2" />
             <p className="font-semibold text-slate-900 text-sm">Scadenze sempre visibili</p>
             <p className="text-sm text-slate-600 mt-1">Ogni vaccino e trattamento mostra da solo se è in regola o scaduto.</p>
           </div>
