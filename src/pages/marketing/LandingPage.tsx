@@ -190,6 +190,13 @@ export function LandingPage() {
               </div>
               <div className="flex items-center justify-between py-3">
                 <div className="flex items-center gap-2.5 min-w-0">
+                  <Stethoscope size={16} className="text-brand-600 flex-shrink-0" />
+                  <span className="text-sm text-slate-700 truncate">Visita di controllo</span>
+                </div>
+                <span className="text-xs text-slate-500 whitespace-nowrap">12 mar</span>
+              </div>
+              <div className="flex items-center justify-between py-3">
+                <div className="flex items-center gap-2.5 min-w-0">
                   <Bug size={16} className="text-brand-600 flex-shrink-0" />
                   <span className="text-sm text-slate-700 truncate">Antiparassitario</span>
                 </div>
