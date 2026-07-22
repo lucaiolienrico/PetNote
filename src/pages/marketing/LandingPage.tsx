@@ -139,7 +139,7 @@ export function LandingPage() {
             Gratis per sempre per 1 animale
           </p>
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight leading-[1.08]">
-            Il libretto sanitario che non dimentica mai una scadenza.
+            Zero scadenze dimenticate. Solo tranquillità, per te e per lui.
           </h1>
           <p className="text-slate-600 text-base md:text-lg mt-5 max-w-md">
             Vaccinazioni, visite, antiparassitari e peso di cane, gatto, coniglio o qualsiasi altro animale.
@@ -150,7 +150,7 @@ export function LandingPage() {
               to="/register"
               className="flex items-center gap-1.5 bg-brand-600 text-white font-semibold rounded-xl px-5 py-3 text-sm hover:bg-brand-700 transition-colors"
             >
-              Inizia gratis <ArrowRight size={16} />
+              Registra il tuo primo animale <ArrowRight size={16} />
             </Link>
             <Link
               to="/login"
