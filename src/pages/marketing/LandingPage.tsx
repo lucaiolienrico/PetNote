@@ -1,12 +1,15 @@
 import { Link } from 'react-router-dom'
 import {
   Syringe, Stethoscope, Bug, Scale, Check, ArrowRight,
-  Smartphone, Lock, CalendarClock, Star, StarHalf,
+  Smartphone, Lock, CalendarClock, Star, StarHalf, Share2,
 } from 'lucide-react'
 import { useDocumentMeta } from '@/hooks/useDocumentMeta'
 
 // Copy delle 4 sezioni sanitarie — stessa icona/ordine di PetDetailPage.tsx,
 // per coerenza visiva reale col prodotto (non icone generiche inventate).
+// 5a card (Share Link): stessa icona Share2 usata in ShareLinkModal.tsx e
+// nell'header di PetDetailPage.tsx — hook di acquisizione canale vet, priorità
+// strategica #1 da feature audit, prima assente da questa pagina.
 const FEATURES = [
   {
     icon: Syringe,
@@ -27,6 +30,11 @@ const FEATURES = [
     icon: Scale,
     title: 'Peso nel tempo',
     body: 'Ogni misurazione diventa un punto su un grafico che racconta la crescita.',
+  },
+  {
+    icon: Share2,
+    title: 'Condividi col veterinario',
+    body: 'Genera un link: il veterinario vede vaccinazioni, visite e trattamenti — senza account, senza stampare nulla.',
   },
 ] as const
 
@@ -151,6 +159,10 @@ export function LandingPage() {
               Ho già un account
             </Link>
           </div>
+          <p className="flex items-center gap-1.5 text-xs text-slate-500 mt-4">
+            <Share2 size={13} className="text-brand-600 flex-shrink-0" />
+            Condividi il libretto col veterinario in un tap, senza account per lui.
+          </p>
         </div>
 
         {/* Signature: mockup "libretto" con timbro — stessa palette badge dell'app reale */}
@@ -213,9 +225,9 @@ export function LandingPage() {
           Tutto quello che serve, niente di superfluo
         </h2>
         <p className="text-slate-600 text-center max-w-md mx-auto mb-10">
-          Quattro cose da ricordare per ogni animale. Una sola app che se ne ricorda per te.
+          Le cose che contano per ogni animale. Una sola app che se ne ricorda per te.
         </p>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {FEATURES.map(({ icon: Icon, title, body }) => (
             <div key={title} className="bg-white rounded-2xl border border-slate-100 p-5">
               <Icon size={22} className="text-brand-600 mb-3" />
