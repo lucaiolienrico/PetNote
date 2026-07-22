@@ -85,22 +85,25 @@ export function PetDetailPage() {
   const latestWeight = weightLogs[0]?.weight_kg ?? null
   const prevWeight   = weightLogs[1]?.weight_kg ?? null
 
-  // Most-recently-administered vaccination/antiparasitic (hooks return
-  // next_due_at ASC, so we need to re-find the latest by administered_at).
-  const lastVacc = useMemo(
-    () => [...vaccinations].sort((a, b) => b.administered_at.localeCompare(a.administered_at))[0],
-    [vaccinations],
-  )
+  // Most-recently-administered antiparasitic (hook returns next_due_at ASC,
+  // so we need to re-find the latest by administered_at).
   const lastAnti = useMemo(
     () => [...antiparasitics].sort((a, b) => b.administered_at.localeCompare(a.administered_at))[0],
     [antiparasitics],
   )
-  // Promemoria è prospettico (scadenze future), non storico → ordina ascendente
-  // per mostrare il più imminente, non il più recente.
-  const nextCustomReminder = useMemo(
-    () => [...reminders].sort((a, b) => a.due_date.localeCompare(b.due_date))[0],
-    [reminders],
-  )
+  // Promemoria custom con scadenza odierna o futura, ordinati per imminenza.
+  // Prima si prendeva reminders.length/reminders ordinato asc senza filtro data:
+  // un promemoria scaduto (mai completato/rimosso) veniva conteggiato come
+  // "attivo" e poteva comparire come "Prossimo" al posto del più imminente
+  // futuro — il commento originale ("prospettico, non storico") descriveva
+  // l'intento ma non era implementato (bug corretto 2026-07-22).
+  const futureReminders = useMemo(() => {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    return reminders
+      .filter(r => parseLocalDate(r.due_date) >= today)
+      .sort((a, b) => a.due_date.localeCompare(b.due_date))
+  }, [reminders])
 
   const activeInsurance = insurancePolicies.find(
     p => !p.end_date || parseLocalDate(p.end_date) >= new Date(),
@@ -397,20 +400,8 @@ export function PetDetailPage() {
           />
         </div>
 
-        {/* ── SECTION CARDS — vet-visits/weight rimosse (ridondanti con StatCard sopra) — 2 cols mobile / 3 cols tablet / 4 cols desktop ── */}
+        {/* ── SECTION CARDS — vet-visits/weight/vaccinations rimosse (ridondanti con StatCard sopra, stessa fonte dati) — 2 cols mobile / 3 cols tablet / 4 cols desktop ── */}
         <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3 xl:gap-4">
-          <SectionCard
-            petId={pet.id}
-            path="vaccinations"
-            label="Vaccinazioni"
-            icon={Syringe}
-            iconBg={SECTION_COLORS.vaccinations.iconBg}
-            iconText={SECTION_COLORS.vaccinations.iconText}
-            count={`${vaccinations.length} registrate`}
-            lastLabel={lastVacc ? `Ultima: ${fmtDate(lastVacc.administered_at)}` : undefined}
-            locked={!hasFullAccess}
-            onLockClick={() => setShowUpgrade(true)}
-          />
           <SectionCard
             petId={pet.id}
             path="antiparasitics"
@@ -514,8 +505,8 @@ export function PetDetailPage() {
             icon={Bell}
             iconBg={SECTION_COLORS.reminders.iconBg}
             iconText={SECTION_COLORS.reminders.iconText}
-            count={reminders.length > 0 ? `${reminders.length} promemoria` : 'Nessun promemoria'}
-            lastLabel={nextCustomReminder ? `Prossimo: ${fmtDate(nextCustomReminder.due_date)}` : undefined}
+            count={futureReminders.length > 0 ? `${futureReminders.length} promemoria` : 'Nessun promemoria'}
+            lastLabel={futureReminders[0] ? `Prossimo: ${fmtDate(futureReminders[0].due_date)}` : undefined}
             locked={!hasFullAccess}
             onLockClick={() => setShowUpgrade(true)}
           />
