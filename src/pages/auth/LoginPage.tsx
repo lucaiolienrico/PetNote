@@ -80,6 +80,14 @@ export function LoginPage() {
             className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
           />
           {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
+          <div className="text-right mt-1.5">
+            <Link
+              to="/password-dimenticata"
+              className="text-xs font-medium text-brand-600 hover:text-brand-700 transition-colors"
+            >
+              Password dimenticata?
+            </Link>
+          </div>
         </div>
         <button
           type="submit"

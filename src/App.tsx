@@ -11,6 +11,8 @@ import { ErrorBoundary } from '@/components/shared/ErrorBoundary'
 const LandingPage    = lazy(() => import('@/pages/marketing/LandingPage').then(m => ({ default: m.LandingPage })))
 const LoginPage      = lazy(() => import('@/pages/auth/LoginPage').then(m => ({ default: m.LoginPage })))
 const RegisterPage   = lazy(() => import('@/pages/auth/RegisterPage').then(m => ({ default: m.RegisterPage })))
+const ForgotPasswordPage = lazy(() => import('@/pages/auth/ForgotPasswordPage').then(m => ({ default: m.ForgotPasswordPage })))
+const ResetPasswordPage  = lazy(() => import('@/pages/auth/ResetPasswordPage').then(m => ({ default: m.ResetPasswordPage })))
 const DashboardPage  = lazy(() => import('@/pages/app/DashboardPage').then(m => ({ default: m.DashboardPage })))
 const PetsPage       = lazy(() => import('@/pages/app/PetsPage').then(m => ({ default: m.PetsPage })))
 const PetDetailPage      = lazy(() => import('@/pages/app/PetDetailPage').then(m => ({ default: m.PetDetailPage })))
@@ -62,6 +64,7 @@ export default function App() {
             <Route element={<AuthLayout />}>
               <Route path="/login"    element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
+              <Route path="/password-dimenticata" element={<ForgotPasswordPage />} />
             </Route>
           </Route>
 
@@ -92,6 +95,10 @@ export default function App() {
 
           {/* Pubblica e anonima — nessun guard: un utente loggato deve poterla
               vedere comunque (RequireGuest la bloccherebbe con redirect). */}
+          {/* Recovery password: nessun guard. Il link email stabilisce una
+              sessione di recovery (user truthy) che RequireGuest scaccerebbe
+              prima dell'impostazione della nuova password. */}
+          <Route path="/reimposta-password" element={<ResetPasswordPage />} />
           <Route path="/shared/:token" element={<SharedPetPage />} />
           <Route path="/privacy" element={<PrivacyPolicyPage />} />
           <Route path="/termini" element={<TermsOfServicePage />} />
