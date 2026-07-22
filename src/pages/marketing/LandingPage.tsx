@@ -214,15 +214,13 @@ export function LandingPage() {
             </div>
           </div>
 
-          {/* Timbro — l'unico elemento "audace" della pagina, il resto resta disciplinato */}
-          <div
+          {/* Badge: logo reale PetNote (asset /public/petnote-logo-badge.png) */}
+          <img
+            src="/petnote-logo-badge.png"
+            alt=""
             aria-hidden
-            className="hidden sm:flex absolute -top-5 -right-3 w-20 h-20 rounded-full border-2 border-dashed border-brand-700 items-center justify-center rotate-[-10deg] mix-blend-multiply bg-white/60"
-          >
-            <span className="text-[10px] font-bold tracking-widest text-brand-700 text-center leading-tight">
-              PET<br />NOTE
-            </span>
-          </div>
+            className="hidden sm:block absolute -top-5 -right-3 w-[72px] h-[72px] rounded-full shadow-sm"
+          />
         </div>
       </section>
 
