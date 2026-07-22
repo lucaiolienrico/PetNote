@@ -399,7 +399,7 @@ export function LandingPage() {
             to="/register"
             className="inline-flex items-center gap-1.5 bg-white text-brand-700 font-semibold rounded-xl px-6 py-3 text-sm hover:bg-brand-50 transition-colors"
           >
-            Registra il tuo primo animale <ArrowRight size={16} />
+            Crea il libretto ora <ArrowRight size={16} />
           </Link>
         </div>
       </section>
