@@ -112,22 +112,26 @@ export function PetDetailPage() {
     const today = new Date()
     today.setHours(0, 0, 0, 0)
 
-    type Candidate = { label: string; sublabel: string; dueDate: Date }
+    // `path` = segmento route della sezione proprietaria della scadenza.
+    // Necessario per navigare correttamente da banner e StatCard aggregato
+    // (prima entrambi puntavano fisso a "reminders", sbagliato quando la
+    // scadenza più imminente era una vaccinazione/antiparassitario).
+    type Candidate = { label: string; sublabel: string; path: string; dueDate: Date }
     const candidates: Candidate[] = []
 
     for (const v of vaccinations) {
       if (!v.next_due_at) continue
       const due = parseLocalDate(v.next_due_at)
-      if (due >= today) candidates.push({ label: v.vaccine_name, sublabel: 'Vaccinazione', dueDate: due })
+      if (due >= today) candidates.push({ label: v.vaccine_name, sublabel: 'Vaccinazione', path: 'vaccinations', dueDate: due })
     }
     for (const a of antiparasitics) {
       if (!a.next_due_at) continue
       const due = parseLocalDate(a.next_due_at)
-      if (due >= today) candidates.push({ label: a.product_name, sublabel: 'Antiparassitario', dueDate: due })
+      if (due >= today) candidates.push({ label: a.product_name, sublabel: 'Antiparassitario', path: 'antiparasitics', dueDate: due })
     }
     for (const r of reminders) {
       const due = parseLocalDate(r.due_date)
-      if (due >= today) candidates.push({ label: r.title, sublabel: 'Promemoria', dueDate: due })
+      if (due >= today) candidates.push({ label: r.title, sublabel: 'Promemoria', path: 'reminders', dueDate: due })
     }
 
     if (!candidates.length) return null
@@ -136,7 +140,7 @@ export function PetDetailPage() {
     const daysUntil = Math.max(0, Math.ceil(
       (first.dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
     ))
-    return { label: first.label, sublabel: first.sublabel, daysUntil }
+    return { label: first.label, sublabel: first.sublabel, path: first.path, daysUntil }
   }, [hasFullAccess, vaccinations, antiparasitics, reminders])
 
   // Count of reminders due within 30 days (Premium only).
@@ -327,6 +331,7 @@ export function PetDetailPage() {
             label={nextReminder.label}
             sublabel={nextReminder.sublabel}
             daysUntil={nextReminder.daysUntil}
+            to={`/app/pets/${pet.id}/${nextReminder.path}`}
           />
         )}
 
@@ -370,7 +375,12 @@ export function PetDetailPage() {
             onLockClick={() => setShowUpgrade(true)}
           />
           <StatCard
-            label="Promemoria"
+            // Rinominato da "Promemoria" a "Scadenze": la card aggrega vaccinazioni +
+            // antiparassitici + promemoria custom (vedi reminderCount sopra), mentre la
+            // SectionCard "Promemoria" più sotto mostra SOLO la tabella reminders custom.
+            // Stessa label su due dataset diversi produceva l'incoerenza "1" vs "Nessun
+            // promemoria" quando la scadenza imminente era un antiparassitario/vaccinazione.
+            label="Scadenze"
             value={reminderCount}
             sublabel="nei prossimi 30 gg"
             icon={Bell}
@@ -379,7 +389,10 @@ export function PetDetailPage() {
             sparkData={[]}
             sparkHex="#d97706"
             locked={!hasFullAccess}
-            to={`/app/pets/${pet.id}/reminders`}
+            // Naviga alla sezione della scadenza più imminente (stesso target del banner),
+            // non più fisso a "reminders" — evitava di portare l'utente su una pagina vuota
+            // quando il conteggio derivava da vaccinazioni/antiparassitici.
+            to={nextReminder ? `/app/pets/${pet.id}/${nextReminder.path}` : `/app/pets/${pet.id}/reminders`}
             onLockClick={() => setShowUpgrade(true)}
           />
         </div>

@@ -1,19 +1,27 @@
+import { Link } from 'react-router-dom'
 import { Bell, ChevronRight } from 'lucide-react'
 
 interface Props {
   label:     string
   sublabel:  string
   daysUntil: number
+  // Rotta della sezione proprietaria della scadenza (vaccinazione/antiparassitario/
+  // promemoria custom). Prima assente: il banner era puro markup, "Vedi >" non navigava
+  // da nessuna parte — fix bug CTA morta.
+  to:        string
 }
 
-export function ReminderBanner({ label, sublabel, daysUntil }: Props) {
+export function ReminderBanner({ label, sublabel, daysUntil, to }: Props) {
   const daysText =
     daysUntil === 0 ? 'Oggi'
     : daysUntil === 1 ? 'Domani'
     : `Tra ${daysUntil} giorni`
 
   return (
-    <div className="flex items-center gap-3 bg-violet-50 border border-violet-100 rounded-2xl p-3.5">
+    <Link
+      to={to}
+      className="flex items-center gap-3 bg-violet-50 border border-violet-100 rounded-2xl p-3.5 active:opacity-75 transition-opacity"
+    >
       <div className="w-10 h-10 rounded-full bg-violet-100 flex items-center justify-center flex-shrink-0">
         <Bell size={18} className="text-violet-600" />
       </div>
@@ -28,6 +36,6 @@ export function ReminderBanner({ label, sublabel, daysUntil }: Props) {
         Vedi
         <ChevronRight size={12} />
       </div>
-    </div>
+    </Link>
   )
 }
