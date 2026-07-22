@@ -18,11 +18,18 @@ interface Props {
 // Estrae il valore primario (numero o "—") in testa alla stringa `count`,
 // separandolo dalla descrizione secondaria, per replicare la gerarchia
 // tipografica delle StatCard senza toccare i dati calcolati a monte.
-function splitCount(count?: string): { primary: string; secondary?: string } | null {
+// `isNumeric` distingue i due casi in rendering: una stringa senza numero in
+// testa (es. "Protezione attiva", "Nessuna nota") non è un primary/secondary
+// da spezzare — va resa con un peso tipografico più leggero, altrimenti
+// eredita lo stile "text-2xl font-extrabold" pensato per un singolo numero e
+// va a capo su 2 righe pesanti, sbilanciando la card rispetto alle altre
+// (bug corretto 2026-07-22, impattava Antiparassitari/Assicurazioni sempre,
+// Allergie/Diario/Farmaci/Documenti/Promemoria sullo stato vuoto).
+function splitCount(count?: string): { primary: string; secondary?: string; isNumeric: boolean } | null {
   if (!count) return null
   const match = count.match(/^(\d+(?:[.,]\d+)?|—)(?:\s+(.+))?$/)
-  if (match) return { primary: match[1], secondary: match[2] }
-  return { primary: count }
+  if (match) return { primary: match[1], secondary: match[2], isNumeric: true }
+  return { primary: count, isNumeric: false }
 }
 
 export function SectionCard({
@@ -49,7 +56,11 @@ export function SectionCard({
       <div>
         <p className="text-xs text-slate-500 leading-tight">{label}</p>
         {parsedCount && (
-          <p className={`text-2xl font-extrabold leading-none tabular-nums mt-1 ${iconText}`}>
+          <p className={
+            parsedCount.isNumeric
+              ? `text-2xl font-extrabold leading-none tabular-nums mt-1 ${iconText}`
+              : `text-base font-semibold leading-snug mt-1 ${iconText}`
+          }>
             {parsedCount.primary}
           </p>
         )}

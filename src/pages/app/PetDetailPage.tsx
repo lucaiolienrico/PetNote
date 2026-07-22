@@ -106,11 +106,20 @@ export function PetDetailPage() {
     p => !p.end_date || parseLocalDate(p.end_date) >= new Date(),
   )
 
-  // ── Next upcoming reminder (Premium only) ───────────────────────────────────
-  const nextReminder = useMemo(() => {
-    if (!hasFullAccess) return null
+  // ── Scadenze imminenti (Premium only) ───────────────────────────────────────
+  // Fonte unica per banner + StatCard "Scadenze": prima erano due loop separati
+  // sulle stesse 3 tabelle (vaccinazioni/antiparassitici/reminders custom), con
+  // finestra 30gg applicata solo al conteggio e non al banner — la scadenza più
+  // vicina poteva essere a 45gg (banner la mostrava), mentre lo StatCard
+  // contava 0. Unificando in un solo array memoized l'allineamento è garantito
+  // per costruzione, non da due cap tenuti manualmente sincronizzati in due
+  // punti (bug corretto 2026-07-22). Effetto collaterale: O(n) invece di
+  // 2×O(n) sulle stesse liste.
+  const upcomingReminders = useMemo(() => {
+    if (!hasFullAccess) return []
     const today = new Date()
     today.setHours(0, 0, 0, 0)
+    const in30 = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000)
 
     // `path` = segmento route della sezione proprietaria della scadenza.
     // Necessario per navigare correttamente da banner e StatCard aggregato
@@ -122,44 +131,35 @@ export function PetDetailPage() {
     for (const v of vaccinations) {
       if (!v.next_due_at) continue
       const due = parseLocalDate(v.next_due_at)
-      if (due >= today) candidates.push({ label: v.vaccine_name, sublabel: 'Vaccinazione', path: 'vaccinations', dueDate: due })
+      if (due >= today && due <= in30) candidates.push({ label: v.vaccine_name, sublabel: 'Vaccinazione', path: 'vaccinations', dueDate: due })
     }
     for (const a of antiparasitics) {
       if (!a.next_due_at) continue
       const due = parseLocalDate(a.next_due_at)
-      if (due >= today) candidates.push({ label: a.product_name, sublabel: 'Antiparassitario', path: 'antiparasitics', dueDate: due })
+      if (due >= today && due <= in30) candidates.push({ label: a.product_name, sublabel: 'Antiparassitario', path: 'antiparasitics', dueDate: due })
     }
     for (const r of reminders) {
       const due = parseLocalDate(r.due_date)
-      if (due >= today) candidates.push({ label: r.title, sublabel: 'Promemoria', path: 'reminders', dueDate: due })
+      if (due >= today && due <= in30) candidates.push({ label: r.title, sublabel: 'Promemoria', path: 'reminders', dueDate: due })
     }
 
-    if (!candidates.length) return null
-    candidates.sort((a, b) => a.dueDate.getTime() - b.dueDate.getTime())
-    const first = candidates[0]!
+    return candidates.sort((a, b) => a.dueDate.getTime() - b.dueDate.getTime())
+  }, [hasFullAccess, vaccinations, antiparasitics, reminders])
+
+  const nextReminder = useMemo(() => {
+    const first = upcomingReminders[0]
+    if (!first) return null
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
     const daysUntil = Math.max(0, Math.ceil(
       (first.dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
     ))
     return { label: first.label, sublabel: first.sublabel, path: first.path, daysUntil }
-  }, [hasFullAccess, vaccinations, antiparasitics, reminders])
+  }, [upcomingReminders])
 
-  // Count of reminders due within 30 days (Premium only).
-  const reminderCount = useMemo(() => {
-    if (!hasFullAccess) return 0
-    const today = new Date(); today.setHours(0, 0, 0, 0)
-    const in30  = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000)
-    let n = 0
-    for (const v of vaccinations) {
-      if (v.next_due_at) { const d = parseLocalDate(v.next_due_at); if (d >= today && d <= in30) n++ }
-    }
-    for (const a of antiparasitics) {
-      if (a.next_due_at) { const d = parseLocalDate(a.next_due_at); if (d >= today && d <= in30) n++ }
-    }
-    for (const r of reminders) {
-      const d = parseLocalDate(r.due_date); if (d >= today && d <= in30) n++
-    }
-    return n
-  }, [hasFullAccess, vaccinations, antiparasitics, reminders])
+  // Count of reminders due within 30 days (Premium only) — deriva da
+  // upcomingReminders, stessa finestra usata dal banner.
+  const reminderCount = upcomingReminders.length
 
   // ── Activity timeline ───────────────────────────────────────────────────────
   const recentActivity = useMemo((): ActivityItem[] => {
