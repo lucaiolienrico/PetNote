@@ -179,7 +179,7 @@ export function LandingPage() {
               <div className="flex items-center justify-between py-3">
                 <div className="flex items-center gap-2.5 min-w-0">
                   <Bug size={16} className="text-brand-600 flex-shrink-0" />
-                  <span className="text-sm text-slate-700 truncate">Advantics</span>
+                  <span className="text-sm text-slate-700 truncate">Antiparassitario</span>
                 </div>
                 <span className="text-xs px-2 py-0.5 rounded-full font-medium whitespace-nowrap bg-red-50 text-red-600">
                   Scaduto
