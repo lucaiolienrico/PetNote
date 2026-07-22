@@ -126,7 +126,7 @@ export function LandingPage() {
               to="/register"
               className="bg-brand-600 text-white text-sm font-semibold rounded-xl px-4 py-2 hover:bg-brand-700 transition-colors"
             >
-              Inizia gratis
+              Registrati gratis
             </Link>
           </div>
         </div>
@@ -383,7 +383,7 @@ export function LandingPage() {
             to="/register"
             className="inline-flex items-center gap-1.5 bg-white text-brand-700 font-semibold rounded-xl px-6 py-3 text-sm hover:bg-brand-50 transition-colors"
           >
-            Inizia gratis <ArrowRight size={16} />
+            Registra il tuo primo animale <ArrowRight size={16} />
           </Link>
         </div>
       </section>
