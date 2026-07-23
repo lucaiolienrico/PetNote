@@ -66,6 +66,46 @@ const SOFTWARE_APPLICATION_JSON_LD = {
       priceCurrency: 'EUR',
     },
   ],
+  // Recensioni reali di utenti verificati (stessi dati di LandingPage.tsx
+  // REVIEWS, forniti da Enrico — vedi sessione 2026-07-17). Media calcolata
+  // da rating reali: (5+5+4.5+4)/4 = 4.625 -> 4.6.
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.6',
+    reviewCount: '4',
+    bestRating: '5',
+    worstRating: '1',
+  },
+  review: [
+    {
+      '@type': 'Review',
+      author: { '@type': 'Person', name: 'Corrado' },
+      reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
+      reviewBody:
+        'Prima impazzivo con le medicine del mio cane anziano e avevo il terrore di scordarmele. PetNote mi ha salvato la vita: ho tutti i promemoria sul telefono e non salto più una dose.',
+    },
+    {
+      '@type': 'Review',
+      author: { '@type': 'Person', name: 'Gianni' },
+      reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
+      reviewBody:
+        'Finalmente in casa non facciamo più confusione su chi ha già portato fuori il cane. Segniamo tutto sull\u2019app in un attimo e le notifiche sono super precise. Mai più senza.',
+    },
+    {
+      '@type': 'Review',
+      author: { '@type': 'Person', name: 'Miki' },
+      reviewRating: { '@type': 'Rating', ratingValue: '4.5', bestRating: '5' },
+      reviewBody:
+        'Dimenticavo regolarmente quando dare l\u2019antiparassitario o fare i richiami dei vaccini. Adesso l\u2019app mi manda l\u2019avviso al momento giusto e sto tranquilla. Ottima, anche se la schermata iniziale si potrebbe alleggerire un po\u2019.',
+    },
+    {
+      '@type': 'Review',
+      author: { '@type': 'Person', name: 'Francesca' },
+      reviewRating: { '@type': 'Rating', ratingValue: '4', bestRating: '5' },
+      reviewBody:
+        'Tenere traccia a mano di tutto quello che serve per la mia gatta era un incubo, finivo sempre per perdere i foglietti. L\u2019app è comodissima per segnare tutto al volo.',
+    },
+  ],
 }
 
 interface RouteDef {
@@ -82,10 +122,9 @@ const LIBRETTO_BREADCRUMB_JSON_LD = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
-    { '@type': 'ListItem', position: 2, name: 'Guide', item: `${SITE_URL}/guide/` },
     {
       '@type': 'ListItem',
-      position: 3,
+      position: 2,
       name: 'Libretto Sanitario Digitale per Cane e Gatto',
       item: `${SITE_URL}/guide/libretto-sanitario-digitale-cane-gatto/`,
     },

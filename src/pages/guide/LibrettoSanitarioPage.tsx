@@ -32,8 +32,6 @@ export function LibrettoSanitarioPage() {
         <nav className="flex items-center gap-1.5 text-xs text-slate-400 mb-6" aria-label="Breadcrumb">
           <Link to="/" className="hover:text-brand-600 transition-colors">Home</Link>
           <span>/</span>
-          <span className="text-slate-500">Guide</span>
-          <span>/</span>
           <span className="text-slate-700">Libretto sanitario digitale</span>
         </nav>
 
