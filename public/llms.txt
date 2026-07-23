@@ -4,7 +4,6 @@
 
 ## Prodotto
 - [Sito](https://www.petnote.it/): landing page, funzionalità e prezzi
-- [Registrazione](https://www.petnote.it/register): crea un account gratuito
 
 ## Legal
 - [Privacy Policy](https://www.petnote.it/privacy)
