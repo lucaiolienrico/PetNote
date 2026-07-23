@@ -5,6 +5,9 @@
 ## Prodotto
 - [Sito](https://www.petnote.it/): landing page, funzionalità e prezzi
 
+## Guide
+- [Libretto Sanitario Digitale per Cane e Gatto](https://www.petnote.it/guide/libretto-sanitario-digitale-cane-gatto/): cos'è, cosa deve contenere, differenze col cartaceo, calendario vaccinazioni e antiparassitari, come crearlo con PetNote
+
 ## Legal
 - [Privacy Policy](https://www.petnote.it/privacy)
 - [Termini di Servizio](https://www.petnote.it/termini)
