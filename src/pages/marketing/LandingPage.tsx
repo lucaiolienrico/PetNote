@@ -257,7 +257,7 @@ export function LandingPage() {
 
           {/* Badge: logo reale PetNote (asset /public/petnote-logo-badge.png) */}
           <img
-            src="/petnote-logo-badge.png"
+            src="/petnote-logo-badge.webp"
             alt=""
             aria-hidden
             className="hidden sm:block absolute -top-5 -right-3 w-[72px] h-[72px] rounded-full shadow-sm"
