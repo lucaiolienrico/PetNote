@@ -180,50 +180,77 @@ export function LandingPage() {
         </div>
 
         {/* Signature: mockup "libretto" con timbro — stessa palette badge dell'app reale */}
-        <div className="relative motion-safe:animate-[fadeUp_0.7s_ease-out_0.15s_forwards] motion-safe:opacity-0">
-          <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5 max-w-sm mx-auto">
-            <div className="flex items-center gap-3 pb-4 border-b border-slate-50">
-              <div className="w-11 h-11 rounded-full bg-brand-50 flex items-center justify-center text-xl flex-shrink-0">
-                🐕
+        <div className="relative max-w-sm mx-auto md:max-w-none motion-safe:animate-[fadeUp_0.7s_ease-out_0.15s_forwards] motion-safe:opacity-0">
+          <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+            {/* Media slot full-bleed, solo da md in su: su mobile la colonna e'
+                gia' singola e la foto allungherebbe l'hero del ~24% (958 -> 1187px
+                @375). aspect-ratio + width/height reali = box riservato prima del
+                decode, zero CLS sull'LCP desktop. L'asset e' gia' ritagliato 2:1,
+                quindi object-cover non ricampiona nulla. */}
+            <img
+              src="/hero-pet.webp"
+              alt=""
+              aria-hidden
+              width={944}
+              height={472}
+              fetchPriority="high"
+              decoding="async"
+              className="hidden md:block w-full aspect-[2/1] object-cover bg-slate-100"
+            />
+            <div className="p-5">
+              <div className="flex items-center gap-3 pb-4 border-b border-slate-50">
+                {/* Avatar reale al posto dell'emoji: l'app vera mostra qui la foto
+                    del pet (pets.photo_url + bucket pet-photos), quindi il mockup
+                    e' fedele al prodotto. Asset 128px = ~2.9x del reso 44px,
+                    copre anche i display 3x. Unico media visibile sotto md. */}
+                <img
+                  src="/hero-pet-avatar.webp"
+                  alt=""
+                  aria-hidden
+                  width={128}
+                  height={128}
+                  decoding="async"
+                  className="w-11 h-11 rounded-full object-cover bg-brand-50 flex-shrink-0"
+                />
+                <div>
+                  <p className="font-semibold text-slate-900 leading-tight">Luna</p>
+                  <p className="text-xs text-slate-500">Cane · labrador · 3 anni</p>
+                </div>
               </div>
-              <div>
-                <p className="font-semibold text-slate-900 leading-tight">Luna</p>
-                <p className="text-xs text-slate-500">Cane · labrador · 3 anni</p>
-              </div>
-            </div>
 
-            <div className="divide-y divide-slate-50">
-              <div className="flex items-center justify-between py-3">
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <Syringe size={16} className="text-brand-600 flex-shrink-0" />
-                  <span className="text-sm text-slate-700 truncate">Trivalente</span>
+              <div className="divide-y divide-slate-50">
+                <div className="flex items-center justify-between py-3">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <Syringe size={16} className="text-brand-600 flex-shrink-0" />
+                    <span className="text-sm text-slate-700 truncate">Trivalente</span>
+                  </div>
+                  <span className="text-xs px-2 py-0.5 rounded-full font-medium whitespace-nowrap bg-brand-50 text-brand-700">
+                    In regola
+                  </span>
                 </div>
-                <span className="text-xs px-2 py-0.5 rounded-full font-medium whitespace-nowrap bg-brand-50 text-brand-700">
-                  In regola
-                </span>
-              </div>
-              <div className="flex items-center justify-between py-3">
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <Stethoscope size={16} className="text-brand-600 flex-shrink-0" />
-                  <span className="text-sm text-slate-700 truncate">Visita di controllo</span>
+                <div className="flex items-center justify-between py-3">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <Stethoscope size={16} className="text-brand-600 flex-shrink-0" />
+                    <span className="text-sm text-slate-700 truncate">Visita di controllo</span>
+                  </div>
+                  <span className="text-xs text-slate-500 whitespace-nowrap">12 mar</span>
                 </div>
-                <span className="text-xs text-slate-500 whitespace-nowrap">12 mar</span>
-              </div>
-              <div className="flex items-center justify-between py-3">
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <Bug size={16} className="text-brand-600 flex-shrink-0" />
-                  <span className="text-sm text-slate-700 truncate">Antiparassitario</span>
+                <div className="flex items-center justify-between py-3">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <Bug size={16} className="text-brand-600 flex-shrink-0" />
+                    <span className="text-sm text-slate-700 truncate">Antiparassitario</span>
+                  </div>
+                  <span className="text-xs px-2 py-0.5 rounded-full font-medium whitespace-nowrap bg-red-50 text-red-600">
+                    Scaduto
+                  </span>
                 </div>
-                <span className="text-xs px-2 py-0.5 rounded-full font-medium whitespace-nowrap bg-red-50 text-red-600">
-                  Scaduto
-                </span>
-              </div>
-              <div className="flex items-center justify-between py-3">
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <Scale size={16} className="text-brand-600 flex-shrink-0" />
-                  <span className="text-sm text-slate-700 truncate">Peso</span>
+                <div className="flex items-center justify-between py-3">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <Scale size={16} className="text-brand-600 flex-shrink-0" />
+                    <span className="text-sm text-slate-700 truncate">Peso</span>
+                  </div>
+                  <span className="text-xs text-slate-500 whitespace-nowrap">30,0 kg ↘</span>
                 </div>
-                <span className="text-xs text-slate-500 whitespace-nowrap">30,0 kg ↘</span>
               </div>
             </div>
           </div>
@@ -317,7 +344,7 @@ export function LandingPage() {
           <p className="text-slate-600 text-center max-w-md mx-auto mb-10">
             Proprietari veri, animali veri.
           </p>
-          <div className="grid sm:grid-cols-3 gap-4">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {REVIEWS.map(({ name, pet, avatar, rating, quote }) => (
               <div key={name} className="bg-white rounded-2xl border border-slate-100 p-5 flex flex-col">
                 <div
@@ -356,7 +383,7 @@ export function LandingPage() {
 
       {/* Fiducia — solo affermazioni verificabili, nessun numero inventato */}
       <section className="border-t border-slate-100">
-        <div className="max-w-5xl mx-auto px-4 py-14 grid sm:grid-cols-3 gap-8 text-center sm:text-left">
+        <div className="max-w-5xl mx-auto px-4 py-16 grid sm:grid-cols-3 gap-8 text-center sm:text-left">
           <div>
             <Lock size={20} className="text-teal-600 mx-auto sm:mx-0 mb-2" />
             <p className="font-semibold text-slate-900 text-sm">Dati privati per design</p>
