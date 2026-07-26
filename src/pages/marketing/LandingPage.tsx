@@ -1,9 +1,20 @@
 import { Link } from 'react-router-dom'
 import {
   Syringe, Stethoscope, Bug, Scale, Check, ArrowRight,
-  Smartphone, Lock, CalendarClock, Star, StarHalf, Share2,
+  Smartphone, Lock, CalendarClock, Star, StarHalf, Share2, ShoppingBag,
 } from 'lucide-react'
 import { useDocumentMeta } from '@/hooks/useDocumentMeta'
+
+/**
+ * Preview categorie prodotti in landing. Solo emoji+label: gli URL affiliati
+ * vivono unicamente in ProdottiConsigliatiPage.tsx — importarli qui fonderebbe
+ * i due chunk lazy, appesantendo la landing.
+ */
+const PRODUCT_CATEGORIES = [
+  { emoji: '🐾', label: 'Crocchette' },
+  { emoji: '🦟', label: 'Antiparassitari' },
+  { emoji: '💊', label: 'Integratori' },
+]
 
 // Copy delle 4 sezioni sanitarie — stessa icona/ordine di PetDetailPage.tsx,
 // per coerenza visiva reale col prodotto (non icone generiche inventate).
@@ -431,14 +442,43 @@ export function LandingPage() {
         </div>
       </section>
 
-      {/* Riga-link Prodotti consigliati — link secondario, stile neutro */}
-      <section className="max-w-5xl mx-auto px-4 pb-10 text-center">
-        <Link
-          to="/prodotti-consigliati"
-          className="text-sm text-slate-600 hover:text-brand-600 hover:underline transition-colors"
-        >
-          Prenditi cura del tuo pet, ogni giorno &rarr;
-        </Link>
+      {/* Prodotti consigliati — banda con preview delle 3 categorie.
+          Le mini-card puntano alla pagina interna, MAI direttamente ad Amazon:
+          la disclosure di affiliazione deve precedere l'uscita dal sito. */}
+      <section className="border-t border-slate-100 bg-brand-50/40">
+        <div className="max-w-5xl mx-auto px-4 py-14 flex flex-col items-center text-center">
+          <div className="w-12 h-12 rounded-2xl bg-brand-100 flex items-center justify-center mb-4">
+            <ShoppingBag size={24} className="text-brand-600" />
+          </div>
+          <h2 className="text-2xl md:text-3xl font-bold text-slate-900">
+            Prenditi cura del tuo pet, ogni giorno
+          </h2>
+          <p className="text-slate-600 mt-2 max-w-md">
+            Crocchette, antiparassitari e integratori selezionati per cani e gatti.
+          </p>
+
+          <div className="grid grid-cols-3 gap-3 sm:gap-4 w-full max-w-lg mt-8">
+            {PRODUCT_CATEGORIES.map(({ emoji, label }) => (
+              <Link
+                key={label}
+                to="/prodotti-consigliati"
+                className="bg-white rounded-2xl border border-slate-100 px-2 py-5 flex flex-col items-center gap-2 hover:border-brand-600 transition-colors"
+              >
+                <span className="text-2xl" aria-hidden>{emoji}</span>
+                <span className="text-xs sm:text-sm font-semibold text-slate-900 leading-tight">
+                  {label}
+                </span>
+              </Link>
+            ))}
+          </div>
+
+          <Link
+            to="/prodotti-consigliati"
+            className="inline-flex items-center gap-1.5 bg-brand-600 text-white font-semibold rounded-xl px-6 py-3 text-sm mt-8 hover:bg-brand-700 transition-colors"
+          >
+            Vedi tutti i prodotti <ArrowRight size={16} />
+          </Link>
+        </div>
       </section>
 
       {/* Footer */}
