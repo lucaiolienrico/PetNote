@@ -80,8 +80,9 @@ export function ProdottiConsigliatiPage() {
         </div>
 
         <p className="text-xs text-slate-500 mt-8">
-          Contiene link di affiliazione: PetNote può ricevere una commissione senza costi
-          aggiuntivi per te.
+          In qualità di Affiliato Amazon, PetNote riceve un guadagno dagli acquisti
+          idonei. Contiene link di affiliazione: PetNote può ricevere una commissione
+          senza costi aggiuntivi per te.
         </p>
       </div>
     </div>

@@ -8,6 +8,9 @@
 ## Guide
 - [Libretto Sanitario Digitale per Cane e Gatto](https://www.petnote.it/guide/libretto-sanitario-digitale-cane-gatto/): cos'è, cosa deve contenere, differenze col cartaceo, calendario vaccinazioni e antiparassitari, come crearlo con PetNote
 
+## Extra
+- [Prodotti consigliati](https://www.petnote.it/prodotti-consigliati): categorie di prodotti per cani e gatti (crocchette, antiparassitari, integratori), contiene link di affiliazione Amazon
+
 ## Legal
 - [Privacy Policy](https://www.petnote.it/privacy)
 - [Termini di Servizio](https://www.petnote.it/termini)
