@@ -5,6 +5,7 @@ import { StaticRouter } from 'react-router'
 import type { ComponentType } from 'react'
 
 import { LandingPage } from '@/pages/marketing/LandingPage'
+import { ProdottiConsigliatiPage } from '@/pages/marketing/ProdottiConsigliatiPage'
 import { PrivacyPolicyPage } from '@/pages/public/PrivacyPolicyPage'
 import { TermsOfServicePage } from '@/pages/public/TermsOfServicePage'
 import { LibrettoSanitarioPage } from '@/pages/guide/LibrettoSanitarioPage'
@@ -229,6 +230,14 @@ const ROUTES: RouteDef[] = [
     description:
       "Tieni traccia di vaccinazioni, visite veterinarie, antiparassitari e peso del tuo animale, tutto in un'unica app. Gratis per un animale.",
     jsonLd: [ORGANIZATION_JSON_LD, SOFTWARE_APPLICATION_JSON_LD],
+  },
+  {
+    urlPath: '/prodotti-consigliati',
+    outFile: 'prodotti-consigliati/index.html',
+    Component: ProdottiConsigliatiPage,
+    title: 'Prenditi cura del tuo pet, ogni giorno — PetNote',
+    description:
+      'Categorie di prodotti utili per la cura quotidiana di cani e gatti: crocchette, antiparassitari e integratori.',
   },
   {
     urlPath: '/privacy',

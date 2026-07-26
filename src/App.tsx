@@ -9,6 +9,7 @@ import { ErrorBoundary } from '@/components/shared/ErrorBoundary'
 
 // Lazy pages — ogni route = chunk separato
 const LandingPage    = lazy(() => import('@/pages/marketing/LandingPage').then(m => ({ default: m.LandingPage })))
+const ProdottiConsigliatiPage = lazy(() => import('@/pages/marketing/ProdottiConsigliatiPage').then(m => ({ default: m.ProdottiConsigliatiPage })))
 const LoginPage      = lazy(() => import('@/pages/auth/LoginPage').then(m => ({ default: m.LoginPage })))
 const RegisterPage   = lazy(() => import('@/pages/auth/RegisterPage').then(m => ({ default: m.RegisterPage })))
 const ForgotPasswordPage = lazy(() => import('@/pages/auth/ForgotPasswordPage').then(m => ({ default: m.ForgotPasswordPage })))
@@ -103,6 +104,7 @@ export default function App() {
           <Route path="/privacy" element={<PrivacyPolicyPage />} />
           <Route path="/termini" element={<TermsOfServicePage />} />
           <Route path="/guide/libretto-sanitario-digitale-cane-gatto" element={<LibrettoSanitarioPage />} />
+          <Route path="/prodotti-consigliati" element={<ProdottiConsigliatiPage />} />
 
           <Route path="*" element={<Navigate to="/app/dashboard" replace />} />
         </Routes>

@@ -431,6 +431,16 @@ export function LandingPage() {
         </div>
       </section>
 
+      {/* Riga-link Prodotti consigliati — link secondario, stile neutro */}
+      <section className="max-w-5xl mx-auto px-4 pb-10 text-center">
+        <Link
+          to="/prodotti-consigliati"
+          className="text-sm text-slate-600 hover:text-brand-600 hover:underline transition-colors"
+        >
+          Prenditi cura del tuo pet, ogni giorno &rarr;
+        </Link>
+      </section>
+
       {/* Footer */}
       <footer className="border-t border-slate-100">
         <div className="max-w-5xl mx-auto px-4 py-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-slate-500">
