@@ -38,6 +38,24 @@ const ORGANIZATION_JSON_LD = {
   logo: `${SITE_URL}/pwa-512x512.png`,
   description:
     "App italiana per la gestione della salute degli animali domestici: vaccinazioni, visite veterinarie, antiparassitari, peso e altro.",
+  // sameAs: disambigua "PetNote" (IT) dalle omonime app cinese/giapponese/irlandese.
+  // Aggiungere LinkedIn company page e Product Hunt una volta creati i profili.
+  sameAs: [
+    'https://github.com/lucaiolienrico/PetNote',
+  ],
+}
+
+// Punto 4: WebSite schema — segnale entità brand per Google, abilita potenziale
+// SiteLinks Search Box nelle SERP brand e rafforza l'autorità del dominio.
+const WEBSITE_JSON_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'PetNote',
+  alternateName: 'PetNote.it',
+  url: SITE_URL,
+  description: "App italiana per la gestione della salute degli animali domestici.",
+  inLanguage: 'it-IT',
+  publisher: { '@type': 'Organization', name: 'PetNote', url: SITE_URL },
 }
 
 const SOFTWARE_APPLICATION_JSON_LD = {
@@ -229,7 +247,7 @@ const ROUTES: RouteDef[] = [
     title: 'PetNote — Gestione salute animali domestici',
     description:
       "Tieni traccia di vaccinazioni, visite veterinarie, antiparassitari e peso del tuo animale, tutto in un'unica app. Gratis per un animale.",
-    jsonLd: [ORGANIZATION_JSON_LD, SOFTWARE_APPLICATION_JSON_LD],
+    jsonLd: [WEBSITE_JSON_LD, ORGANIZATION_JSON_LD, SOFTWARE_APPLICATION_JSON_LD],
   },
   {
     urlPath: '/prodotti-consigliati',
