@@ -166,6 +166,9 @@ export function LandingPage() {
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight leading-[1.08]">
             Zero scadenze dimenticate. Solo tranquillità, per te e per lui.
           </h1>
+          <p className="text-slate-700 text-lg font-semibold mt-3">
+            Il libretto sanitario digitale per cane e gatto.
+          </p>
           <p className="text-slate-600 text-base md:text-lg mt-5 max-w-md">
             Vaccinazioni, visite, antiparassitari e peso di cane, gatto, coniglio o qualsiasi altro animale.
             Un posto solo, sempre a portata di mano.
