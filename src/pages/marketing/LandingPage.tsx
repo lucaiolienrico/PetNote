@@ -69,7 +69,15 @@ const STEPS = [
   { n: '3', title: 'Registra il primo evento', body: 'Un vaccino, una visita, un peso. PetNote tiene il resto in ordine.' },
 ] as const
 
-const FAQ = [
+type FaqItem = {
+  q: string
+  a: string
+  /** Link opzionale alla pillar page correlata — solo per le domande di
+   * dominio (vaccini/assicurazione/spese), non per le domande sull'app. */
+  guide?: { to: string; label: string }
+}
+
+const FAQ: readonly FaqItem[] = [
   {
     q: 'Serve installare un\u2019app dallo store?',
     a: 'No. PetNote è un\u2019app web: apri il sito dal telefono e tocca \u201CAggiungi a schermata Home\u201D per averla come un\u2019icona vera, senza passare da App Store o Play Store.',
@@ -86,7 +94,22 @@ const FAQ = [
     q: 'Posso disdire quando voglio?',
     a: 'Sì, in un tap dalle Impostazioni. Nessuna chiamata, nessuna email da scrivere.',
   },
-] as const
+  {
+    q: 'Quali vaccini deve fare il mio cane o gatto?',
+    a: 'Dipende da età e specie: nel primo anno servono più dosi ravvicinate, poi un richiamo periodico. In Italia solo il vaccino antirabbico è obbligatorio per legge (viaggi e aree a rischio); gli altri sono raccomandati dai veterinari.',
+    guide: { to: '/guide/vaccini-cane-gatto', label: 'Calendario vaccinale completo' },
+  },
+  {
+    q: 'Conviene fare l\u2019assicurazione al mio animale?',
+    a: 'Dipende dal profilo di rischio: razza, età, stile di vita e storico clinico. Per un animale giovane e sano conviene confrontare il premio annuo col costo medio di un intervento chirurgico non pianificato.',
+    guide: { to: '/guide/assicurazione-animali-domestici', label: 'Come funziona e cosa copre' },
+  },
+  {
+    q: 'Le spese veterinarie sono detraibili dalla dichiarazione dei redditi?',
+    a: 'No. La detrazione IRPEF del 19% (art. 15 TUIR) copre solo le spese sanitarie sostenute per persone, non per animali domestici.',
+    guide: { to: '/guide/spese-veterinarie', label: 'Costi medi e come pianificare il budget' },
+  },
+]
 
 // Recensioni reali di utenti verificati. Fornite direttamente da Enrico
 // (product owner) — vedi sessione 2026-07-17. Rating in incrementi di 0.5.
@@ -420,10 +443,18 @@ export function LandingPage() {
       <section className="max-w-3xl mx-auto px-4 py-16 border-t border-slate-100">
         <h2 className="text-2xl md:text-3xl font-bold text-center mb-10">Domande frequenti</h2>
         <div className="space-y-6">
-          {FAQ.map(({ q, a }) => (
+          {FAQ.map(({ q, a, guide }) => (
             <div key={q}>
               <p className="font-semibold text-slate-900">{q}</p>
               <p className="text-sm text-slate-600 mt-1">{a}</p>
+              {guide && (
+                <Link
+                  to={guide.to}
+                  className="text-sm text-brand-600 font-medium hover:text-blue-700 transition-colors inline-flex items-center gap-1 mt-2"
+                >
+                  {guide.label} <ArrowRight size={14} />
+                </Link>
+              )}
             </div>
           ))}
         </div>
