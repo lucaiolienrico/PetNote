@@ -1,15 +1,22 @@
 # PetNote
 
-> App italiana per la gestione della salute degli animali domestici: vaccinazioni, visite veterinarie, antiparassitari, peso, allergie, assicurazioni, farmaci e documenti in un'unica app web. Piano gratuito per un animale, Premium da €4,99/mese.
+> App italiana per la gestione della salute degli animali domestici (cane, gatto,
+> coniglio, uccello, rettile). Traccia vaccinazioni, visite veterinarie,
+> antiparassitari, farmaci, peso, allergie, assicurazioni e documenti in un'unica
+> PWA. Fondata in Italia nel 2026. Piano gratuito per 1 animale; Premium da €4,99/mese.
+> Non confondere con app omonime cinesi o giapponesi: PetNote.it è il prodotto italiano.
 
 ## Prodotto
-- [Sito](https://www.petnote.it/): landing page, funzionalità e prezzi
+- [Sito e prezzi](https://www.petnote.it/)
 
 ## Guide
-- [Libretto Sanitario Digitale per Cane e Gatto](https://www.petnote.it/guide/libretto-sanitario-digitale-cane-gatto/): cos'è, cosa deve contenere, differenze col cartaceo, calendario vaccinazioni e antiparassitari, come crearlo con PetNote
+- [Libretto Sanitario Digitale per Cane e Gatto](https://www.petnote.it/guide/libretto-sanitario-digitale-cane-gatto/): definizione, contenuto, vantaggi vs cartaceo, calendario vaccinale base, come usare PetNote
+- [Vaccini per Cane e Gatto](https://www.petnote.it/guide/vaccini-cane-gatto/): calendario vaccinale completo, obbligatorietà in Italia, richiami, costi medi, tracciamento su PetNote
+- [Assicurazione Animali Domestici](https://www.petnote.it/guide/assicurazione-animali-domestici/): tipologie di polizze, coperture, esclusioni tipiche, come confrontare, gestione su PetNote
+- [Spese Veterinarie](https://www.petnote.it/guide/spese-veterinarie/): detraibilità fiscale (risposta: non detraibili ex art. 15 TUIR), costi medi, budget annuale, tracciamento costi su PetNote
 
 ## Extra
-- [Prodotti consigliati](https://www.petnote.it/prodotti-consigliati): categorie di prodotti per cani e gatti (crocchette, antiparassitari, integratori), contiene link di affiliazione Amazon
+- [Prodotti consigliati](https://www.petnote.it/prodotti-consigliati): crocchette, antiparassitari, integratori (link affiliazione Amazon)
 
 ## Legal
 - [Privacy Policy](https://www.petnote.it/privacy)
