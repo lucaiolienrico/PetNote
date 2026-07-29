@@ -535,9 +535,7 @@ export function LandingPage() {
               <Link to="/privacy" className="hover:text-slate-600 transition-colors">Privacy</Link>
               <Link to="/termini" className="hover:text-slate-600 transition-colors">Termini</Link>
               <a
-                href="https://mail.google.com/mail/?view=cm&to=supporto.petnote@gmail.com"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="mailto:supporto.petnote@gmail.com"
                 className="hover:text-slate-600 transition-colors"
               >
                 Supporto
