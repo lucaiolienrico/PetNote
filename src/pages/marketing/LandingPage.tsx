@@ -486,20 +486,34 @@ export function LandingPage() {
 
       {/* Footer */}
       <footer className="border-t border-slate-100">
-        <div className="max-w-5xl mx-auto px-4 py-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-slate-500">
-          <span className="flex items-center gap-1.5">🐾 PetNote</span>
-          <div className="flex items-center gap-4">
-            <Link to="/privacy" className="hover:text-slate-600 transition-colors">Privacy</Link>
-            <Link to="/termini" className="hover:text-slate-600 transition-colors">Termini</Link>
-            <a
-              href="https://mail.google.com/mail/?view=cm&to=supporto.petnote@gmail.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-slate-600 transition-colors"
-            >
-              Supporto
-            </a>
-            <Link to="/login" className="hover:text-slate-600 transition-colors">Accedi</Link>
+        <div className="max-w-5xl mx-auto px-4 py-8 text-sm text-slate-500">
+          {/* Guide — link interno per crawlability. Footer presente solo qui
+              (homepage), non condiviso con le altre pagine pubbliche: è comunque
+              il punto d'ingresso a più alta link-authority del sito, altrimenti
+              queste pillar page restano isole non raggiungibili dalla homepage. */}
+          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-5 gap-y-2 pb-5 mb-5 border-b border-slate-50">
+            <span className="text-slate-400 text-xs font-semibold uppercase tracking-wide">Guide</span>
+            <Link to="/guide/libretto-sanitario-digitale-cane-gatto" className="hover:text-slate-600 transition-colors">Libretto sanitario digitale</Link>
+            <Link to="/guide/vaccini-cane-gatto" className="hover:text-slate-600 transition-colors">Vaccini cane e gatto</Link>
+            <Link to="/guide/assicurazione-animali-domestici" className="hover:text-slate-600 transition-colors">Assicurazione animali domestici</Link>
+            <Link to="/guide/spese-veterinarie" className="hover:text-slate-600 transition-colors">Spese veterinarie</Link>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+            <span className="flex items-center gap-1.5">🐾 PetNote</span>
+            <div className="flex items-center gap-4">
+              <Link to="/privacy" className="hover:text-slate-600 transition-colors">Privacy</Link>
+              <Link to="/termini" className="hover:text-slate-600 transition-colors">Termini</Link>
+              <a
+                href="https://mail.google.com/mail/?view=cm&to=supporto.petnote@gmail.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-slate-600 transition-colors"
+              >
+                Supporto
+              </a>
+              <Link to="/login" className="hover:text-slate-600 transition-colors">Accedi</Link>
+            </div>
           </div>
         </div>
       </footer>
