@@ -34,6 +34,9 @@ const SharedPetPage  = lazy(() => import('@/pages/public/SharedPetPage').then(m 
 const PrivacyPolicyPage      = lazy(() => import('@/pages/public/PrivacyPolicyPage').then(m => ({ default: m.PrivacyPolicyPage })))
 const TermsOfServicePage     = lazy(() => import('@/pages/public/TermsOfServicePage').then(m => ({ default: m.TermsOfServicePage })))
 const LibrettoSanitarioPage  = lazy(() => import('@/pages/guide/LibrettoSanitarioPage').then(m => ({ default: m.LibrettoSanitarioPage })))
+const VacciniPage            = lazy(() => import('@/pages/guide/VacciniPage').then(m => ({ default: m.VacciniPage })))
+const AssicurazionePage      = lazy(() => import('@/pages/guide/AssicurazionePage').then(m => ({ default: m.AssicurazionePage })))
+const SpeseVeterinariaPage   = lazy(() => import('@/pages/guide/SpeseVeterinariaPage').then(m => ({ default: m.SpeseVeterinariaPage })))
 
 function Spinner() {
   return (
@@ -104,6 +107,9 @@ export default function App() {
           <Route path="/privacy" element={<PrivacyPolicyPage />} />
           <Route path="/termini" element={<TermsOfServicePage />} />
           <Route path="/guide/libretto-sanitario-digitale-cane-gatto" element={<LibrettoSanitarioPage />} />
+          <Route path="/guide/vaccini-cane-gatto" element={<VacciniPage />} />
+          <Route path="/guide/assicurazione-animali-domestici" element={<AssicurazionePage />} />
+          <Route path="/guide/spese-veterinarie" element={<SpeseVeterinariaPage />} />
           <Route path="/prodotti-consigliati" element={<ProdottiConsigliatiPage />} />
 
           <Route path="*" element={<Navigate to="/app/dashboard" replace />} />
