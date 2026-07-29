@@ -3,7 +3,10 @@ import {
   Syringe, Stethoscope, Bug, Scale, Check, ArrowRight,
   Smartphone, Lock, CalendarClock, Star, StarHalf, Share2, ShoppingBag,
 } from 'lucide-react'
+import { toast } from 'sonner'
 import { useDocumentMeta } from '@/hooks/useDocumentMeta'
+
+const SUPPORT_EMAIL = 'supporto.petnote@gmail.com'
 
 /**
  * Preview categorie prodotti in landing. Solo emoji+label: gli URL affiliati
@@ -157,6 +160,18 @@ export function LandingPage() {
       "Tieni traccia di vaccinazioni, visite veterinarie, antiparassitari e peso del tuo animale, tutto in un'unica app. Gratis per un animale.",
     canonicalPath: '/',
   })
+
+  // L'href mailto: apre il client email di sistema quando presente (Outlook,
+  // Apple Mail, app native mobile). Dove non c'è client configurato o dove
+  // mailto: resta muto (Opera, Windows senza Outlook), la copia negli appunti
+  // + toast garantiscono comunque l'accesso all'indirizzo: nessun canale cieco.
+  const handleSupportClick = () => {
+    if (!navigator.clipboard) return
+    navigator.clipboard.writeText(SUPPORT_EMAIL).then(
+      () => toast.success(`Email supporto copiata: ${SUPPORT_EMAIL}`),
+      () => {},
+    )
+  }
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
@@ -535,7 +550,8 @@ export function LandingPage() {
               <Link to="/privacy" className="hover:text-slate-600 transition-colors">Privacy</Link>
               <Link to="/termini" className="hover:text-slate-600 transition-colors">Termini</Link>
               <a
-                href="mailto:supporto.petnote@gmail.com"
+                href={`mailto:${SUPPORT_EMAIL}`}
+                onClick={handleSupportClick}
                 className="hover:text-slate-600 transition-colors"
               >
                 Supporto
