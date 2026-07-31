@@ -1,8 +1,10 @@
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
+import { Mail } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useDocumentMeta } from '@/hooks/useDocumentMeta'
 
@@ -22,6 +24,7 @@ export function RegisterPage() {
   })
 
   const navigate = useNavigate()
+  const [pendingEmail, setPendingEmail] = useState<string | null>(null)
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormData>({
     resolver: zodResolver(schema),
   })
@@ -44,9 +47,10 @@ export function RegisterPage() {
         toast.success('Benvenuto in PetNote! 🐾')
         navigate('/app/dashboard', { replace: true })
       } else {
-        // Email confirmation ON → attende conferma
-        toast.success('Controlla la tua email per confermare la registrazione!')
-        navigate('/login', { replace: true })
+        // Email confirmation ON → mostra schermata "controlla email" inline
+        // invece di reindirizzare al login: evita i tentativi di accesso
+        // pre-conferma che generano warning email_not_confirmed lato Auth
+        setPendingEmail(email)
       }
     } catch {
       toast.error('Errore di rete. Riprova.')
@@ -59,6 +63,33 @@ export function RegisterPage() {
       options: { redirectTo: `${window.location.origin}/app/dashboard` },
     })
     if (error) toast.error(error.message)
+  }
+
+  if (pendingEmail) {
+    return (
+      <div className="space-y-5 text-center">
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-brand-50">
+          <Mail className="h-6 w-6 text-brand-600" />
+        </div>
+        <div className="space-y-2">
+          <h2 className="text-lg font-semibold text-slate-900">Controlla la tua email</h2>
+          <p className="text-sm text-slate-600">
+            Ti abbiamo inviato un'email di conferma a{' '}
+            <span className="font-medium text-slate-900">{pendingEmail}</span>.
+            Apri il link nel messaggio per attivare il tuo account.
+          </p>
+          <p className="text-xs text-slate-500">
+            Non la trovi? Controlla anche la cartella spam o posta indesiderata.
+          </p>
+        </div>
+        <Link
+          to="/login"
+          className="block w-full rounded-xl bg-brand-600 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-700"
+        >
+          Ho confermato, vai al login
+        </Link>
+      </div>
+    )
   }
 
   return (
