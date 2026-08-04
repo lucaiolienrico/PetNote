@@ -349,9 +349,7 @@ export function PetDetailPage() {
             iconText={SECTION_COLORS.vaccinations.iconText}
             sparkData={vaccSparkData}
             sparkHex={SECTION_COLORS.vaccinations.sparkHex}
-            locked={!hasFullAccess}
             to={`/app/pets/${pet.id}/vaccinations`}
-            onLockClick={() => setShowUpgrade(true)}
           />
           <StatCard
             label="Visite"
@@ -373,9 +371,7 @@ export function PetDetailPage() {
             iconText={SECTION_COLORS.weight.iconText}
             sparkData={weightSparkData}
             sparkHex={SECTION_COLORS.weight.sparkHex}
-            locked={!hasFullAccess}
             to={`/app/pets/${pet.id}/weight`}
-            onLockClick={() => setShowUpgrade(true)}
           />
           <StatCard
             // Rinominato da "Promemoria" a "Scadenze": la card aggrega vaccinazioni +

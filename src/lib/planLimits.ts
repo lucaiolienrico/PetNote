@@ -1,10 +1,12 @@
 // Limiti piano Free — unica fonte di verità, riusata da hook mutation e UI.
-// Pro-only totale (0 per Free): vaccinations, antiparasitics, weight_logs,
-// insurance_policies, medications, health_events, documents, share_links.
+// Pro-only totale (0 per Free): antiparasitics, insurance_policies,
+// medications, documents, share_links, reminders.
+// Accesso libero su Free (nessun limite): weight_logs, health_events.
 export const FREE_LIMITS = {
-  pets:             1,
-  vetVisitsPerPet:  2,
-  allergiesPerPet:  1,
+  pets:               1,
+  vetVisitsPerPet:    2,
+  allergiesPerPet:    1,
+  vaccinationsPerPet: 2,
 } as const
 
 // Errore tipizzato lanciato dalle mutation quando un utente Free supera il

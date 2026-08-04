@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
+import { FREE_LIMITS, PlanLimitError } from '@/lib/planLimits'
 import type { Database } from '@/types/database.types'
 
 export type Vaccination       = Database['public']['Tables']['vaccinations']['Row']
@@ -26,10 +27,27 @@ export function useVaccinations(petId: string | undefined) {
   })
 }
 
-export function useCreateVaccination(petId: string) {
+// hasFullAccess: passato dal chiamante (useAuthStore/selectHasFullAccess).
+// Il check qui è enforcement applicativo reale, non solo un guard sul bottone
+// "Aggiungi" — chi bypassa la UI e chiama la mutation direttamente trova
+// comunque il limite. RLS resta ownership-only (nessun constraint DB sul
+// conteggio): questa è quindi l'unica barriera, non difesa in profondità.
+export function useCreateVaccination(petId: string, hasFullAccess: boolean) {
   const qc = useQueryClient()
   return useMutation({
     mutationFn: async (input: Omit<VaccinationInsert, 'pet_id'>) => {
+      if (!hasFullAccess) {
+        const { count, error: countError } = await supabase
+          .from('vaccinations')
+          .select('id', { count: 'exact', head: true })
+          .eq('pet_id', petId)
+        if (countError) throw countError
+        if ((count ?? 0) >= FREE_LIMITS.vaccinationsPerPet) {
+          throw new PlanLimitError(
+            `Piano Free: massimo ${FREE_LIMITS.vaccinationsPerPet} vaccinazioni per animale. Passa a Premium per aggiungerne altre.`
+          )
+        }
+      }
       const { data, error } = await supabase
         .from('vaccinations')
         .insert({ ...input, pet_id: petId })

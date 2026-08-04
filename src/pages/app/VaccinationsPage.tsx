@@ -13,7 +13,8 @@ import { ReminderBadge } from '@/components/shared/ReminderBadge'
 import { formatIt } from '@/lib/health'
 import { useConfirmTap } from '@/hooks/useConfirmTap'
 import { useAuthStore, selectHasFullAccess } from '@/stores/auth.store'
-import { LockedFeature } from '@/components/shared/LockedFeature'
+import { FREE_LIMITS, PlanLimitError } from '@/lib/planLimits'
+import { UpgradeModal } from '@/components/shared/UpgradeModal'
 
 const today = () => new Date().toISOString().slice(0, 10)
 
@@ -34,27 +35,23 @@ const nn = (v?: string) => (v && v.trim() !== '' ? v.trim() : null)
 const inputCls = 'w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500'
 const labelCls = 'block text-xs font-medium text-slate-600 mb-1'
 
-// Pro-only totale: nessun hook dati viene montato per un utente Free, il
-// gate avviene prima — vedi LockedFeature.
+// Free: cap FREE_LIMITS.vaccinationsPerPet vaccinazioni per animale (accesso
+// parziale, non più Pro-only totale). Oltre soglia → UpgradeModal.
 export function VaccinationsPage() {
   const { id: petId } = useParams<{ id: string }>()
   const hasFullAccess = useAuthStore(selectHasFullAccess)
-  if (!hasFullAccess) {
-    return <LockedFeature title="Vaccinazioni" icon={Syringe} backTo={`/app/pets/${petId}`} />
-  }
-  return <VaccinationsPageContent />
-}
-
-function VaccinationsPageContent() {
-  const { id: petId } = useParams<{ id: string }>()
   const { data: vaccinations, isLoading } = useVaccinations(petId)
-  const createV = useCreateVaccination(petId!)
+  const createV = useCreateVaccination(petId!, hasFullAccess)
   const updateV = useUpdateVaccination(petId!)
   const deleteV = useDeleteVaccination(petId!)
 
   const [editing, setEditing]   = useState<Vaccination | null>(null)
   const [showForm, setShowForm] = useState(false)
+  const [showUpgrade, setShowUpgrade] = useState(false)
   const { tap, isArmed } = useConfirmTap()
+
+  // Oltre soglia → upsell invece del form.
+  const canAdd = hasFullAccess || (vaccinations?.length ?? 0) < FREE_LIMITS.vaccinationsPerPet
 
   const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -88,7 +85,12 @@ function VaccinationsPageContent() {
       else         await createV.mutateAsync(payload)
       toast.success(editing ? 'Vaccinazione aggiornata' : 'Vaccinazione registrata')
       setShowForm(false)
-    } catch {
+    } catch (err) {
+      if (err instanceof PlanLimitError) {
+        setShowForm(false)
+        setShowUpgrade(true)
+        return
+      }
       toast.error('Salvataggio non riuscito')
     }
   }
@@ -110,7 +112,10 @@ function VaccinationsPageContent() {
           <h1 className="text-xl font-bold text-slate-900">Vaccinazioni</h1>
         </div>
         {!showForm && (
-          <button onClick={openNew} className="flex items-center gap-1.5 bg-brand-600 text-white rounded-xl px-3.5 py-2 text-sm font-semibold hover:bg-brand-700">
+          <button
+            onClick={() => canAdd ? openNew() : setShowUpgrade(true)}
+            className="flex items-center gap-1.5 bg-brand-600 text-white rounded-xl px-3.5 py-2 text-sm font-semibold hover:bg-brand-700"
+          >
             <Plus size={16} strokeWidth={2.5} /> Aggiungi
           </button>
         )}
@@ -195,6 +200,8 @@ function VaccinationsPageContent() {
           </div>
         ))}
       </div>
+
+      <UpgradeModal open={showUpgrade} onClose={() => setShowUpgrade(false)} />
     </div>
   )
 }

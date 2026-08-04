@@ -11,9 +11,9 @@ interface Props {
 
 const BENEFITS = [
   'Animali illimitati',
-  'Vaccinazioni, antiparassitari e peso',
-  'Visite veterinarie e allergie illimitate',
-  'Assicurazioni, documenti e reminder',
+  'Vaccinazioni e visite veterinarie illimitate',
+  'Antiparassitari e allergie illimitate',
+  'Assicurazioni, farmaci, documenti e reminder',
 ]
 
 type PlanKey = 'monthly' | 'yearly'
@@ -54,7 +54,7 @@ export function UpgradeModal({ open, onClose }: Props) {
           <div>
             <h2 className="text-lg font-bold text-slate-900">Passa a Premium ⭐</h2>
             <p className="text-sm text-slate-600 mt-1">
-              Il piano Free include 1 animale, 2 visite veterinarie e 1 allergia. Sblocca tutto con Premium.
+              Il piano Free include 1 animale, con peso illimitato, 2 vaccinazioni, 2 visite veterinarie e 1 allergia. Sblocca tutto con Premium.
             </p>
           </div>
           <button
