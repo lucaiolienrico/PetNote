@@ -5,6 +5,7 @@ import {
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { useDocumentMeta } from '@/hooks/useDocumentMeta'
+import { Copyright } from '@/components/shared/Copyright'
 
 const SUPPORT_EMAIL = 'supporto.petnote@gmail.com'
 
@@ -561,6 +562,8 @@ export function LandingPage() {
               <Link to="/login" className="hover:text-slate-600 transition-colors">Accedi</Link>
             </div>
           </div>
+
+          <Copyright className="mt-5 text-center" />
         </div>
       </footer>
     </div>

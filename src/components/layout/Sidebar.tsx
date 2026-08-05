@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom'
 import { Home, PawPrint, Settings, Crown } from 'lucide-react'
 import { useAuthStore, selectHasFullAccess } from '@/stores/auth.store'
 import { UpgradeModal } from '@/components/shared/UpgradeModal'
+import { Copyright } from '@/components/shared/Copyright'
 
 // Stessa struttura link di BottomNav.tsx (route, icone, label) — nav
 // desktop e mobile devono restare in sync, ma sono componenti separati:
@@ -64,6 +65,7 @@ export function Sidebar() {
             Premium
           </button>
         )}
+        <Copyright className="mt-4 px-2 text-center" />
       </div>
 
       <UpgradeModal open={showUpgrade} onClose={() => setShowUpgrade(false)} />

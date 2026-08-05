@@ -12,6 +12,7 @@ import { usePushNotifications } from '@/hooks/usePushNotifications'
 import { UpgradeModal } from '@/components/shared/UpgradeModal'
 import { DeleteAccountModal } from '@/components/shared/DeleteAccountModal'
 import { useConfirmTap } from '@/hooks/useConfirmTap'
+import { Copyright } from '@/components/shared/Copyright'
 
 const schema = z.object({
   full_name: z.string().trim().min(2, 'Nome troppo corto').max(80),
@@ -286,7 +287,10 @@ export function SettingsPage() {
         Elimina account
       </button>
 
-      <p className="text-center text-xs text-slate-300 pt-2">PetNote v{APP_VERSION}</p>
+      <div className="pt-2 space-y-1.5">
+        <p className="text-center text-xs text-slate-300">PetNote v{APP_VERSION}</p>
+        <Copyright variant="extended" />
+      </div>
 
       <UpgradeModal open={showUpgrade} onClose={() => setShowUpgrade(false)} />
       <DeleteAccountModal open={showDeleteAccount} onClose={() => setShowDeleteAccount(false)} />
