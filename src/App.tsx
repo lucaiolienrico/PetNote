@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/react'
 import { lazy, Suspense, useEffect } from 'react'
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '@/stores/auth.store'
@@ -115,6 +116,7 @@ export default function App() {
           <Route path="*" element={<Navigate to="/app/dashboard" replace />} />
         </Routes>
       </Suspense>
+      <Analytics />
     </ErrorBoundary>
   )
 }
