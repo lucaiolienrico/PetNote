@@ -1,8 +1,14 @@
 import { Link } from 'react-router-dom'
-import { Plus } from 'lucide-react'
+import { Plus, PawPrint, Check } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth.store'
 import { usePets } from '@/lib/queries/pets'
 import { PetCard } from '@/components/pets/PetCard'
+
+const ONBOARDING_BENEFITS = [
+  'Vaccinazioni e richiami sempre sotto controllo',
+  'Storico visite, peso e trattamenti in un tap',
+  'Condividi il libretto col veterinario senza stampare nulla',
+]
 
 export function DashboardPage() {
   const profile = useAuthStore(s => s.profile)
@@ -29,12 +35,35 @@ export function DashboardPage() {
       {isLoading && <div className="h-20 bg-slate-100 rounded-2xl animate-pulse" />}
 
       {!isLoading && pets?.length === 0 && (
-        <Link
-          to="/app/pets/new"
-          className="flex items-center justify-center gap-2 bg-white rounded-2xl border-2 border-dashed border-brand-200 p-6 text-brand-600 text-sm font-semibold"
-        >
-          <Plus size={18} /> Aggiungi il tuo primo animale
-        </Link>
+        <div className="bg-gradient-to-br from-brand-50 to-white rounded-3xl border border-brand-100 p-6 space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-2xl bg-brand-100 flex items-center justify-center flex-shrink-0">
+              <PawPrint size={24} className="text-brand-600" />
+            </div>
+            <div>
+              <p className="font-bold text-slate-900">Inizia con il tuo primo animale</p>
+              <p className="text-sm text-slate-500">Ci vuole meno di un minuto.</p>
+            </div>
+          </div>
+
+          <ul className="space-y-2.5">
+            {ONBOARDING_BENEFITS.map(benefit => (
+              <li key={benefit} className="flex items-center gap-2.5 text-sm text-slate-600">
+                <span className="flex-shrink-0 w-5 h-5 rounded-full bg-brand-100 flex items-center justify-center">
+                  <Check size={11} className="text-brand-700" strokeWidth={3} />
+                </span>
+                {benefit}
+              </li>
+            ))}
+          </ul>
+
+          <Link
+            to="/app/pets/new"
+            className="flex items-center justify-center gap-2 w-full bg-brand-600 hover:bg-brand-700 text-white rounded-2xl p-4 text-sm font-semibold transition-colors"
+          >
+            <Plus size={16} /> Aggiungi il tuo animale
+          </Link>
+        </div>
       )}
 
       {!isLoading && !!pets?.length && (
